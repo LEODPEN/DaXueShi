@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/daxueshi
     username: root
-    password: #填写自己的密码
+    password: pf19990122
   jpa:
     hibernate:
       ddl-auto: update

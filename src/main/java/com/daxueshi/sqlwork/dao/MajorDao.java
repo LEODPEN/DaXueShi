@@ -12,6 +12,6 @@ import java.util.List;
  */
 @Mapper
 public interface MajorDao {
-    @Select({})
-    List<Major> selectByCompany();
+    //@Select({})
+    //List<Major> selectByCompany();
 }

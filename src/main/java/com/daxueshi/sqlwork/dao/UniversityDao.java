@@ -1,11 +1,36 @@
 package com.daxueshi.sqlwork.dao;
 
-import org.apache.ibatis.annotations.Mapper;
+import com.daxueshi.sqlwork.domain.University;
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.FetchType;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author onion
- * @create 2019-03-29-15:20
+ * @date 2019-04-08 -20:22
  */
+@Repository
 @Mapper
 public interface UniversityDao {
+    String TABLE_NAME = "university";
+    @Select({"select * from ",TABLE_NAME})
+    @Results(id="universityMap",value={
+            @Result(id=true,column = "university_id",property = "universityId"),
+            @Result(column = "university_name",property = "universityName"),
+            @Result(column = "university_id",property = "major",
+                    many = @Many(
+                            select = "com.daxueshi.sqlwork.dao.MajorDao.findMajorsById",
+                            fetchType = FetchType.LAZY
+                    )
+
+            )
+
+    })
+    List<University> findAll();
+
+    @Select({"select * from ",TABLE_NAME," where university_id in " +
+            "(select * from uni_major where major_id = #{majorId})"})
+    List<University> findUniversitiesById(Integer majorId);
 }

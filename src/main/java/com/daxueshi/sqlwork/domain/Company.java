@@ -1,14 +1,47 @@
 package com.daxueshi.sqlwork.domain;
 
-import lombok.Data;
+import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+/**
+ * @author onion
+ * @date 2019-04-08 -20:54
+ */
+public class Company implements Serializable {
 
-@Entity
-@Data
-public class Company {
+    private Integer companyId;
+    private String companyName;
+    private String city;
+    private String type;
 
-    @Id
-    private String companyId;
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

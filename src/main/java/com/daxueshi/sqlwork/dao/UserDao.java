@@ -2,22 +2,43 @@ package com.daxueshi.sqlwork.dao;
 
 import com.daxueshi.sqlwork.domain.User;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author onion
- * @create 2019-03-29-15:02
+ * @date 2019-04-08 -20:56
  */
+@Repository
 @Mapper
 public interface UserDao {
-    @Insert({"insert into user(name,password) values(#{name},#{password}"})
-    int addUser(User user);
+    String TABLE_NAME = "users";
+    String INSERT_FIELD = "user_id, password, nickname";
+    String INSERT_VALUES = "#{userId},#{password},#{nickname}";
 
-    @Update({"update user set password = #{password} where id = {#id}"})
-    void updatePassword(User user);
+    @Update({"update ",TABLE_NAME," set nickname=#{nickname},phone_number=#{phoneNumber}," +
+            " email=#{email},password=#{password},portrait_url=#{portraitUrl}," +
+            " status=#{status},register_time=#{registerTime},last_edit_time=#{lastEditTime}" +
+            " where user_id=#{userId}"})
+    int updateUser(User user);
 
-    @Select({"select * from user where id = #{id}"})
-    User findUserById();
+    @Insert({"insert into ",TABLE_NAME,"(",INSERT_FIELD,") values (",INSERT_VALUES,")"})
+    int saveUser(User user);
 
-    @Delete({"delete from user where id = #{id}"})
-    void deleteById(int id);
+    @Select({"select * from ",TABLE_NAME," where user_id=#{userId}"})
+    User findById(String userId);
+
+    @Select({"select * from ",TABLE_NAME," where nickname like '%${value}%' "})
+    List<User> findByNickName(String nickname);
+
+    @Select({"select count(*) from ",TABLE_NAME})
+    int findTotalUser();
+
+    @Select({"select * from ",TABLE_NAME})
+    List<User> findAll();
+
+    @Delete({"delete from ",TABLE_NAME," where user_id=#{userId}"})
+    int deleteUser(String userId);
+
 }

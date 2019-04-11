@@ -2,6 +2,7 @@ package com.daxueshi.sqlwork.utils;
 
 import com.daxueshi.sqlwork.VO.ResultVO;
 
+
 public class ResultVOUtils {
     public static ResultVO success(Object object){
         ResultVO resultVO = new ResultVO();

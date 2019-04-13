@@ -57,8 +57,12 @@ public class UserDaoTest {
     @Test
     public void testUpdate(){
         User user = userDao.findById("004");
-        user.setNickname("pepper");
+        user.setNickname("strawberry");
         System.out.println(userDao.updateUser(user));
+        List<User> list = userDao.findAll();
+        for (User user1 : list) {
+            System.out.println(user1);
+        }
     }
 
     @Test

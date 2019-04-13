@@ -1,6 +1,7 @@
 package com.daxueshi.sqlwork.dao;
 
 import com.daxueshi.sqlwork.domain.User;
+import com.daxueshi.sqlwork.provider.UserProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -17,13 +18,15 @@ public interface UserDao {
     String INSERT_FIELD = "user_id, password, nickname";
     String INSERT_VALUES = "#{userId},#{password},#{nickname}";
 
-    @Update({"update ",TABLE_NAME," set nickname=#{nickname},phone_number=#{phoneNumber}," +
+    /*@Update({"update ",TABLE_NAME," set nickname=#{nickname},phone_number=#{phoneNumber}," +
             " email=#{email},password=#{password},portrait_url=#{portraitUrl}," +
             " status=#{status},register_time=#{registerTime},last_edit_time=#{lastEditTime}" +
-            " where user_id=#{userId}"})
+            " where user_id=#{userId}"})*/
+    @UpdateProvider(type = UserProvider.class, method = "updateUser")
     int updateUser(User user);
 
     @Insert({"insert into ",TABLE_NAME,"(",INSERT_FIELD,") values (",INSERT_VALUES,")"})
+    @Options(useGeneratedKeys = true, keyColumn = "user_id", keyProperty = "userId")
     int saveUser(User user);
 
     @Select({"select * from ",TABLE_NAME," where user_id=#{userId}"})

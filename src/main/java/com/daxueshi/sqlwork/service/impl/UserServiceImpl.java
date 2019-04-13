@@ -1,7 +1,8 @@
 package com.daxueshi.sqlwork.service.impl;
 
+import com.daxueshi.sqlwork.service.UniversityService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements UniversityService {
 }

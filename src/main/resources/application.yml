@@ -11,3 +11,9 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 微信相关配置
+wxopen:
+  appid:
+  appsecret:
+  redirect_url:

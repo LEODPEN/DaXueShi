@@ -13,7 +13,7 @@ import java.util.List;
 public class Major implements Serializable {
     private Integer majorId;
     private String majorName;
-    private List<University> universities;
+    private List<University> universityList;
 
     public Integer getMajorId() {
         return majorId;
@@ -31,11 +31,19 @@ public class Major implements Serializable {
         this.majorName = majorName;
     }
 
-    public List<University> getUniversities() {
-        return universities;
+    public List<University> getUniversityList() {
+        return universityList;
     }
 
-    public void setUniversities(List<University> universities) {
-        this.universities = universities;
+    public void setUniversityList(List<University> universityList) {
+        this.universityList = universityList;
+    }
+
+    @Override
+    public String toString() {
+        return "Major{" +
+                "majorId=" + majorId +
+                ", majorName='" + majorName + '\'' +
+                '}';
     }
 }

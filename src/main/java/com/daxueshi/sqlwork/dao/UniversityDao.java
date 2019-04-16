@@ -14,12 +14,12 @@ import java.util.List;
 @Repository
 @Mapper
 public interface UniversityDao {
-    String TABLE_NAME = "university";
+    String TABLE_NAME = "universities";
     @Select({"select * from ",TABLE_NAME})
     @Results(id="universityMap",value={
             @Result(id=true,column = "university_id",property = "universityId"),
             @Result(column = "university_name",property = "universityName"),
-            @Result(column = "university_id",property = "major",
+            @Result(column = "university_id",property = "majorList",
                     many = @Many(
                             select = "com.daxueshi.sqlwork.dao.MajorDao.findMajorsById",
                             fetchType = FetchType.LAZY
@@ -31,6 +31,6 @@ public interface UniversityDao {
     List<University> findAll();
 
     @Select({"select * from ",TABLE_NAME," where university_id in " +
-            "(select * from uni_major where major_id = #{majorId})"})
+            "(select university_id from uni_major where major_id = #{majorId})"})
     List<University> findUniversitiesById(Integer majorId);
 }

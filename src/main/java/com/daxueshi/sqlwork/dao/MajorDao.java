@@ -20,7 +20,7 @@ public interface MajorDao {
     @Results(id="majorMap",value={
             @Result(id=true,column = "major_id",property = "majorId"),
             @Result(column = "major_name",property = "majorName"),
-            @Result(column = "major_id",property = "university",
+            @Result(column = "major_id",property = "universityList",
                     many = @Many(
                             select = "com.daxueshi.sqlwork.dao.UniversityDao.findUniversitiesById",
                             fetchType = FetchType.LAZY
@@ -32,6 +32,6 @@ public interface MajorDao {
     List <Major> findAll();
 
     @Select({"select * from ",TABLE_NAME," where major_id in ",
-            "(select major_id from uni_major where university_id=#{universityId}"})
+            "(select major_id from uni_major where university_id=#{universityId})"})
     List <Major> findMajorsById(Integer universityId);
 }

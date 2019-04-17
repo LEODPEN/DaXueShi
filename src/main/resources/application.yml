@@ -5,6 +5,10 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/daxueshi
     username: root
     password: 969023014
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
 
 # mybatis相关配置
 mybatis:

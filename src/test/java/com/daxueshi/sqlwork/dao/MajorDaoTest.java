@@ -13,8 +13,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author onion
@@ -73,12 +71,15 @@ public class MajorDaoTest {
 
     @Test
     public void testRedisLock(){
-        ExecutorService executorService = Executors.newFixedThreadPool(25);
+        /*ExecutorService executorService = Executors.newFixedThreadPool(25);
         executorService.submit(new Runnable() {
             @Override
             public void run() {
                 userService.findAll();
             }
-        });
+        });*/
+        userService.findAll();
+        userService.findAll();
+        userService.findAll();
     }
 }

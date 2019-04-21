@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService  {
     @Autowired
     private WeChatConfig weChatConfig;
     @Autowired
@@ -26,6 +27,9 @@ public class UserServiceImpl implements UserService {
     /*
     @Autowired
     private RedisClient redisClient;*/
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
     @Override
     public User saveWeChatUser(String code) {
         String accessTokenUrl = String.format(WeChatConfig.getOpenAccessTokenUrl(),weChatConfig.getOpenAppId(),
@@ -73,13 +77,44 @@ public class UserServiceImpl implements UserService {
                      userList = userDao.findAll();
                      redisTemplate.opsForValue().set("allUsers",userList);
                  }
-                 else {
-                     System.out.println("use redis");
-                 }
             }
-        }else{
-            System.out.println("use redis");
         }
         return userList;
     }
+
+    @Override
+    public User login(User user) {
+        User userLogin = userDao.findByMail(user.getEmail());
+        if(userLogin != null &&
+                encoder.matches(user.getPassword(),userLogin.getPassword())){
+            return userLogin;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean activate(String userId,int status) {
+        User user = userDao.findById(userId);
+        if(user == null)
+            return false;
+        user.setStatus(status);
+        userDao.updateUser(user);
+        return true;
+    }
+
+    @Override
+    public boolean register(User user) {
+        User u = userDao.findByMail(user.getEmail());
+        if(u != null) {
+            return false;
+        }
+        user.setStatus(0);
+        user.setRegisterTime(new Date());
+        user.setPassword(encoder.encode(user.getPassword()));
+        userDao.saveUser(user);
+        return true;
+    }
+
+
+
 }

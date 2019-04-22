@@ -7,7 +7,7 @@ import java.util.List;
 public interface UserService {
     User saveWeChatUser(String code);
     List<User> findAll();
-    User login(User user);
+    User login(String email,String password);
     boolean activate(String userId,int status);
     boolean register(User user);
 }

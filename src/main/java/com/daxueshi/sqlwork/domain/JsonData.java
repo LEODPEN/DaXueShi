@@ -59,6 +59,7 @@ public class JsonData implements Serializable {
         this.data = data;
     }
 
+
     @Override
     public String toString() {
         return "JsonData{" +

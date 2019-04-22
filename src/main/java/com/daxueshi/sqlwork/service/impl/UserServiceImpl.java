@@ -83,11 +83,11 @@ public class UserServiceImpl implements UserService  {
     }
 
     @Override
-    public User login(User user) {
-        User userLogin = userDao.findByMail(user.getEmail());
-        if(userLogin != null &&
-                encoder.matches(user.getPassword(),userLogin.getPassword())){
-            return userLogin;
+    public User login(String email,String password) {
+        User user = userDao.findByMail(email);
+        if(user != null &&
+                encoder.matches(password,user.getPassword())){
+            return user;
         }
         return null;
     }

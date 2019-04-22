@@ -25,12 +25,9 @@ public class UserServiceTest {
         System.out.println(userService.register(user));
     }
     @Test
-    public void testLogin() {
-        User user = new User();
-        user.setEmail("969023015@qq.com");
-        user.setPassword("10175101227");
-        if(userService.login(user)==null)
-            throw new RuntimeException();
-
+    public void testLogin(){
+        String email = "969023015@qq.com";
+        String password = "10175101227";
+        System.out.println(userService.login(email,password));
     }
 }

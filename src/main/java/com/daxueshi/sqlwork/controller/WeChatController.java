@@ -1,7 +1,7 @@
 package com.daxueshi.sqlwork.controller;
 
+import com.daxueshi.sqlwork.VO.Result;
 import com.daxueshi.sqlwork.config.WeChatConfig;
-import com.daxueshi.sqlwork.domain.JsonData;
 import com.daxueshi.sqlwork.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,12 +27,12 @@ public class WeChatController {
     private UserService userService;
     @GetMapping("login_url")
     @ResponseBody
-    public JsonData loginUrl(@RequestParam(value="access_page",required = true)String accessPage) throws UnsupportedEncodingException {
+    public Result loginUrl(@RequestParam(value="access_page",required = true)String accessPage) throws UnsupportedEncodingException {
         String redirectUrl = weChatConfig.getOpenRedirectUrl();
         String callbackUrl = URLEncoder.encode(redirectUrl,"utf-8");
         String qrcodeUrl = String.format(weChatConfig.getOpenQrcodeUrl(),
                 weChatConfig.getOpenAppId(),callbackUrl,accessPage);
-        return JsonData.buildSuccess(qrcodeUrl);
+        return Result.buildSuccess(qrcodeUrl);
     }
 
     @GetMapping("/user/callback")

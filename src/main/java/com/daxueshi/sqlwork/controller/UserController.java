@@ -21,12 +21,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @PostMapping("/login")
     public Result login(@RequestBody Map<String,String>loginMap){
         User user = userService.login(loginMap.get("email"),loginMap.get("password"));
         if(user != null){
-            String token = JwtUtils.createJwt(user);
+            String token = jwtUtils.createJwt(user);
             Map map = new HashMap();
             map.put("token",token);
             map.put("name",user.getNickname());
@@ -36,4 +38,6 @@ public class UserController {
             return ResultUtils.error(ResultEnums.LOGIN_ERROR);
         }
     }
+
+
 }

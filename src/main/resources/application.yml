@@ -9,16 +9,16 @@ spring:
     host: 127.0.0.1
     port: 6379
     password:
+  devtools:
+    restart:
+      trigger-file: trigger.txt
 
 # mybatis相关配置
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-# 微信相关配置
-wxopen:
-  appid:
-  appsecret:
-  redirect_url:
-
+jwt:
+  config:
+    key: ecnusoft
+    ttl: 3600000

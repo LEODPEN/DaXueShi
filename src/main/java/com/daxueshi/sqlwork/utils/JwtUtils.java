@@ -5,6 +5,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
@@ -13,10 +15,29 @@ import java.util.Date;
  * @date 2019-04-13 -11:21
  * jwt工具类
  */
+@Component
+@ConfigurationProperties("jwt.config")
 public class JwtUtils {
-    private final static String key = "ecnusoft";
-    private final static Long ttl = 3600000L;
-    public static String createJwt(User user){
+    private String key ;
+    private Long ttl ;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public Long getTtl() {
+        return ttl;
+    }
+
+    public void setTtl(Long ttl) {
+        this.ttl = ttl;
+    }
+
+    public  String createJwt(User user){
         if(user == null || user.getUserId() == null)
             return null;
         long cur = System.currentTimeMillis();
@@ -31,7 +52,7 @@ public class JwtUtils {
         }
         return builder.compact();
     }
-    public static Claims parseJwt(String jwt){
+    public Claims parseJwt(String jwt){
         try{
             Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwt).getBody();
             return claims;

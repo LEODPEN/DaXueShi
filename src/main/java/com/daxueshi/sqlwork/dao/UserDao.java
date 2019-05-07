@@ -49,4 +49,6 @@ public interface UserDao {
     @Select({"select * from ",TABLE_NAME," where email=#{email}"})
     User findByMail(String email);
 
+    @Delete({"delete from ",TABLE_NAME," where email=#{email}"})
+    int deleteByMail(String email);
 }

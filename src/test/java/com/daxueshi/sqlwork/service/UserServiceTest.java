@@ -22,7 +22,7 @@ public class UserServiceTest {
         user.setUserId("007");
         user.setEmail("969023015@qq.com");
         user.setPassword("10175101226");
-        System.out.println(userService.register(user));
+        //System.out.println(userService.register(user));
     }
     @Test
     public void testLogin(){

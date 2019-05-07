@@ -12,6 +12,11 @@ spring:
   devtools:
     restart:
       trigger-file: trigger.txt
+  mail:
+    username:
+    password:
+    host:
+    properties: mail.smtp.ssl.enable = true
 
 # mybatis相关配置
 mybatis:
@@ -22,3 +27,4 @@ jwt:
   config:
     key: ecnusoft
     ttl: 3600000
+

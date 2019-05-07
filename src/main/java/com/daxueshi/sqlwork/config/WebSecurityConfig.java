@@ -1,6 +1,7 @@
 package com.daxueshi.sqlwork.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,8 +20,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //anyRequest任何的请求认证后才能访问
         //使csrf拦截失效
         http.authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .anyRequest().authenticated()
-                .and().csrf().disable();
+                .antMatchers("/").permitAll()
+                .antMatchers("/stu").hasRole("Student")
+                .antMatchers("/gra").hasRole("Graduate");
+        http.formLogin();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        //auth.jdbcAuthentication();
     }
 }

@@ -1,7 +1,6 @@
 package com.daxueshi.sqlwork.config;
 
 import com.github.pagehelper.PageHelper;
-import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,6 +25,7 @@ public class MybatisConfig {
         pageHelper.setProperties(p);
         return pageHelper;
     }
+    /*
     public ConfigurationCustomizer customize(){
         return new ConfigurationCustomizer() {
             @Override
@@ -33,5 +33,5 @@ public class MybatisConfig {
                 configuration.setMapUnderscoreToCamelCase(true);
             }
         };
-    }
+    }*/
 }

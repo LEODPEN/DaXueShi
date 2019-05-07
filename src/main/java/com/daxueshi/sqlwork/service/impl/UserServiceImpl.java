@@ -3,6 +3,7 @@ package com.daxueshi.sqlwork.service.impl;
 import com.daxueshi.sqlwork.dao.UserDao;
 import com.daxueshi.sqlwork.domain.User;
 import com.daxueshi.sqlwork.service.UserService;
+import com.daxueshi.sqlwork.utils.CheckcodeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -69,13 +70,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public boolean register(User user) {
+    public boolean register(User user,String checkcode) {
         User u = userDao.findByMail(user.getEmail());
         if(u != null) {
             return false;
         }
+        String code = (String) redisTemplate.opsForValue().get("checkcode_"+user.getEmail());
+        if(code == null){
+            throw new RuntimeException("请输入验证码");
+        }
+        if(!code.equals(checkcode)){
+            throw new RuntimeException("验证码错误");
+        }
         user.setStatus(0);
         user.setRegisterTime(new Date());
+        user.setLastEditTime(new Date());
         user.setPassword(encoder.encode(user.getPassword()));
         userDao.saveUser(user);
         return true;
@@ -97,6 +106,12 @@ public class UserServiceImpl implements UserService{
     @Override
     public int deleteByEmail(String email) {
         return userDao.deleteByMail(email);
+    }
+
+    @Override
+    public void sendCheckcode(String email) {
+        String checkcode = CheckcodeUtils.getCheckcode();
+        redisTemplate.opsForValue().set("checkcode_"+email,checkcode);
     }
 
 

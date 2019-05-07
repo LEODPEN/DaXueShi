@@ -26,4 +26,10 @@ public class JwtTest {
         System.out.println(jwt);
 
     }
+
+    @Test
+    public void testCode(){
+        String str = CheckcodeUtils.getCheckcode();
+        System.out.println("str = " + str);
+    }
 }

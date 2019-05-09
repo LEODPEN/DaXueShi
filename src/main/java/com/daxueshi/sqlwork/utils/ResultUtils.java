@@ -20,7 +20,7 @@ public class ResultUtils {
     }
 
     public static Result success(){
-        return success();
+        return success(null);
     }
 
     public static Result error(ResultEnums resultEnums) {

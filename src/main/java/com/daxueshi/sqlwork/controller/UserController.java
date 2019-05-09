@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,8 +26,8 @@ public class UserController {
     private JwtUtils jwtUtils;
 
     @PostMapping("/login")
-    public Result login(@RequestBody Map<String,String>loginMap){
-        User user = userService.login(loginMap.get("email"),loginMap.get("password"));
+    public Result login(@RequestBody @Valid User u){
+        User user = userService.login(u.getEmail(),u.getPassword());
         if(user != null){
             String token = jwtUtils.createJwt(user);
             Map map = new HashMap();
@@ -38,6 +39,8 @@ public class UserController {
             return ResultUtils.error(ResultEnums.LOGIN_ERROR);
         }
     }
+
+
 
 
 }

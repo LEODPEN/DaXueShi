@@ -1,5 +1,8 @@
 package com.daxueshi.sqlwork.domain;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -8,10 +11,14 @@ import java.util.Date;
  * @date 2019-04-08 -20:36
  */
 public class User implements Serializable {
+
     private String userId;
     private String nickname;
     private String phoneNumber;
+    @Email
     private String email;
+    @NotNull
+    @Size(min = 6, max = 20)
     private String password;
     private String portraitUrl;
     private Integer status;

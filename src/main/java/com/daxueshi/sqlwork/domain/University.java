@@ -3,7 +3,6 @@ package com.daxueshi.sqlwork.domain;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author onion
@@ -13,7 +12,16 @@ import java.util.List;
 public class University implements Serializable {
     private Integer universityId;
     private String universityName;
-    private List<Major> majorList;
+    private String city;
+    //private List<Major> majorList;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public Integer getUniversityId() {
         return universityId;
@@ -31,19 +39,21 @@ public class University implements Serializable {
         this.universityName = universityName;
     }
 
-    public List<Major> getMajorList() {
+    /*public List<Major> getMajorList() {
         return majorList;
     }
 
     public void setMajorList(List<Major> majorList) {
         this.majorList = majorList;
     }
+    */
 
     @Override
     public String toString() {
         return "University{" +
                 "universityId=" + universityId +
                 ", universityName='" + universityName + '\'' +
+                ", city='" + city + '\'' +
                 '}';
     }
 }

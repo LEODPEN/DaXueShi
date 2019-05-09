@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum  ResultEnums {
 
     LOGIN_SUCCESS(1,"登陆成功"),
-    LOGIN_ERROR(-1,"登陆失败");
+    LOGIN_ERROR(-1,"登陆失败"),
+    INFO_NOT_EXIST(-2,"查无相关信息");
 
     private Integer code;
 

@@ -1,8 +1,10 @@
 package com.daxueshi.sqlwork.dao;
 
 import com.daxueshi.sqlwork.domain.University;
-import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.mapping.FetchType;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,13 +21,14 @@ public interface UniversityDao {
     @Results(id="universityMap",value={
             @Result(id=true,column = "university_id",property = "universityId"),
             @Result(column = "university_name",property = "universityName"),
-            @Result(column = "university_id",property = "majorList",
+            @Result(column = "city",property = "city")
+            /*@Result(column = "university_id",property = "majorList",
                     many = @Many(
                             select = "com.daxueshi.sqlwork.dao.MajorDao.findMajorsById",
                             fetchType = FetchType.LAZY
                     )
 
-            )
+            )*/
 
     })
     List<University> findAll();
@@ -33,4 +36,7 @@ public interface UniversityDao {
     @Select({"select * from ",TABLE_NAME," where university_id in " +
             "(select university_id from uni_major where major_id = #{majorId})"})
     List<University> findUniversitiesById(Integer majorId);
+
+    @Select({"select * from ",TABLE_NAME," where city = #{city}"})
+    List<University> findUniversitiesByCity(String city);
 }

@@ -1,8 +1,10 @@
 package com.daxueshi.sqlwork.dao;
 
 import com.daxueshi.sqlwork.domain.Major;
-import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.mapping.FetchType;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,14 +21,14 @@ public interface MajorDao {
     @Select({"select * from ",TABLE_NAME})
     @Results(id="majorMap",value={
             @Result(id=true,column = "major_id",property = "majorId"),
-            @Result(column = "major_name",property = "majorName"),
-            @Result(column = "major_id",property = "universityList",
+            @Result(column = "major_name",property = "majorName")
+            /*@Result(column = "major_id",property = "universityList",
                     many = @Many(
                             select = "com.daxueshi.sqlwork.dao.UniversityDao.findUniversitiesById",
                             fetchType = FetchType.LAZY
                     )
 
-            )
+            )*/
 
     })
     List <Major> findAll();

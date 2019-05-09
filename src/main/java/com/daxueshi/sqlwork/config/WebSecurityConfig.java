@@ -29,5 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         //auth.jdbcAuthentication();
+        auth.inMemoryAuthentication().withUser("user").password("123456").authorities("Student");
+
     }
 }

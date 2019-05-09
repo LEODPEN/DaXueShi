@@ -9,4 +9,6 @@ public interface UniversityService {
     List<University> findAll();
 
     List<University> findByMajorId(Integer majorId);
+
+    List<University> findByCity(String city);
 }

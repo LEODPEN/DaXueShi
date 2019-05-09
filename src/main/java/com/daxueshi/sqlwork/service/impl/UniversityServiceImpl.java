@@ -23,4 +23,10 @@ public class UniversityServiceImpl implements UniversityService {
     public List<University> findByMajorId(Integer majorId) {
         return universityDao.findUniversitiesById(majorId);
     }
+
+    @Override
+    @Cacheable(value = "universities",key = "#city")
+    public List<University> findByCity(String city) {
+        return universityDao.findUniversitiesByCity(city);
+    }
 }

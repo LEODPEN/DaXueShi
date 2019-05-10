@@ -6,6 +6,8 @@ import com.daxueshi.sqlwork.enums.ResultEnums;
 import com.daxueshi.sqlwork.service.UserService;
 import com.daxueshi.sqlwork.utils.JwtUtils;
 import com.daxueshi.sqlwork.utils.ResultUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +18,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
+@Api(tags = "用户请求")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -25,6 +28,7 @@ public class UserController {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @ApiOperation("用户登录")
     @PostMapping("/login")
     public Result login(@RequestBody @Valid User u){
         User user = userService.login(u.getEmail(),u.getPassword());

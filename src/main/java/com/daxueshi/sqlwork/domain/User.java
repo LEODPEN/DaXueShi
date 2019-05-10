@@ -1,5 +1,8 @@
 package com.daxueshi.sqlwork.domain;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -10,6 +13,7 @@ import java.util.Date;
  * @author onion
  * @date 2019-04-08 -20:36
  */
+@ApiModel("用户实体")
 public class User implements Serializable {
 
     private String userId;
@@ -20,7 +24,9 @@ public class User implements Serializable {
     @NotNull
     @Size(min = 6, max = 20)
     private String password;
+    @ApiModelProperty("头像路径")
     private String portraitUrl;
+    @ApiModelProperty("账号状态")
     private Integer status;
     private Date registerTime;
     private Date lastEditTime;

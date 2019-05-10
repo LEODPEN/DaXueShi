@@ -1,5 +1,8 @@
 package com.daxueshi.sqlwork.domain;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,16 +10,22 @@ import java.util.Date;
  * @author onion
  * @date 2019-05-10 -09:27
  */
+@ApiModel("论坛区实体")
 public class Discussion implements Serializable {
-
+    @ApiModelProperty("论坛Id")
     private String _id;
     private String content;
     private Date publishTime;
+    @ApiModelProperty("用户Id")
     private String userId;
+    @ApiModelProperty("用户昵称")
     private String nickname;
+    @ApiModelProperty("访问量")
     private Integer visits;
+    @ApiModelProperty("回复量")
     private Integer comment;
     private String state;
+    @ApiModelProperty("上级用户Id")
     private String parentId;
 
     public String getId() {

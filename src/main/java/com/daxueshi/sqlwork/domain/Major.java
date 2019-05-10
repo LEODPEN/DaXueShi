@@ -1,14 +1,11 @@
 package com.daxueshi.sqlwork.domain;
 
-import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
 
 /**
  * @author onion
  * @date 2019-04-08 -20:19
  */
-@Component
 public class Major implements Serializable {
     private Integer majorId;
     private String majorName;

@@ -1,14 +1,12 @@
 package com.daxueshi.sqlwork.domain;
 
-import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
 
 /**
  * @author onion
  * @date 2019-04-08 -20:15
  */
-@Component
+
 public class University implements Serializable {
     private Integer universityId;
     private String universityName;

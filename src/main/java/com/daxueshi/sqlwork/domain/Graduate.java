@@ -1,18 +1,24 @@
 package com.daxueshi.sqlwork.domain;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * @author onion
  * @date 2019-04-08 -20:51
  */
+@ApiModel("毕业生实体")
 public class Graduate implements Serializable {
     private String userId;
     private Integer universityId;
     private Integer majorId;
     private Integer companyId;
+    @ApiModelProperty("积分")
     private Integer score;
     private Double salary;
+    @ApiModelProperty("职位")
     private String position;
 
     public String getUserId() {

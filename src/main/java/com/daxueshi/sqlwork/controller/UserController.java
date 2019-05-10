@@ -9,18 +9,14 @@ import com.daxueshi.sqlwork.utils.ResultUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
 @Api(tags = "用户请求")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -29,9 +25,9 @@ public class UserController {
     private JwtUtils jwtUtils;
 
     @ApiOperation("用户登录")
-    @PostMapping("/login")
-    public Result login(@RequestBody @Valid User u){
-        User user = userService.login(u.getEmail(),u.getPassword());
+    @PostMapping("/users/{email}/{password}")
+    public Result login(@PathVariable String email,@PathVariable String password){
+        User user = userService.login(email,password);
         if(user != null){
             String token = jwtUtils.createJwt(user);
             Map map = new HashMap();
@@ -44,7 +40,25 @@ public class UserController {
         }
     }
 
+    @ApiOperation("用户注册")
+    @PostMapping("/users")
+    public Result register(@RequestBody User user){
+        userService.register(user,null);
+        return ResultUtils.success();
+    }
+    @ApiOperation("更新用户信息")
+    @PutMapping("/users")
+    public Result update(@RequestBody User user){
+        userService.updateUser(user);
+        return ResultUtils.success();
+    }
 
+    @ApiOperation("删除用户信息")
+    @DeleteMapping("/user/{email}")
+    public Result delete(@PathVariable String email){
+        userService.deleteByEmail(email);
+        return ResultUtils.success();
+    }
 
 
 }

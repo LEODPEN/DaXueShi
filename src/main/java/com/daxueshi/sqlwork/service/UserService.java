@@ -13,4 +13,5 @@ public interface UserService {
     void updateUser(User user);
     int deleteByEmail(String email);
     void sendCheckcode(String email);
+    void save(User user);
 }

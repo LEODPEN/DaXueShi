@@ -114,6 +114,10 @@ public class UserServiceImpl implements UserService{
         redisTemplate.opsForValue().set("checkcode_"+email,checkcode);
     }
 
+    @Override
+    public void save(User user) {
+        userDao.saveUser(user);
+    }
 
 
 }

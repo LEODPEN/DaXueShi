@@ -19,10 +19,10 @@ public class User implements Serializable {
     private String userId;
     private String nickname;
     private String phoneNumber;
-    @Email
+    @Email(message = "邮箱格式错误")
     private String email;
     @NotNull
-    @Size(min = 6, max = 20)
+    @Size(min = 6, max = 20, message = "密码长度为6-20位")
     private String password;
     @ApiModelProperty("头像路径")
     private String portraitUrl;

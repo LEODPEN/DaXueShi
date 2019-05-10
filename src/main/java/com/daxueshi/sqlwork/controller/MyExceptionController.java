@@ -1,4 +1,4 @@
-package com.daxueshi.sqlwork.handler;
+package com.daxueshi.sqlwork.controller;
 
 import com.daxueshi.sqlwork.VO.Result;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @date 2019-05-06 -16:14
  */
 @ControllerAdvice
-public class MyExceptionHandler {
+public class MyExceptionController {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public Result exception(Exception e){

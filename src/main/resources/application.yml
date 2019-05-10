@@ -17,6 +17,10 @@ spring:
     password:
     host:
     properties: mail.smtp.ssl.enable = true
+  data:
+    mongodb:
+      database: discussion
+      host: 127.0.0.1
 
 # mybatis相关配置
 mybatis:
@@ -27,4 +31,3 @@ jwt:
   config:
     key: ecnusoft
     ttl: 3600000
-

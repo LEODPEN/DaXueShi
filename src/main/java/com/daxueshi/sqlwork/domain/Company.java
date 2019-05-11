@@ -8,6 +8,9 @@ import java.io.Serializable;
  */
 public class Company implements Serializable {
 
+
+    private static final long serialVersionUID = -5693815303324276770L;
+
     private Integer companyId;
     private String companyName;
     private String city;

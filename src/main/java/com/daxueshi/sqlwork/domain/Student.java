@@ -7,6 +7,9 @@ import java.io.Serializable;
  * @date 2019-04-08 -20:49
  */
 public class Student implements Serializable {
+
+
+    private static final long serialVersionUID = -7311090085844484220L;
     private String userId;
     private Integer universityId;
     private Integer majorId;

@@ -8,6 +8,9 @@ import java.io.Serializable;
  */
 
 public class University implements Serializable {
+
+
+    private static final long serialVersionUID = 7716883622038586704L;
     private Integer universityId;
     private String universityName;
     private String city;

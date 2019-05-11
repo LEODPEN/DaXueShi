@@ -11,6 +11,10 @@ import java.io.Serializable;
  */
 @ApiModel("毕业生实体")
 public class Graduate implements Serializable {
+
+
+    private static final long serialVersionUID = -6358879932920351127L;
+
     private String userId;
     private Integer universityId;
     private Integer majorId;

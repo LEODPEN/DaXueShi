@@ -16,6 +16,8 @@ import java.util.Date;
 @ApiModel("用户实体")
 public class User implements Serializable {
 
+
+    private static final long serialVersionUID = -2027019289964426820L;
     private String userId;
     private String nickname;
     private String phoneNumber;

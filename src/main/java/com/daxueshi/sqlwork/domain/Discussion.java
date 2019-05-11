@@ -12,6 +12,9 @@ import java.util.Date;
  */
 @ApiModel("论坛区实体")
 public class Discussion implements Serializable {
+
+
+    private static final long serialVersionUID = -7528116001412346790L;
     @ApiModelProperty("论坛Id")
     private String _id;
     private String content;

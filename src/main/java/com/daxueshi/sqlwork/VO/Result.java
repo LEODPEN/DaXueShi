@@ -35,22 +35,6 @@ public class Result<T> implements Serializable {
     public Result() {
     }
 
-    //看看此处还有没有其他的用途，无则可删除
-    public static Result buildSuccess(){
-        return new Result(0,null,null);
-    }
-    public static Result buildSuccess(Object data){
-        return new Result(0,data,null);
-    }
-    public static Result buildSuccess(Object data, String msg){
-        return new Result(0,data,msg);
-    }
-    public static Result buildError(String msg){
-        return new Result(-1,null,msg);
-    }
-    public static Result buildError(String msg, Object data){
-        return new Result(-1,data,msg);
-    }
 
 
 }

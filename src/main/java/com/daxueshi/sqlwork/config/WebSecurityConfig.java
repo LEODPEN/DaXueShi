@@ -1,12 +1,17 @@
 package com.daxueshi.sqlwork.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.sql.DataSource;
 
@@ -20,31 +25,41 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        //权限分两部分，一部分为拦截的路径，一部分为访问路径需要的权限
-        //antMatchers表示拦截路径
-        //anyRequest任何的请求认证后才能访问
-        //使csrf拦截失效
-        http.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/stu").hasRole("Student")
-                .antMatchers("/gra").hasRole("Graduate");
-        http.formLogin().usernameParameter("email").passwordParameter("password")
-        .and().logout();
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
+    @Autowired
+    private AuthenticationFailureHandler authenticationFailureHandler;
+    @Autowired
+    @Qualifier(value = "userDetailsServiceImpl")
+    private UserDetailsService userDetailsService;
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(){
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        return tokenRepository;
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //auth.jdbcAuthentication();
-        //auth.inMemoryAuthentication().withUser("user").password("123456").authorities("Student");
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery("select email, password from users where email=?")
-                .authoritiesByUsernameQuery("select email from users")
-                .passwordEncoder(bCryptPasswordEncoder);
+    protected void configure(HttpSecurity http) throws Exception {
+        http.formLogin()
+                .loginPage("/login.html")
+                .loginProcessingUrl("/authentication/form")
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)
+                .and()
+                //.rememberMe()
+                //.tokenRepository(persistentTokenRepository())
+                //.tokenValiditySeconds(3600)
+                //.userDetailsService(userDetailsService)
+                //.and()
+                .authorizeRequests()
+                .antMatchers("/login.html").permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .csrf().disable();
     }
+
 
 
 }

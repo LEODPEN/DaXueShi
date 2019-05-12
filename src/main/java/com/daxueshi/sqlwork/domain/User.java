@@ -80,10 +80,6 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -119,4 +115,10 @@ public class User implements Serializable {
     public void setLastEditTime(Date lastEditTime) {
         this.lastEditTime = lastEditTime;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+
 }

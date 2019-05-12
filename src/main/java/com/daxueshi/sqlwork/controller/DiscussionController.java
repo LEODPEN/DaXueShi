@@ -2,7 +2,7 @@ package com.daxueshi.sqlwork.controller;
 
 import com.daxueshi.sqlwork.VO.Result;
 import com.daxueshi.sqlwork.domain.Discussion;
-import com.daxueshi.sqlwork.service.DiscussionService;
+import com.daxueshi.sqlwork.service.impl.DiscussionServiceImpl;
 import com.daxueshi.sqlwork.utils.ResultUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +20,7 @@ import java.io.Serializable;
 @RequestMapping("/api/v1")
 public class DiscussionController implements Serializable {
     @Autowired
-    private DiscussionService discussionService;
+    private DiscussionServiceImpl discussionService;
 
     @ApiOperation("查询所有帖子")
     @GetMapping("/discussions")

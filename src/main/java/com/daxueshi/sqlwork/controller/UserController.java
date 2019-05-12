@@ -43,7 +43,7 @@ public class UserController {
     @ApiOperation("用户注册")
     @PostMapping("/users")
     public Result register(@RequestBody User user){
-        userService.register(user,null);
+        userService.register(user);
         return ResultUtils.success();
     }
     @ApiOperation("更新用户信息")
@@ -57,8 +57,23 @@ public class UserController {
     @DeleteMapping("/user/{email}")
     public Result delete(@PathVariable String email){
         userService.deleteByEmail(email);
+        //下一步是发验证码
         return ResultUtils.success();
     }
 
+    //前端保存email，此处只传email即可
+    @GetMapping("/user/sendCheckCode")
+    public Result sendCheckCode(@RequestParam("email") String email){
+
+        userService.sendCheckcode(email);
+        return ResultUtils.success("请填写发送到邮箱的验证码");
+    }
+
+    @GetMapping("/user/checkCode")
+    public Result checkCode(@RequestParam("email") String email,
+                            @RequestParam("checkCode") String checkCode){
+        userService.activeByEmail(email,checkCode);
+        return ResultUtils.success();
+    }
 
 }

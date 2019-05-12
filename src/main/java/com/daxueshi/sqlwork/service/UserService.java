@@ -8,10 +8,12 @@ public interface UserService {
     List<User> findAll();
     User login(String email,String password);
     boolean activate(String userId,int status);
-    boolean register(User user,String checkcode);
+    boolean register(User user);
     User findByEmail(String email);
     void updateUser(User user);
     int deleteByEmail(String email);
     void sendCheckcode(String email);
     void save(User user);
+
+    void activeByEmail(String email,String checkCode);
 }

@@ -13,10 +13,19 @@ spring:
     restart:
       trigger-file: trigger.txt
   mail:
-    username:
-    password:
-    host:
-    properties: mail.smtp.ssl.enable = true
+    protocol: smtp
+    host: smtp.qq.com
+    port: 465
+    username: 446110075@qq.com
+    password: axptybjnnzcfbhcg
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+    # 改成新邮箱
+    from: 446110075@qq.com
   data:
     mongodb:
       database: discussion

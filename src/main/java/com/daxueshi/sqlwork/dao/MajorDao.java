@@ -31,7 +31,7 @@ public interface MajorDao {
     @Select("select major_name from majors where major_id = #{majorId}")
     String findNameByMajorId(Integer majorId);
 
-    @Select("select major_name,company,city,salary,position " +
+    @Select("select major_name,company_name,city,salary,position " +
             "from majors natural join graduates natural join companies " +
             "where major_id = #{majorId}")
     List<JobInfo> findJobInfo(Integer majorId);

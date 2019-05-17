@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface DiscussionDao extends MongoRepository<Discussion, String> {
-    public Page<Discussion> findByParentId(String parentId, Pageable pageable);
+    Page<Discussion> findByParentId(String parentId, Pageable pageable);
 }

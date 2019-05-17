@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -20,6 +21,7 @@ public class Discussion implements Serializable {
 
     private static final long serialVersionUID = -7528116001412346790L;
     @ApiModelProperty("论坛Id")
+    @Id
     private String _id;
     private String content;
     private Date publishTime;

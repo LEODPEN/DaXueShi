@@ -7,7 +7,7 @@ public interface UserService {
     void register(User user,String checkcode);
     User findByEmail(String email);
     void updateUser(User user);
-    int deleteByEmail(String email);
+    void deleteByEmail(String email);
     void sendCheckcode(String email);
     void save(User user);
 }

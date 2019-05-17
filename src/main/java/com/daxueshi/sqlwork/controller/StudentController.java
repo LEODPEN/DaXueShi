@@ -23,7 +23,7 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    @ApiOperation("查询指定学校毕业生信息")
+    @ApiOperation("查询指定学校在校生信息")
     @ApiImplicitParam(name = "universityId",value = "大学编号")
     @GetMapping("/students/university/{universityId}")
     public Result findByUniversityId(@PathVariable Integer universityId){
@@ -31,7 +31,7 @@ public class StudentController {
         return ResultUtils.success(students);
     }
 
-    @ApiOperation("查询指定专业毕业生信息")
+    @ApiOperation("查询指定专业在校生信息")
     @GetMapping("/students/major/{majorId}")
     @ApiImplicitParam(name = "majorId",value = "专业编号")
     public Result findByMajorId(@PathVariable Integer majorId){

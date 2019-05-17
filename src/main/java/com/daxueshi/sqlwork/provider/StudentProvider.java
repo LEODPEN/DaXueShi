@@ -17,7 +17,7 @@ public class StudentProvider {
             if(student.getMajorId() != null){
                 SET("major_id = #{majorId}");
             }
-            if(student.getScore() != null){
+            if(student.getScores() != null){
                 SET("scores = #{scores}");
             }
             WHERE("user_id = #{userId}");

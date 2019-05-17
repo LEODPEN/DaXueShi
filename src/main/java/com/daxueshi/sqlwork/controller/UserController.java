@@ -60,8 +60,8 @@ public class UserController {
     }
 
     //前端保存email，此处只传email即可
-    @GetMapping("/users/checkCode/{email}")
-    public Result sendCheckCode(@PathVariable String email){
+    @GetMapping("/users/checkcode")
+    public Result sendCheckCode(@RequestParam String email){
         userService.sendCheckcode(email);
         return ResultUtils.success("请填写发送到邮箱的验证码");
     }

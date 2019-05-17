@@ -22,12 +22,11 @@ public interface UserDao {
             " status=#{status},register_time=#{registerTime},last_edit_time=#{lastEditTime}" +
             " where user_id=#{userId}"})*/
     @UpdateProvider(type = UserProvider.class, method = "updateUser")
-    int updateUser(User user);
+    void updateUser(User user);
 
-    //@Insert({"insert into ",TABLE_NAME,"(",INSERT_FIELD,") values (",INSERT_VALUES,")"})
+
     @InsertProvider(type = UserProvider.class, method = "insertUser")
-    //@Options(useGeneratedKeys = true, keyColumn = "user_id", keyProperty = "userId")
-    int saveUser(User user);
+    void saveUser(User user);
 
     @Select({"select * from ",TABLE_NAME," where user_id=#{userId}"})
     User findById(String userId);
@@ -35,14 +34,13 @@ public interface UserDao {
     @Select({"select * from ",TABLE_NAME," where nickname like '%${value}%' "})
     List<User> findByNickName(String nickname);
 
-    @Select({"select count(*) from ",TABLE_NAME})
-    int findTotalUser();
 
     @Select({"select * from ",TABLE_NAME})
     List<User> findAll();
 
     @Delete({"delete from ",TABLE_NAME," where user_id=#{userId}"})
     int deleteUser(String userId);
+
 
     @Select({"select * from ",TABLE_NAME," where email=#{email} and password=#{password}"})
     User findByMailAndPassword(String email,String password);
@@ -51,5 +49,5 @@ public interface UserDao {
     User findByMail(String email);
 
     @Delete({"delete from ",TABLE_NAME," where email=#{email}"})
-    int deleteByMail(String email);
+    void deleteByMail(String email);
 }

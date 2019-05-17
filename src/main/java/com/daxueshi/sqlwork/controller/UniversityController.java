@@ -38,7 +38,7 @@ public class UniversityController {
 
     @ApiOperation("查询开设某专业的所有大学")
     @ApiImplicitParam(name = "majorId",value = "专业代号")
-    @GetMapping("/universities/{majorId}")
+    @GetMapping("/universities/major/{majorId}")
     public Result universitiesByMajor(@PathVariable Integer majorId){
         List<University> universityList = universityService.findByMajorId(majorId);
         if(universityList == null || universityList.isEmpty()){
@@ -49,7 +49,7 @@ public class UniversityController {
 
     @ApiOperation("查询某个城市拥有的大学")
     @ApiImplicitParam(name = "city",value = "城市名")
-    @GetMapping("/university/{city}")
+    @GetMapping("/universities/city/{city}")
     public Result universityByCity(@PathVariable String city){
         List<University> universityList = universityService.findByCity(city);
         if(universityList == null || universityList.isEmpty()){

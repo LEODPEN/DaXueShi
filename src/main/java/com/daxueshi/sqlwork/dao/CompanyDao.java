@@ -24,6 +24,6 @@ public interface CompanyDao {
     @Select("select * from companies where company_id = #{companyId}")
     Company findByCompanyId(Integer companyId);
 
-    @Select("select company_name,city,salary,position from companies natural join graduates where companyId = #{companyId}")
+    @Select("select company_name,city,salary,position from companies natural join graduates where company_id = #{companyId}")
     List<JobInfo> findJobInfo(Integer companyId);
 }

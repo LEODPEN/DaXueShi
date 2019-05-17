@@ -37,6 +37,59 @@ public class SqlworkApplicationTests {
         System.out.println("res = " + res);
     }
     @Test
+    public void testCompany() throws Exception {
+        String res = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/companies/0")
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println(res);
+    }
+    @Test
+    public void testMajor() throws Exception{
+        String res = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/majors/jobInfo/37")
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println(res);
+    }
+    @Test
+    public void testGraduate() throws Exception{
+        String content = "{\"userId\":\"012\",\"universityId\":\"360\",\"majorId\":\"37\",\"companyId\":\"0\"," +
+               "\"score\":\"null\",\"salary\":\"9000\"}";
+        String res = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/graduates/012")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println(res);
+    }
+    @Test
+    public void testStudent() throws Exception{
+        String content = "{\"scores\":\"800\"}";
+        String res = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/students/009")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println(res);
+    }
+    @Test
+    public void testUniversity() throws Exception{
+        //String content = "{\"scores\":\"800\"}";
+        String res = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/universities/city/北京市")
+                //.content(content)
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println(res);
+    }
+
+    @Test
+    public void testUser() throws Exception{
+        String content = "{\"userId\":\"012\",\"email\":\"969023014@qq.com\",\"password\":\"10175101226\"}";
+        String res = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/431128")
+                .param("email","969023014@qq.com")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println(res);
+    }
+    @Test
     public void contextLoads() {
     }
 

@@ -20,7 +20,7 @@ public class Student implements Serializable {
     private String userId;
     private Integer universityId;
     private Integer majorId;
-    private Integer score;
+    private Integer scores;
 
     @Override
     public String toString() {
@@ -28,7 +28,7 @@ public class Student implements Serializable {
                 "userId='" + userId + '\'' +
                 ", universityId=" + universityId +
                 ", majorId=" + majorId +
-                ", score=" + score +
+                ", scores=" + scores +
                 '}';
     }
 }

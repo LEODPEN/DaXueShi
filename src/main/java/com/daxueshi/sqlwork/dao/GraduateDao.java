@@ -14,17 +14,17 @@ import java.util.List;
 @Repository
 @Mapper
 public interface GraduateDao {
-    @Select("select * from graduates where universityId=#{universityId}")
+    @Select("select * from graduates where university_id=#{universityId}")
     List<Graduate> findByUniversityId(Integer universityId);
-    @Select("select * from graduates where companyId=#{companyId}")
+    @Select("select * from graduates where company_id=#{companyId}")
     List<Graduate> findByCompanyId(Integer companyId);
-    @Select("select * from graduates where majorId=#{majorId}")
+    @Select("select * from graduates where major_id=#{majorId}")
     List<Graduate> findByMajorId(Integer majorId);
     @Select("select * from graduates where salary between #{salaryMin} and #{salaryMax}")
     List<Graduate> findBySalary(Double salaryMin, Double salaryMax);
     @InsertProvider(type = GraduateProvider.class, method = "insertGraduate")
     void save(Graduate graduate);
-    @Delete("delete from graduates where useId=#{userId}")
+    @Delete("delete from graduates where user_id=#{userId}")
     void delete(String userId);
     @UpdateProvider(type = GraduateProvider.class, method = "updateGraduate")
     void update(Graduate graduate);

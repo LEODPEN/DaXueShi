@@ -30,7 +30,7 @@ public class GraduateProvider  {
                 VALUES("salary",graduate.getSalary().toString());
             }
             if(graduate.getPosition() != null){
-                VALUES("position",graduate.getPosition().toString());
+                VALUES("position",graduate.getPosition());
             }
         }}.toString();
     }
@@ -38,7 +38,7 @@ public class GraduateProvider  {
         return new SQL(){{
             UPDATE("graduates");
             if(graduate.getUniversityId() != null){
-                SET("university_id = #{university}");
+                SET("university_id = #{universityId}");
             }
             if(graduate.getMajorId() != null){
                 SET("major_id = #{majorId}");

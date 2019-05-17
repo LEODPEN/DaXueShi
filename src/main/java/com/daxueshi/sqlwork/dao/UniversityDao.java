@@ -16,27 +16,21 @@ import java.util.List;
 @Repository
 @Mapper
 public interface UniversityDao {
-    String TABLE_NAME = "universities";
-    @Select({"select * from ",TABLE_NAME})
+    @Select("select * from universities")
     @Results(id="universityMap",value={
             @Result(id=true,column = "university_id",property = "universityId"),
             @Result(column = "university_name",property = "universityName"),
             @Result(column = "city",property = "city")
-            /*@Result(column = "university_id",property = "majorList",
-                    many = @Many(
-                            select = "com.daxueshi.sqlwork.dao.MajorDao.findMajorsById",
-                            fetchType = FetchType.LAZY
-                    )
-
-            )*/
-
     })
     List<University> findAll();
 
-    @Select({"select * from ",TABLE_NAME," where university_id in " +
+    @Select({"select * from universities where university_id in " +
             "(select university_id from uni_major where major_id = #{majorId})"})
-    List<University> findUniversitiesById(Integer majorId);
+    List<University> findByMajorId(Integer majorId);
 
-    @Select({"select * from ",TABLE_NAME," where city = #{city}"})
-    List<University> findUniversitiesByCity(String city);
+    @Select({"select * from universities where city = #{city}"})
+    List<University> findByCity(String city);
+
+    @Select("select university_name from universities where university_id = #{universityId}")
+    String findNameByUniversityId(Integer universityId);
 }

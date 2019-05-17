@@ -37,7 +37,8 @@ public class GraduateServiceImpl implements GraduateService {
     }
 
     @Override
-    public void save(Graduate graduate) {
+    public void save(Graduate graduate,String userId) {
+        graduate.setUserId(userId);
         graduateDao.save(graduate);
     }
 
@@ -48,7 +49,8 @@ public class GraduateServiceImpl implements GraduateService {
 
     @Override
     public void update(String userId, Graduate graduate) {
-        graduateDao.update(userId,graduate);
+        graduate.setUserId(userId);
+        graduateDao.update(graduate);
     }
 
 

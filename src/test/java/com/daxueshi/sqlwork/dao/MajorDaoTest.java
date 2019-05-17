@@ -49,8 +49,6 @@ public class MajorDaoTest {
                 userService.findAll();
             }
         });*/
-        userService.findAll();
-        userService.findAll();
-        userService.findAll();
+
     }
 }

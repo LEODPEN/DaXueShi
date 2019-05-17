@@ -1,5 +1,6 @@
 package com.daxueshi.sqlwork.dao;
 
+import com.daxueshi.sqlwork.domain.JobInfo;
 import com.daxueshi.sqlwork.domain.Major;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
@@ -16,24 +17,22 @@ import java.util.List;
 @Repository
 @Mapper
 public interface MajorDao {
-    String TABLE_NAME = "majors";
-
-    @Select({"select * from ",TABLE_NAME})
+    @Select("select * from majors")
     @Results(id="majorMap",value={
             @Result(id=true,column = "major_id",property = "majorId"),
             @Result(column = "major_name",property = "majorName")
-            /*@Result(column = "major_id",property = "universityList",
-                    many = @Many(
-                            select = "com.daxueshi.sqlwork.dao.UniversityDao.findUniversitiesById",
-                            fetchType = FetchType.LAZY
-                    )
-
-            )*/
-
     })
     List <Major> findAll();
 
-    @Select({"select * from ",TABLE_NAME," where major_id in ",
+    @Select({"select * from majors where major_id in ",
             "(select major_id from uni_major where university_id=#{universityId})"})
-    List <Major> findMajorsById(Integer universityId);
+    List <Major> findByUniversityId(Integer universityId);
+
+    @Select("select major_name from majors where major_id = #{majorId}")
+    String findNameByMajorId(Integer majorId);
+
+    @Select("select major_name,company,city,salary,position " +
+            "from majors natural join graduates natural join companies " +
+            "where major_id = #{majorId}")
+    List<JobInfo> findJobInfo(Integer majorId);
 }

@@ -1,6 +1,7 @@
 package com.daxueshi.sqlwork.controller;
 
 import com.daxueshi.sqlwork.VO.Result;
+import com.daxueshi.sqlwork.domain.JobInfo;
 import com.daxueshi.sqlwork.domain.Major;
 import com.daxueshi.sqlwork.enums.ResultEnums;
 import com.daxueshi.sqlwork.service.MajorService;
@@ -46,5 +47,13 @@ public class MajorController {
             return ResultUtils.error(ResultEnums.INFO_NOT_EXIST);
         }
         return ResultUtils.success(list);
+    }
+
+    @ApiOperation("查询专业就业情况")
+    @ApiImplicitParam()
+    @GetMapping("/majors/jobInfo/{majorId}")
+    public Result findJobInfo(@PathVariable Integer majorId){
+        List<JobInfo> jobInfos = majorService.findJobInfo(majorId);
+        return ResultUtils.success(jobInfos);
     }
 }

@@ -27,7 +27,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void save(Student student) {
+    public void save(Student student,String userId) {
+        student.setUserId(userId);
         studentDao.save(student);
     }
 
@@ -38,6 +39,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void update(String userId, Student student) {
-        studentDao.update(userId,student);
+        student.setUserId(userId);
+        studentDao.update(student);
     }
 }

@@ -2,6 +2,7 @@ package com.daxueshi.sqlwork.service.impl;
 
 import com.daxueshi.sqlwork.dao.CompanyDao;
 import com.daxueshi.sqlwork.domain.Company;
+import com.daxueshi.sqlwork.domain.JobInfo;
 import com.daxueshi.sqlwork.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,15 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public List<Company> findByType(String type) {
         return companyDao.findByType(type);
+    }
+
+    @Override
+    public Company findByCompanyId(Integer companyId) {
+        return companyDao.findByCompanyId(companyId);
+    }
+
+    @Override
+    public List<JobInfo> findJobInfo(Integer companyId) {
+        return companyDao.findJobInfo(companyId);
     }
 }

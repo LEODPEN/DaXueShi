@@ -15,8 +15,8 @@ import java.util.List;
 @Mapper
 public interface UserDao {
     String TABLE_NAME = "users";
-    String INSERT_FIELD = "user_id,password,nickname,email,register_time";
-    String INSERT_VALUES = "#{userId},#{password},#{nickname},#{email},#{registerTime}";
+    //String INSERT_FIELD = "user_id,password,nickname,email,register_time";
+    //String INSERT_VALUES = "#{userId},#{password},#{nickname},#{email},#{registerTime}";
     /*@Update({"update ",TABLE_NAME," set nickname=#{nickname},phone_number=#{phoneNumber}," +
             " email=#{email},password=#{password},portrait_url=#{portraitUrl}," +
             " status=#{status},register_time=#{registerTime},last_edit_time=#{lastEditTime}" +
@@ -24,8 +24,9 @@ public interface UserDao {
     @UpdateProvider(type = UserProvider.class, method = "updateUser")
     int updateUser(User user);
 
-    @Insert({"insert into ",TABLE_NAME,"(",INSERT_FIELD,") values (",INSERT_VALUES,")"})
-    @Options(useGeneratedKeys = true, keyColumn = "user_id", keyProperty = "userId")
+    //@Insert({"insert into ",TABLE_NAME,"(",INSERT_FIELD,") values (",INSERT_VALUES,")"})
+    @InsertProvider(type = UserProvider.class, method = "insertUser")
+    //@Options(useGeneratedKeys = true, keyColumn = "user_id", keyProperty = "userId")
     int saveUser(User user);
 
     @Select({"select * from ",TABLE_NAME," where user_id=#{userId}"})

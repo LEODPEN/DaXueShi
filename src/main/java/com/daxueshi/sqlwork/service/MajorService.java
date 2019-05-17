@@ -1,10 +1,13 @@
 package com.daxueshi.sqlwork.service;
 
+import com.daxueshi.sqlwork.domain.JobInfo;
 import com.daxueshi.sqlwork.domain.Major;
 
 import java.util.List;
 
 public interface MajorService {
-    public List<Major> findAll();
-    public List<Major> findByUniversityId(Integer universityId);
+     List<Major> findAll();
+     List<Major> findByUniversityId(Integer universityId);
+     String findNameByMajorId(Integer majorId);
+     List<JobInfo> findJobInfo(Integer majorId);
 }

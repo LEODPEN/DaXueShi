@@ -11,4 +11,6 @@ public interface UniversityService {
     List<University> findByMajorId(Integer majorId);
 
     List<University> findByCity(String city);
+
+    String findNameByUniversityId(Integer universityId);
 }

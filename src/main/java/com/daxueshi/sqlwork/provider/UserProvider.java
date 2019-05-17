@@ -35,6 +35,35 @@ public class UserProvider {
             WHERE("user_id=#{userId}");
 
         }}.toString();
+    }
+    public String insertUser(final User user){
+        return new SQL(){{
+            INSERT_INTO("users");
+            if(user.getUserId()!= null){
+                VALUES("user_id",user.getUserId());
+            }
+            if(user.getNickname()!=null){
+                VALUES("nickname",user.getNickname());
+            }
+            if(user.getEmail()!=null){
+                VALUES("email",user.getEmail());
+            }
+            if(user.getPassword()!=null){
+                VALUES("password",user.getPassword());
+            }
+            if(user.getPortraitUrl()!=null){
+                VALUES("portrait_url",user.getPortraitUrl());
+            }
+            if(user.getStatus()!=null){
+                VALUES("status",user.getStatus().toString());
+            }
+            if (user.getRegisterTime()!=null){
+                VALUES("register_time",user.getRegisterTime().toString());
+            }
+            if(user.getLastEditTime()!=null){
+                VALUES("last_edit_time",user.getLastEditTime().toString());
+            }
 
+        }}.toString();
     }
 }

@@ -30,6 +30,8 @@ spring:
     mongodb:
       database: discussion
       host: 127.0.0.1
+  mvc:
+    static-path-pattern: /static/**
 
 # mybatis相关配置
 mybatis:
@@ -40,3 +42,5 @@ jwt:
   config:
     key: ecnusoft
     ttl: 3600000
+server:
+  port: 8080

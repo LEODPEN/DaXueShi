@@ -30,7 +30,7 @@ public class GraduateController {
         List<Graduate> graduates = graduateService.findByUniversityId(universityId);
         return ResultUtils.success(graduates);
     }
-    // 参数Ambiguous
+
     @ApiOperation("查询指定公司毕业生信息")
     @GetMapping("/graduates/company/{companyId}")
     @ApiImplicitParam(name = "companyId",value = "公司编号")
@@ -58,9 +58,9 @@ public class GraduateController {
     }
 
     @ApiOperation("插入毕业生信息")
-    @PostMapping("/graduates")
-    public Result save(@RequestBody Graduate graduate){
-        graduateService.save(graduate);
+    @PostMapping("/graduates/{userId}")
+    public Result save(@RequestBody Graduate graduate,@PathVariable String userId){
+        graduateService.save(graduate,userId);
         return ResultUtils.success();
     }
 

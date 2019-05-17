@@ -2,6 +2,8 @@ package com.daxueshi.sqlwork.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,6 +13,8 @@ import java.util.Date;
  * @date 2019-05-10 -09:27
  */
 @ApiModel("论坛区实体")
+@Getter
+@Setter
 public class Discussion implements Serializable {
 
 
@@ -31,75 +35,18 @@ public class Discussion implements Serializable {
     @ApiModelProperty("上级用户Id")
     private String parentId;
 
-    public String getId() {
-        return _id;
-    }
-
-    public void setId(String _id) {
-        this._id = _id;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Date getPublishTime() {
-        return publishTime;
-    }
-
-    public void setPublishTime(Date publishTime) {
-        this.publishTime = publishTime;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public Integer getVisits() {
-        return visits;
-    }
-
-    public void setVisits(Integer visits) {
-        this.visits = visits;
-    }
-
-    public Integer getComment() {
-        return comment;
-    }
-
-    public void setComment(Integer comment) {
-        this.comment = comment;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    @Override
+    public String toString() {
+        return "Discussion{" +
+                "_id='" + _id + '\'' +
+                ", content='" + content + '\'' +
+                ", publishTime=" + publishTime +
+                ", userId='" + userId + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", visits=" + visits +
+                ", comment=" + comment +
+                ", state='" + state + '\'' +
+                ", parentId='" + parentId + '\'' +
+                '}';
     }
 }

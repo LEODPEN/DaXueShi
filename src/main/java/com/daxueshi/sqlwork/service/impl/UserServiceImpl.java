@@ -10,16 +10,12 @@ import com.daxueshi.sqlwork.service.UserService;
 import com.daxueshi.sqlwork.utils.CheckcodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -39,6 +35,7 @@ public class UserServiceImpl implements UserService{
      *
      * @return
      */
+    /*
     @Override
     public List<User> findAll(){
         RedisSerializer redisSerializer = new StringRedisSerializer();
@@ -56,22 +53,26 @@ public class UserServiceImpl implements UserService{
             }
         }
         return userList;
-    }
+    }*/
+
 
     @Override
     public User login(String email,String password) {
         User user = userDao.findByMail(email);
-        if (user.getStatus().equals(UserStatusEnums.TOBEVERIFIED.getCode())){
+        /*if (user.getStatus().equals(UserStatusEnums.TOBEVERIFIED.getCode())){
             log.warn("账号未激活,需在邮箱激活");
             return null;
-        }
+        }*/
+        /*
         if(user != null &&
                 encoder.matches(password,user.getPassword())){
             return user;
-        }
+        }*/
+        if(user != null && password.equals(user.getPassword()))
+            return user;
         return null;
     }
-
+    /*
     @Override
     public boolean activate(String userId,int status) {
         User user = userDao.findById(userId);
@@ -80,8 +81,8 @@ public class UserServiceImpl implements UserService{
         user.setStatus(status);
         userDao.updateUser(user);
         return true;
-    }
-
+    }*/
+    /*
     @Override
     public void activeByEmail(String email,String checkCode) {
         User user =userDao.findByMail(email);
@@ -91,43 +92,51 @@ public class UserServiceImpl implements UserService{
         }
         String code = (String) redisTemplate.opsForValue().get("checkcode_"+email);
         if(code == null){
-            throw new MyException(ResultEnums.WAIT_TO_VERIFY);
+            throw new MyException(ResultEnums.INVALID_CODE);
         }
         if(!code.equals(checkCode)){
             throw new MyException(ResultEnums.WRONG_CODE);
         }
         user.setStatus(UserStatusEnums.SECRETBUTVERIFIED.getCode());
         userDao.updateUser(user);
-    }
+    }*/
 
     @Override
-    public boolean register(User user) {
-        User u = userDao.findByMail(user.getEmail());
-        if(u != null) {
-            return false;
+    public void register(User user,String checkcode) {
+        if(checkcode == null){
+            throw new MyException(ResultEnums.WRONG_CODE);
         }
-        user.setStatus(UserStatusEnums.TOBEVERIFIED.getCode());
+        if(userDao.findByMail(user.getEmail())!= null){
+            throw new MyException(ResultEnums.USER_EXIST);
+        }
+        String code = (String) redisTemplate.opsForValue().get("checkcode_"+user.getEmail());
+        if(code == null){
+            throw new MyException(ResultEnums.INVALID_CODE);
+        }
+        if(!checkcode.equals(code)){
+            throw new MyException(ResultEnums.WRONG_CODE);
+        }
         user.setRegisterTime(new Date());
         user.setLastEditTime(new Date());
+        user.setStatus(UserStatusEnums.VISIT.getCode());
         user.setPassword(encoder.encode(user.getPassword()));
         userDao.saveUser(user);
-        log.info("到邮箱找验证码并完成注册");
-        return true;
+        log.info("邮箱"+user.getEmail()+"已经被注册");
     }
 
-    @Cacheable(value = "user",key = "#email")
+    //@Cacheable(value = "user",key = "#email")
     @Override
     public User findByEmail(String email) {
         return userDao.findByMail(email);
     }
 
-    @CacheEvict(value = "user",key = "#user.email")
+    //@CacheEvict(value = "user",key = "#user.email")
     @Override
     public void updateUser(User user) {
         userDao.updateUser(user);
     }
 
-    @CacheEvict(value = "user",key = "#email")
+   // @CacheEvict(value = "user",key = "#email")
     @Override
     public int deleteByEmail(String email) {
         return userDao.deleteByMail(email);
@@ -136,11 +145,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public void sendCheckcode(String email) {
         String checkcode = CheckcodeUtils.getCheckcode();
-        //过期时间设置？
-        redisTemplate.opsForValue().set("checkcode_"+email,checkcode);
+        redisTemplate.opsForValue().set("checkcode_"+email,checkcode,5*60, TimeUnit.SECONDS);
         String subject = "Hello"+", This is a register mail from MTD";
-
-        String content = "your code is "+checkcode+", please complex your registration in 30 minutes.";
+        String content = "your code is "+checkcode+", please complete your registration in 5 minutes.";
         mailService.sendHtmlMail(email,subject,content);
     }
 

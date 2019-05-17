@@ -2,6 +2,8 @@ package com.daxueshi.sqlwork.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -10,74 +12,31 @@ import java.io.Serializable;
  * @date 2019-04-08 -20:51
  */
 @ApiModel("毕业生实体")
+@Getter
+@Setter
 public class Graduate implements Serializable {
 
-
     private static final long serialVersionUID = -6358879932920351127L;
-
     private String userId;
     private Integer universityId;
     private Integer majorId;
     private Integer companyId;
     @ApiModelProperty("积分")
-    private Integer score;
+    private Integer scores;
     private Double salary;
     @ApiModelProperty("职位")
     private String position;
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public Integer getUniversityId() {
-        return universityId;
-    }
-
-    public void setUniversityId(Integer universityId) {
-        this.universityId = universityId;
-    }
-
-    public Integer getMajorId() {
-        return majorId;
-    }
-
-    public void setMajorId(Integer majorId) {
-        this.majorId = majorId;
-    }
-
-    public Integer getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
-
-    public Double getSalary() {
-        return salary;
-    }
-
-    public void setSalary(Double salary) {
-        this.salary = salary;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
+    @Override
+    public String toString() {
+        return "Graduate{" +
+                "userId='" + userId + '\'' +
+                ", universityId=" + universityId +
+                ", majorId=" + majorId +
+                ", companyId=" + companyId +
+                ", scores=" + scores +
+                ", salary=" + salary +
+                ", position='" + position + '\'' +
+                '}';
     }
 }

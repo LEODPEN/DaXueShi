@@ -13,7 +13,7 @@ public interface StudentService {
 
     List<Student> findByMajorId(Integer majorId);
 
-    void save(Student student);
+    void save(Student student,String userId);
 
     void delete(String userId);
 

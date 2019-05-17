@@ -25,6 +25,14 @@ public class UserServiceTest {
         //System.out.println(userService.register(user));
     }
     @Test
+    public void testSave(){
+        User user = new User();
+        user.setUserId("008");
+        user.setEmail("969023014@qq.com");
+        user.setPassword("10175101226");
+        //userService.register(user);
+    }
+    @Test
     public void testLogin(){
         String email = "969023015@qq.com";
         String password = "10175101227";

@@ -1,6 +1,7 @@
 package com.daxueshi.sqlwork.dao;
 
 import com.daxueshi.sqlwork.domain.Graduate;
+import com.daxueshi.sqlwork.provider.GraduateProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -21,10 +22,10 @@ public interface GraduateDao {
     List<Graduate> findByMajorId(Integer majorId);
     @Select("select * from graduates where salary between #{salaryMin} and #{salaryMax}")
     List<Graduate> findBySalary(Double salaryMin, Double salaryMax);
-    @Insert("")
+    @InsertProvider(type = GraduateProvider.class, method = "insertGraduate")
     void save(Graduate graduate);
     @Delete("delete from graduates where useId=#{userId}")
     void delete(String userId);
-    @Update("")
-    void update(String userId, Graduate graduate);
+    @UpdateProvider(type = GraduateProvider.class, method = "updateGraduate")
+    void update(Graduate graduate);
 }

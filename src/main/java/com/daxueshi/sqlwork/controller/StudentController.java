@@ -40,9 +40,9 @@ public class StudentController {
     }
 
     @ApiOperation("插入学生信息")
-    @PostMapping("/students")
-    public Result save(@RequestBody Student student){
-        studentService.save(student);
+    @PostMapping("/students/{userId}")
+    public Result save(@RequestBody Student student,@PathVariable String userId){
+        studentService.save(student,userId);
         return ResultUtils.success();
     }
 

@@ -2,6 +2,7 @@ package com.daxueshi.sqlwork.controller;
 
 import com.daxueshi.sqlwork.VO.Result;
 import com.daxueshi.sqlwork.domain.Company;
+import com.daxueshi.sqlwork.domain.JobInfo;
 import com.daxueshi.sqlwork.service.CompanyService;
 import com.daxueshi.sqlwork.utils.ResultUtils;
 import io.swagger.annotations.Api;
@@ -22,6 +23,7 @@ import java.util.List;
 @RequestMapping("/api/v1")
 @Api(tags = "公司查询相关请求")
 public class CompanyController {
+
     @Autowired
     private CompanyService companyService;
     @ApiOperation("查询所有公司")
@@ -43,6 +45,13 @@ public class CompanyController {
     public Result findByType(@PathVariable String type){
         List<Company> companyList = companyService.findByType(type);
         return ResultUtils.success(companyList);
+    }
+
+    @ApiOperation("查询公司毕业生薪水情况")
+    @GetMapping("/companies/{companyId}")
+    public Result findSalaryCondition(@PathVariable Integer companyId){
+        List<JobInfo> jobInfos = companyService.findJobInfo(companyId);
+        return ResultUtils.success(jobInfos);
     }
 
 }

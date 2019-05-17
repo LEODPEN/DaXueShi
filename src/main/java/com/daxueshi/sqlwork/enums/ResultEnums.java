@@ -6,11 +6,13 @@ import lombok.Getter;
 public enum  ResultEnums {
 
     LOGIN_SUCCESS(1,"登陆成功"),
-    LOGIN_ERROR(-1,"登陆失败"),
-    INFO_NOT_EXIST(-2,"查无相关信息"),
-    NO_SUCH_USER(2,"无此用户"),
-    WAIT_TO_VERIFY(3,"账户未激活"),
-    WRONG_CODE(4,"验证码错误"),;
+    LOGIN_ERROR(2,"账号或密码错误"),
+    INFO_NOT_EXIST(3,"查无相关信息"),
+    NO_SUCH_USER(4,"无此用户"),
+    USER_EXIST(5,"邮箱已被注册"),
+    WRONG_CODE(6,"验证码错误"),
+    INVALID_CODE(7,"验证码失效");
+
 
     private Integer code;
 

@@ -19,12 +19,14 @@ public class Major implements Serializable {
     private static final long serialVersionUID = -8043169636833484339L;
     private Integer majorId;
     private String majorName;
+    private String description;
 
     @Override
     public String toString() {
         return "Major{" +
                 "majorId=" + majorId +
                 ", majorName='" + majorName + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

@@ -58,9 +58,9 @@ public class GraduateController {
     }
 
     @ApiOperation("插入毕业生信息")
-    @PostMapping("/graduates/{userId}")
-    public Result save(@RequestBody Graduate graduate,@PathVariable String userId){
-        graduateService.save(graduate,userId);
+    @PostMapping("/graduates")
+    public Result save(@RequestBody Graduate graduate){
+        graduateService.save(graduate);
         return ResultUtils.success();
     }
 

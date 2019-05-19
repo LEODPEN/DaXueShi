@@ -22,7 +22,8 @@ public interface GraduateDao {
     List<Graduate> findByMajorId(Integer majorId);
     @Select("select * from graduates where salary between #{salaryMin} and #{salaryMax}")
     List<Graduate> findBySalary(Double salaryMin, Double salaryMax);
-    @InsertProvider(type = GraduateProvider.class, method = "insertGraduate")
+    @Insert("insert into graduates(user_id,university_id,major_id,company_id,score,salary,position)" +
+            "values(#{userId},#{universityId},#{majorId},#{companyId},#{score},#{salary},#{position})")
     void save(Graduate graduate);
     @Delete("delete from graduates where user_id=#{userId}")
     void delete(String userId);

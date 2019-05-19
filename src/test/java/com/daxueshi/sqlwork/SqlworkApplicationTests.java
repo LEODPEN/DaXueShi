@@ -52,9 +52,9 @@ public class SqlworkApplicationTests {
     }
     @Test
     public void testGraduate() throws Exception{
-        String content = "{\"userId\":\"012\",\"universityId\":\"360\",\"majorId\":\"37\",\"companyId\":\"0\"," +
-               "\"score\":\"null\",\"salary\":\"9000\"}";
-        String res = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/graduates/012")
+        String content = "{\"userId\":\"13\",\"universityId\":\"360\",\"majorId\":\"37\",\"companyId\":\"0\"," +
+               "\"position\":\"产品锦鲤\",\"salary\":\"9000\"}";
+        String res = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/graduates")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn().getResponse().getContentAsString();
@@ -81,9 +81,9 @@ public class SqlworkApplicationTests {
 
     @Test
     public void testUser() throws Exception{
-        String content = "{\"userId\":\"012\",\"email\":\"969023014@qq.com\",\"password\":\"10175101226\"}";
-        String res = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/431128")
-                .param("email","969023014@qq.com")
+        String content = "{\"userId\":\"009\",\"email\":\"969023015@qq.com\",\"password\":\"10175101225\"}";
+        String res = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/")
+                //.param("email","969023014@qq.com")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn().getResponse().getContentAsString();

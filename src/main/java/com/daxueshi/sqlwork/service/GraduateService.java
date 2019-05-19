@@ -18,7 +18,7 @@ public interface GraduateService {
 
     List<Graduate> findBySalary(Double salaryMin, Double salaryMax);
 
-    void save(Graduate graduate,String userId);
+    void save(Graduate graduate);
 
     void delete(String userId);
 

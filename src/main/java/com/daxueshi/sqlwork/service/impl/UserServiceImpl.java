@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService{
         user.setRegisterTime(new Date());
         user.setLastEditTime(new Date());
         user.setStatus(UserStatusEnums.VISIT.getCode());
-        user.setPassword(user.getPassword());
+        user.setPassword(encoder.encode(user.getPassword()));
         userDao.saveUser(user);
         log.info("邮箱"+user.getEmail()+"已经被注册");
     }
@@ -133,6 +133,7 @@ public class UserServiceImpl implements UserService{
     //@CacheEvict(value = "user",key = "#user.email")
     @Override
     public void updateUser(User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
         userDao.updateUser(user);
     }
 

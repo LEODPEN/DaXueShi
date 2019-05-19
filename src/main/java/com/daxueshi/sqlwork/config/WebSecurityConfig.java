@@ -44,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin()
-                .loginPage("/login.html")
+                //.loginPage("/login.html")
                 .and()
                 /*.loginPage("/login.html")
                 .loginProcessingUrl("/authentication/form")
@@ -57,12 +57,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .userDetailsService(userDetailsService)
                 .and()*/
                 .authorizeRequests()
-                .antMatchers("/login.html").permitAll()
+                //.antMatchers("/login.html").permitAll()
                 //.antMatchers("/users/**").hasAnyRole("commonUser","student","graduate")
-                .antMatchers("/majors/**").hasAnyRole("student","graduate")
-                .antMatchers("/discussions/**").hasAnyRole("student","graduate")
+                .antMatchers("api/v1/majors/**").hasAnyRole("student","graduate")
+                .antMatchers("api/v1/discussions/**").hasAnyRole("student","graduate")
                 .anyRequest()
-                .permitAll()
+                .authenticated()
                 .and()
                 .csrf().disable();
     }

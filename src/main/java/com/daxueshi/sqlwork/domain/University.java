@@ -20,6 +20,8 @@ public class University implements Serializable {
     private Integer universityId;
     private String universityName;
     private String city;
+    private String description;
+    private String image;
 
     @Override
     public String toString() {
@@ -27,6 +29,8 @@ public class University implements Serializable {
                 "universityId=" + universityId +
                 ", universityName='" + universityName + '\'' +
                 ", city='" + city + '\'' +
+                ", description='" + description + '\'' +
+                ", image='" + image + '\'' +
                 '}';
     }
 }

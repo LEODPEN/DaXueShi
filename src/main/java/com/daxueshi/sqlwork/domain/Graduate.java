@@ -22,7 +22,7 @@ public class Graduate implements Serializable {
     private Integer majorId;
     private Integer companyId;
     @ApiModelProperty("积分")
-    private Integer scores;
+    private Integer score;
     private Double salary;
     @ApiModelProperty("职位")
     private String position;
@@ -34,7 +34,7 @@ public class Graduate implements Serializable {
                 ", universityId=" + universityId +
                 ", majorId=" + majorId +
                 ", companyId=" + companyId +
-                ", scores=" + scores +
+                ", score=" + score +
                 ", salary=" + salary +
                 ", position='" + position + '\'' +
                 '}';

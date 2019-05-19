@@ -19,6 +19,7 @@ public class Company implements Serializable {
     private String companyName;
     private String city;
     private String type;
+    private String description;
 
     @Override
     public String toString() {
@@ -27,6 +28,7 @@ public class Company implements Serializable {
                 ", companyName='" + companyName + '\'' +
                 ", city='" + city + '\'' +
                 ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

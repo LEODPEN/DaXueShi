@@ -2,6 +2,7 @@ package com.daxueshi.sqlwork.controller;
 
 import com.daxueshi.sqlwork.VO.Result;
 import com.daxueshi.sqlwork.domain.User;
+import com.daxueshi.sqlwork.enums.UserEnums;
 import com.daxueshi.sqlwork.service.UserService;
 import com.daxueshi.sqlwork.utils.JwtUtils;
 import com.daxueshi.sqlwork.utils.ResultUtils;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "用户请求")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/dxs")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -21,30 +22,36 @@ public class UserController {
     private JwtUtils jwtUtils;
 
     @ApiOperation("用户登录")
-    @PostMapping("/users")
-    public Result login(@RequestBody User user){
-        userService.login(user.getEmail(),user.getPassword());
-        return ResultUtils.success();
-        /*if(user != null){
+    @PostMapping("/user/login")
+    public Result login(@RequestParam String email,@RequestParam String password){
+        User user = userService.login(email, password);
+        if(user != null){
             String token = jwtUtils.createJwt(user);
-            Map map = new HashMap();
-            map.put("token",token);
-            map.put("name",user.getNickname());
-            map.put("portrait",user.getPortraitUrl());
-            return  ResultUtils.success(map);
+            return ResultUtils.success(token);
+        }
+        return ResultUtils.error(UserEnums.LOGIN_FAIL);
+    }
+
+    @ApiOperation("查看邮箱是否可用")
+    @GetMapping("/user/checkAvailable")
+    public Result isAvailable(@RequestParam String email){
+        if(userService.findByEmail(email)!= null){
+            return ResultUtils.error(UserEnums.EMAIL_REGISTERED);
         }else{
-            return ResultUtils.error(ResultEnums.LOGIN_ERROR);
-        }*/
+            return ResultUtils.success();
+        }
     }
 
     @ApiOperation("用户注册")
-    @PostMapping("/users/{checkcode}")
-    public Result register(@RequestBody User user,@PathVariable String checkcode){
+    @PostMapping("/user/register")
+    public Result register(@RequestBody User user,@RequestParam String checkcode){
         userService.register(user,checkcode);
         return ResultUtils.success();
     }
+
+
     @ApiOperation("更新用户信息")
-    @PutMapping("/users")
+    @PutMapping("/user")
     public Result update(@RequestBody User user){
         userService.updateUser(user);
         return ResultUtils.success();
@@ -52,25 +59,45 @@ public class UserController {
 
 
     @ApiOperation("删除用户信息")
-    @DeleteMapping("/users/{email}")
-    public Result delete(@PathVariable String email){
-        userService.deleteByEmail(email);
-        //下一步是发验证码
+    @DeleteMapping("/user/")
+    public Result delete(@RequestParam String email,@RequestParam String checkCode){
+        userService.deleteByEmail(email,checkCode);
         return ResultUtils.success();
     }
 
-    //前端保存email，此处只传email即可
-    @GetMapping("/users/checkcode")
+    @ApiOperation("发送验证码")
+    @GetMapping("/user/sendCode")
     public Result sendCheckCode(@RequestParam String email){
         userService.sendCheckcode(email);
-        return ResultUtils.success("请填写发送到邮箱的验证码");
+        return ResultUtils.success("验证码已发送");
     }
-    /*
-    @GetMapping("/users/checkCode")
-    public Result checkCode(@RequestParam("email") String email,
-                            @RequestParam("checkCode") String checkCode){
-        userService.activeByEmail(email,checkCode);
-        return ResultUtils.success();
-    }*/
 
+    @ApiOperation("忘记密码")
+    @PostMapping("user/forgetPassword")
+    public Result resetPassword(@RequestParam String checkCode,@RequestParam String email,@RequestParam String password){
+        userService.sendCheckcode(email);
+        userService.resetPassword(email,checkCode,password);
+        return ResultUtils.success();
+    }
+
+    @ApiOperation("关注")
+    @PutMapping("user/follow")
+    public Result follow(@RequestParam String followingEmail,@RequestParam String followedEmail){
+        userService.follow(followingEmail,followedEmail);
+        return ResultUtils.success();
+    }
+
+    @ApiOperation("取消关注")
+    @DeleteMapping("user/cancelFollow")
+    public Result cancelFollow(@RequestParam String followingEmail,@RequestParam String followedEmail){
+        userService.cancelFollow(followingEmail,followedEmail);
+        return ResultUtils.success();
+    }
+
+    @ApiOperation("记录访问主页次数")
+    @PostMapping("user/visit")
+    public Result visit(@RequestParam String followingEmail,@RequestParam String followedEmail){
+        userService.visit(followingEmail,followedEmail);
+        return ResultUtils.success();
+    }
 }

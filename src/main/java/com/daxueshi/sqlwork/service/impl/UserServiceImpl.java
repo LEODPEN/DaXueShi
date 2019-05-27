@@ -2,7 +2,7 @@ package com.daxueshi.sqlwork.service.impl;
 
 import com.daxueshi.sqlwork.dao.UserDao;
 import com.daxueshi.sqlwork.domain.User;
-import com.daxueshi.sqlwork.enums.ResultEnums;
+import com.daxueshi.sqlwork.enums.UserEnums;
 import com.daxueshi.sqlwork.enums.UserStatusEnums;
 import com.daxueshi.sqlwork.exception.MyException;
 import com.daxueshi.sqlwork.service.MailService;
@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class UserServiceImpl implements UserService{
     @Autowired
     private UserDao userDao;
+
     @Autowired
     private RedisTemplate<Object,Object> redisTemplate;
 
@@ -31,116 +32,43 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private MailService  mailService;
 
-    /**
-     *
-     * @return
-     */
-    /*
-    @Override
-    public List<User> findAll(){
-        RedisSerializer redisSerializer = new StringRedisSerializer();
-        redisTemplate.setKeySerializer(redisSerializer);
-        List<User> userList = (List<User>) redisTemplate.opsForValue().get("allUsers");
-        //双重检测锁，避免缓存穿透
-        if(userList == null){
-            synchronized (this){
-                 userList = (List<User>) redisTemplate.opsForValue().get("allUsers");
-                 if(userList == null){
-                     System.out.println("use database");
-                     userList = userDao.findAll();
-                     redisTemplate.opsForValue().set("allUsers",userList);
-                 }
-            }
-        }
-        return userList;
-    }*/
-
-
     @Override
     public User login(String email,String password) {
         User user = userDao.findByMail(email);
-        /*if (user.getStatus().equals(UserStatusEnums.TOBEVERIFIED.getCode())){
-            log.warn("账号未激活,需在邮箱激活");
-            return null;
-        }*/
-        /*
-        if(user != null &&
-                encoder.matches(password,user.getPassword())){
+        if(user != null && encoder.matches(password,user.getPassword())) {
+            log.info("账号:" + email + "已经成功登录");
             return user;
-        }*/
-        if(user != null && password.equals(user.getPassword()))
-            return user;
+        }
         return null;
     }
-    /*
-    @Override
-    public boolean activate(String userId,int status) {
-        User user = userDao.findById(userId);
-        if(user == null)
-            return false;
-        user.setStatus(status);
-        userDao.updateUser(user);
-        return true;
-    }*/
-    /*
-    @Override
-    public void activeByEmail(String email,String checkCode) {
-        User user =userDao.findByMail(email);
-        if (user == null){
-            log.info("邮箱未注册");
-            throw new MyException(ResultEnums.NO_SUCH_USER);
-        }
-        String code = (String) redisTemplate.opsForValue().get("checkcode_"+email);
-        if(code == null){
-            throw new MyException(ResultEnums.INVALID_CODE);
-        }
-        if(!code.equals(checkCode)){
-            throw new MyException(ResultEnums.WRONG_CODE);
-        }
-        user.setStatus(UserStatusEnums.SECRETBUTVERIFIED.getCode());
-        userDao.updateUser(user);
-    }*/
 
     @Override
     public void register(User user,String checkcode) {
-        if(checkcode == null){
-            throw new MyException(ResultEnums.WRONG_CODE);
-        }
-        if(userDao.findByMail(user.getEmail())!= null){
-            throw new MyException(ResultEnums.USER_EXIST);
-        }
         String code = (String) redisTemplate.opsForValue().get("checkcode_"+user.getEmail());
         if(code == null){
-            throw new MyException(ResultEnums.INVALID_CODE);
+            throw new MyException(UserEnums.INVALID_CODE);
         }
         if(!checkcode.equals(code)){
-            throw new MyException(ResultEnums.WRONG_CODE);
+            throw new MyException(UserEnums.WRONG_CODE);
         }
         user.setRegisterTime(new Date());
         user.setLastEditTime(new Date());
-        user.setStatus(UserStatusEnums.VISIT.getCode());
+        user.setStatus(UserStatusEnums.VISITOR.getCode());
         user.setPassword(encoder.encode(user.getPassword()));
         userDao.saveUser(user);
-        log.info("邮箱"+user.getEmail()+"已经被注册");
+        log.info("邮箱:"+user.getEmail()+"已经被注册");
     }
 
-    //@Cacheable(value = "user",key = "#email")
     @Override
     public User findByEmail(String email) {
         return userDao.findByMail(email);
     }
 
-    //@CacheEvict(value = "user",key = "#user.email")
     @Override
     public void updateUser(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
+        log.info("用户:" + user.getEmail() + "信息修改");
         userDao.updateUser(user);
-    }
-
-   // @CacheEvict(value = "user",key = "#email")
-    @Override
-    public void deleteByEmail(String email) {
-        userDao.deleteByMail(email);
     }
 
     @Override
@@ -150,12 +78,48 @@ public class UserServiceImpl implements UserService{
         String subject = "Hello"+", This is a register mail from MTD";
         String content = "your code is "+checkcode+", please complete your registration in 5 minutes.";
         mailService.sendHtmlMail(email,subject,content);
+        log.info("向用户:" + email + "发送了验证码");
     }
 
     @Override
-    public void save(User user) {
+    public void resetPassword(String email, String checkCode, String password) {
+        String code = (String) redisTemplate.opsForValue().get("checkcode_"+email);
+        if(code == null){
+            throw new MyException(UserEnums.INVALID_CODE);
+        }
+        if(!code.equals(checkCode)){
+            throw new MyException(UserEnums.WRONG_CODE);
+        }
+        User user = userDao.findByMail(email);
+        user.setPassword(encoder.encode(password));
+        log.info("用户:" + email + "重置了密码");
         userDao.saveUser(user);
     }
 
+    @Override
+    public void deleteByEmail(String email, String checkCode) {
+        String code = (String) redisTemplate.opsForValue().get("checkcode_"+email);
+        if(code == null){
+            throw new MyException(UserEnums.INVALID_CODE);
+        }
+        if(!code.equals(checkCode)){
+            throw new MyException(UserEnums.WRONG_CODE);
+        }
+        userDao.deleteByMail(email);
+    }
 
+    @Override
+    public void follow(String followingEmail, String followedEmail) {
+        userDao.follow(followingEmail,followedEmail);
+    }
+
+    @Override
+    public void cancelFollow(String followingEmail, String followedEmail) {
+        userDao.cancelFollow(followingEmail,followedEmail);
+    }
+
+    @Override
+    public void visit(String followingEmail, String followedEmail) {
+        userDao.recordTimes(followingEmail,followedEmail);
+    }
 }

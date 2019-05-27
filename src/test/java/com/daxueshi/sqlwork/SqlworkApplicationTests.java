@@ -1,5 +1,6 @@
 package com.daxueshi.sqlwork;
 
+import com.daxueshi.sqlwork.utils.JwtUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,9 @@ import org.springframework.web.context.WebApplicationContext;
 public class SqlworkApplicationTests {
     @Autowired
     private WebApplicationContext wac;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     private MockMvc mockMvc;
 
@@ -81,7 +85,7 @@ public class SqlworkApplicationTests {
 
     @Test
     public void testUser() throws Exception{
-        String content = "{\"userId\":\"009\",\"email\":\"969023015@qq.com\",\"password\":\"10175101225\"}";
+        String content = "{\"userId\":\"008\",\"email\":\"969023017@qq.com\",\"password\":\"10175101227\"}";
         String res = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/")
                 //.param("email","969023014@qq.com")
                 .content(content)
@@ -89,6 +93,29 @@ public class SqlworkApplicationTests {
                 .andReturn().getResponse().getContentAsString();
         System.out.println(res);
     }
+
+    @Test
+    public void testLogin() throws Exception{
+        String content = "{\"email\":\"969023017@qq.com\",\"password\":\"10175101227\"}";
+        String res = mockMvc.perform(MockMvcRequestBuilders.post("/dxs/users/login")
+                .param("userEmail","969023017@qq.com")
+                .param("password","10175101227")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println("res = " + res);
+    }
+
+    @Test
+    public void testDiscussion() throws Exception{
+        String content = "{\"_id\":\"10175\",\"content\":\"有中国智慧、世界眼光的现代人\"}";
+        String res = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/discussions")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println("res = " + res);
+    }
+
     @Test
     public void contextLoads() {
     }

@@ -1,8 +1,7 @@
 package com.daxueshi.sqlwork.domain;
 
 import io.swagger.annotations.ApiModel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -10,25 +9,16 @@ import java.io.Serializable;
  * @author onion
  * @date 2019-04-08 -20:49
  */
-@Getter
-@Setter
+@Data
 @ApiModel("学生实体")
 public class Student implements Serializable {
 
 
     private static final long serialVersionUID = -7311090085844484220L;
-    private String userId;
-    private Integer universityId;
-    private Integer majorId;
+    private String email;
+    private String universityName;
+    private String majorName;
     private Integer scores;
+    private Integer grade;
 
-    @Override
-    public String toString() {
-        return "Student{" +
-                "userId='" + userId + '\'' +
-                ", universityId=" + universityId +
-                ", majorId=" + majorId +
-                ", scores=" + scores +
-                '}';
-    }
 }

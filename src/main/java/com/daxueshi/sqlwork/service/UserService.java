@@ -7,7 +7,13 @@ public interface UserService {
     void register(User user,String checkcode);
     User findByEmail(String email);
     void updateUser(User user);
-    void deleteByEmail(String email);
     void sendCheckcode(String email);
-    void save(User user);
+    void resetPassword(String email,String checkCode,String password);
+    void deleteByEmail(String email, String checkCode);
+
+    void follow(String followingEmail, String followedEmail);
+
+    void cancelFollow(String followingEmail, String followedEmail);
+
+    void visit(String followingEmail, String followedEmail);
 }

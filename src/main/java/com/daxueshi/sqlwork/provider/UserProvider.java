@@ -14,14 +14,8 @@ public class UserProvider {
             if(user.getNickname()!=null){
                 SET("nickname=#{nickname}");
             }
-            if(user.getEmail()!=null){
-                SET("email=#{email}");
-            }
-            if(user.getPassword()!=null){
+            if(user.getPassword()!=null) {
                 SET("password=#{password}");
-            }
-            if(user.getPhoneNumber()!=null){
-                SET("phone_number=#{phoneNumber}");
             }
             if(user.getPortraitUrl()!=null){
                 SET("portrait_url=#{portraitUrl}");
@@ -32,21 +26,18 @@ public class UserProvider {
             if(user.getLastEditTime()!=null){
                 SET("last_edit_time=#{lastEditTime}");
             }
-            WHERE("user_id=#{userId}");
+            WHERE("email=#{email}");
 
         }}.toString();
     }
     public String insertUser(final User user){
         return new SQL(){{
             INSERT_INTO("users");
-            if(user.getUserId()!= null){
-                VALUES("user_id",user.getUserId());
+            if(user.getEmail()!= null){
+                VALUES("email",user.getEmail());
             }
             if(user.getNickname()!=null){
                 VALUES("nickname",user.getNickname());
-            }
-            if(user.getEmail()!=null){
-                VALUES("email",user.getEmail());
             }
             if(user.getPassword()!=null){
                 VALUES("password",user.getPassword());

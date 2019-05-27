@@ -9,13 +9,14 @@ import java.util.List;
  * @date 2019-05-10 -19:10
  */
 public interface StudentService {
-    List<Student> findByUniversityId(Integer universityId);
 
-    List<Student> findByMajorId(Integer majorId);
+    List<Student> findByMajorName(String majorName);
 
-    void save(Student student,String userId);
+    void save(Student student);
 
-    void delete(String userId);
+    void delete(String email);
 
-    void update(String userId, Student student);
+    void update(Student student);
+
+    List<Student> findByUniversityAndMajor(String universityName, String majorName);
 }

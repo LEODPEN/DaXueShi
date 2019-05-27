@@ -11,25 +11,31 @@ public class GraduateProvider  {
     public String updateGraduate(final Graduate graduate){
         return new SQL(){{
             UPDATE("graduates");
-            if(graduate.getUniversityId() != null){
-                SET("university_id = #{universityId}");
+            if(graduate.getUniversityName() != null){
+                SET("university_name = #{universityName}");
             }
-            if(graduate.getMajorId() != null){
-                SET("major_id = #{majorId}");
+            if(graduate.getMajorName() != null){
+                SET("major_name = #{majorName}");
             }
-            if(graduate.getCompanyId() != null){
-                SET("company_id = #{companyId}");
+            if(graduate.getCompanyName() != null){
+                SET("company_name = #{companyName}");
             }
-            if(graduate.getScore() != null){
-                SET("score = #{score}");
+            if(graduate.getScores() != null){
+                SET("scores = #{scores}");
             }
-            if (graduate.getSalary() != null){
+            if(graduate.getSalary() != null){
                 SET("salary = #{salary}");
             }
             if(graduate.getPosition() != null){
                 SET("position = #{position}");
             }
-            WHERE("user_id = #{userId}");
+            if(graduate.getGraduateYear() != null){
+                SET("graduate_year = #{graduateYear}");
+            }
+            if(graduate.getStatus() != null){
+                SET("status = #{status}");
+            }
+            WHERE("email = #{email}");
         }}.toString();
     }
 }

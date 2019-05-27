@@ -50,12 +50,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/authentication/form")
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
-                .and()
+                .and()*/
                 .rememberMe()
                 .tokenRepository(persistentTokenRepository())
                 .tokenValiditySeconds(3600)
                 .userDetailsService(userDetailsService)
-                .and()*/
+                .and()
                 .authorizeRequests()
                 //.antMatchers("/login.html").permitAll()
                 //.antMatchers("/users/**").hasAnyRole("commonUser","student","graduate")
@@ -63,6 +63,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("api/v1/discussions/**").hasAnyRole("student","graduate")
                 .anyRequest()
                 .authenticated()
+                .and()
+                .logout()
                 .and()
                 .csrf().disable();
     }

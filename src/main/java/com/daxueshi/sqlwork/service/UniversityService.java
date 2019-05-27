@@ -6,11 +6,6 @@ import java.util.List;
 
 public interface UniversityService {
 
-    List<University> findAll();
-
-    List<University> findByMajorId(Integer majorId);
-
     List<University> findByCity(String city);
 
-    String findNameByUniversityId(Integer universityId);
 }

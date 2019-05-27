@@ -5,6 +5,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -16,35 +18,22 @@ import java.util.Date;
  * jwt工具类
  */
 @Component
+@Getter
+@Setter
 @ConfigurationProperties("jwt.config")
 public class JwtUtils {
     private String key ;
     private Long ttl ;
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public Long getTtl() {
-        return ttl;
-    }
-
-    public void setTtl(Long ttl) {
-        this.ttl = ttl;
-    }
-
-    public  String createJwt(User user){
-        if(user == null || user.getUserId() == null)
+    public String createJwt(User user){
+        if(user == null || user.getEmail() == null)
             return null;
         long cur = System.currentTimeMillis();
         Date present = new Date(cur);
-        JwtBuilder builder = Jwts.builder().setId(user.getUserId())
+        JwtBuilder builder = Jwts.builder()
                 .claim("name",user.getNickname())
                 .claim("img",user.getPortraitUrl())
+                .claim("email",user.getEmail())
                 .setIssuedAt(present)
                 .signWith(SignatureAlgorithm.HS256,key);
         if(ttl > 0){

@@ -5,8 +5,6 @@ import com.daxueshi.sqlwork.provider.UserProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * @author onion
  * @date 2019-04-08 -20:56
@@ -14,40 +12,30 @@ import java.util.List;
 @Repository
 @Mapper
 public interface UserDao {
-    String TABLE_NAME = "users";
-    //String INSERT_FIELD = "user_id,password,nickname,email,register_time";
-    //String INSERT_VALUES = "#{userId},#{password},#{nickname},#{email},#{registerTime}";
-    /*@Update({"update ",TABLE_NAME," set nickname=#{nickname},phone_number=#{phoneNumber}," +
-            " email=#{email},password=#{password},portrait_url=#{portraitUrl}," +
-            " status=#{status},register_time=#{registerTime},last_edit_time=#{lastEditTime}" +
-            " where user_id=#{userId}"})*/
+
     @UpdateProvider(type = UserProvider.class, method = "updateUser")
     void updateUser(User user);
-
 
     @InsertProvider(type = UserProvider.class, method = "insertUser")
     void saveUser(User user);
 
-    @Select({"select * from ",TABLE_NAME," where user_id=#{userId}"})
-    User findById(String userId);
-
-    @Select({"select * from ",TABLE_NAME," where nickname like '%${value}%' "})
-    List<User> findByNickName(String nickname);
-
-
-    @Select({"select * from ",TABLE_NAME})
-    List<User> findAll();
-
-    @Delete({"delete from ",TABLE_NAME," where user_id=#{userId}"})
-    int deleteUser(String userId);
-
-
-    @Select({"select * from ",TABLE_NAME," where email=#{email} and password=#{password}"})
-    User findByMailAndPassword(String email,String password);
-
-    @Select({"select * from ",TABLE_NAME," where email=#{email}"})
+    @Select("select * from users where email=#{email}")
     User findByMail(String email);
 
-    @Delete({"delete from ",TABLE_NAME," where email=#{email}"})
+    @Delete("delete from users where email=#{email}")
     void deleteByMail(String email);
+
+    @Insert("insert into follows(following_email,followed_email,times)" +
+            "values(#{followingEmail},#{followedEmail},0)")
+    void follow(String followingEmail,String followedEmail);
+
+    @Delete("delete from follows " +
+            "where following_email = #{followingEmail}" +
+            "and followed_email = #{followedEmail}")
+    void cancelFollow(String followingEmail,String followedEmail);
+
+    @Update("update follows set times = times + 1" +
+            "where following_email = #{followingEmail}" +
+            "and followed_email = #{followedEmail}")
+    void recordTimes(String followingEmail,String followedEmail);
 }

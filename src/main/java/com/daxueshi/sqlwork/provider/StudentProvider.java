@@ -11,16 +11,19 @@ public class StudentProvider {
     public String updateStudent(final Student student){
         return new SQL(){{
             UPDATE("students");
-            if(student.getUniversityId() != null){
-                SET("university_id = #{universityId}");
+            if(student.getUniversityName() != null){
+                SET("university_name = #{universityName}");
             }
-            if(student.getMajorId() != null){
-                SET("major_id = #{majorId}");
+            if(student.getMajorName() != null){
+                SET("major_name = #{majorName}");
             }
             if(student.getScores() != null){
                 SET("scores = #{scores}");
             }
-            WHERE("user_id = #{userId}");
+            if(student.getGrade() != null){
+                SET("grade = #{grade}");
+            }
+            WHERE("email = #{email}");
         }}.toString();
     }
 }

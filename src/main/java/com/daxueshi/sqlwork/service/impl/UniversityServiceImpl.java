@@ -14,22 +14,8 @@ public class UniversityServiceImpl implements UniversityService {
     private UniversityDao universityDao;
 
     @Override
-    public List<University> findAll() {
-        return universityDao.findAll();
-    }
-
-    @Override
-    public List<University> findByMajorId(Integer majorId) {
-        return universityDao.findByMajorId(majorId);
-    }
-
-    @Override
     public List<University> findByCity(String city) {
         return universityDao.findByCity(city);
     }
 
-    @Override
-    public String findNameByUniversityId(Integer universityId) {
-        return universityDao.findNameByUniversityId(universityId);
-    }
 }

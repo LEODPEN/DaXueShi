@@ -16,30 +16,30 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService {
     @Autowired
     private StudentDao studentDao;
+
+
     @Override
-    public List<Student> findByUniversityId(Integer universityId) {
-        return studentDao.findByUniversityId(universityId);
+    public List<Student> findByMajorName(String majorName) {
+        return studentDao.findByMajorName(majorName);
     }
 
     @Override
-    public List<Student> findByMajorId(Integer majorId) {
-        return studentDao.findByMajorid(majorId);
-    }
-
-    @Override
-    public void save(Student student,String userId) {
-        student.setUserId(userId);
+    public void save(Student student) {
         studentDao.save(student);
     }
 
     @Override
-    public void delete(String userId) {
-        studentDao.delete(userId);
+    public void delete(String email) {
+        studentDao.delete(email);
     }
 
     @Override
-    public void update(String userId, Student student) {
-        student.setUserId(userId);
+    public void update(Student student) {
         studentDao.update(student);
+    }
+
+    @Override
+    public List<Student> findByUniversityAndMajor(String universityName, String majorName) {
+        return studentDao.findByUniversityAndMajor(universityName,majorName);
     }
 }

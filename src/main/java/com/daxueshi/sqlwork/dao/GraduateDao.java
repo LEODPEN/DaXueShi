@@ -1,6 +1,7 @@
 package com.daxueshi.sqlwork.dao;
 
 import com.daxueshi.sqlwork.domain.Graduate;
+import com.daxueshi.sqlwork.dto.JobInfo;
 import com.daxueshi.sqlwork.provider.GraduateProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -14,19 +15,31 @@ import java.util.List;
 @Repository
 @Mapper
 public interface GraduateDao {
-    @Select("select * from graduates where university_id=#{universityId}")
-    List<Graduate> findByUniversityId(Integer universityId);
-    @Select("select * from graduates where company_id=#{companyId}")
-    List<Graduate> findByCompanyId(Integer companyId);
-    @Select("select * from graduates where major_id=#{majorId}")
-    List<Graduate> findByMajorId(Integer majorId);
-    @Select("select * from graduates where salary between #{salaryMin} and #{salaryMax}")
-    List<Graduate> findBySalary(Double salaryMin, Double salaryMax);
-    @Insert("insert into graduates(user_id,university_id,major_id,company_id,score,salary,position)" +
-            "values(#{userId},#{universityId},#{majorId},#{companyId},#{score},#{salary},#{position})")
+    @Insert("insert into graduates(email,university_name,major_name,company_name,score,salary,position,graduate_year,status)" +
+            "values(#{email},#{universityName},#{majorName},#{companyName},#{score},#{salary},#{position},#{graduateYear},#{status})")
     void save(Graduate graduate);
-    @Delete("delete from graduates where user_id=#{userId}")
-    void delete(String userId);
+
+    @Delete("delete from graduates where email=#{email}")
+    void delete(String email);
+
     @UpdateProvider(type = GraduateProvider.class, method = "updateGraduate")
     void update(Graduate graduate);
+
+    @Select("select * from graduates " +
+            "where major_name = #{majorName} " +
+            "left join companies" +
+            "on graduates.company_name = companies.company_name")
+    List<JobInfo> findByMajorName(String majorName);
+
+    @Select("select * from graduates " +
+            "where university_name = #{universityName} and major_name = #{majorName} " +
+            "left join companies" +
+            "on graduates.company_name = companies.company_name")
+    List<JobInfo> findByUniversityAndMajor(String universityName, String majorName);
+
+    @Select("select * from graduates " +
+            "where salary = #{salaryLevel} " +
+            "left join companies" +
+            "on graduates.company_name = companies.company_name")
+    List<JobInfo> findBySalaryLevel(Integer salaryLevel);
 }

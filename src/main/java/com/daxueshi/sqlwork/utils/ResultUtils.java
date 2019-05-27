@@ -30,10 +30,4 @@ public class ResultUtils {
         return result;
     }
 
-    public static Result withMessage(String message){
-        Result result = new Result();
-        result.setMsg(message);
-        result.setCode(0);
-        return result;
-    }
 }

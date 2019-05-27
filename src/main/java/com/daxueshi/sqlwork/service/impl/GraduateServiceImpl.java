@@ -2,6 +2,7 @@ package com.daxueshi.sqlwork.service.impl;
 
 import com.daxueshi.sqlwork.dao.GraduateDao;
 import com.daxueshi.sqlwork.domain.Graduate;
+import com.daxueshi.sqlwork.dto.JobInfo;
 import com.daxueshi.sqlwork.service.GraduateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,42 +17,35 @@ import java.util.List;
 public class GraduateServiceImpl implements GraduateService {
     @Autowired
     private GraduateDao graduateDao;
-    @Override
-    public List<Graduate> findByUniversityId(Integer universityId) {
-        return graduateDao.findByUniversityId(universityId);
-    }
 
-    @Override
-    public List<Graduate> findByCompanyId(Integer companyId) {
-        return graduateDao.findByCompanyId(companyId);
-    }
-
-    @Override
-    public List<Graduate> findByMajorId(Integer majorId) {
-        return graduateDao.findByMajorId(majorId);
-    }
-
-    @Override
-    public List<Graduate> findBySalary(Double salaryMin, Double salaryMax) {
-        return graduateDao.findBySalary(salaryMin,salaryMax);
-    }
 
     @Override
     public void save(Graduate graduate) {
-        //graduate.setUserId(userId);
         graduateDao.save(graduate);
     }
 
     @Override
-    public void delete(String userId) {
-        graduateDao.delete(userId);
+    public void delete(String email) {
+        graduateDao.delete(email);
     }
 
     @Override
-    public void update(String userId, Graduate graduate) {
-        graduate.setUserId(userId);
-        graduateDao.update(graduate);
+    public List<JobInfo> findByMajorName(String majorName) {
+        return graduateDao.findByMajorName(majorName);
     }
 
+    @Override
+    public List<JobInfo> findByUniversityNameAndMajor(String universityName, String majorName) {
+        return graduateDao.findByUniversityAndMajor(universityName, majorName);
+    }
 
+    @Override
+    public List<JobInfo> findBySalaryLevel(Integer salaryLevel) {
+        return graduateDao.findBySalaryLevel(salaryLevel);
+    }
+
+    @Override
+    public void update(Graduate graduate) {
+        graduateDao.update(graduate);
+    }
 }

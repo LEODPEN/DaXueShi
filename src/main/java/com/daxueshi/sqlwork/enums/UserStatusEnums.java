@@ -3,15 +3,15 @@ package com.daxueshi.sqlwork.enums;
 import lombok.Getter;
 
 @Getter
-public enum UserStatusEnums {
+public enum UserStatusEnums implements ResultEnums{
     //已经激活账号但在校或工作状态保密
-    SECRET(0,"保密"),
 
-    STUDY(1,"在校"),
+    VISITOR(0,"普通用户"),
 
-    WORK(2,"工作"),
+    STUDENT(1,"在校"),
 
-    VISIT(-1,"访客"),
+    GRADUATE(2,"工作"),
+
     ;
 
 

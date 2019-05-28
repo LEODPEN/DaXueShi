@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -21,16 +22,18 @@ import java.util.Date;
 @Getter
 @Setter
 @ConfigurationProperties("jwt.config")
+@Slf4j
 public class JwtUtils {
-    private String key ;
-    private Long ttl ;
+    private static String key ;
+    private static Long ttl;
 
-    public String createJwt(User user){
+    public static String createJwt(User user){
         if(user == null || user.getEmail() == null)
             return null;
         long cur = System.currentTimeMillis();
         Date present = new Date(cur);
         JwtBuilder builder = Jwts.builder()
+                //就只能存user信息，因为不确定是否状态为毕业
                 .claim("name",user.getNickname())
                 .claim("img",user.getPortraitUrl())
                 .claim("email",user.getEmail())
@@ -41,12 +44,12 @@ public class JwtUtils {
         }
         return builder.compact();
     }
-    public Claims parseJwt(String jwt){
+    public static Claims parseJwt(String jwt){
         try{
             Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwt).getBody();
             return claims;
         }catch (Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return null;
     }

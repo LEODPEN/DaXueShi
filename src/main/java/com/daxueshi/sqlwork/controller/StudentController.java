@@ -1,11 +1,18 @@
 package com.daxueshi.sqlwork.controller;
 
+import com.daxueshi.sqlwork.RequestDataForm.RequestForm;
 import com.daxueshi.sqlwork.VO.Result;
+import com.daxueshi.sqlwork.domain.Graduate;
 import com.daxueshi.sqlwork.domain.Student;
+import com.daxueshi.sqlwork.service.DataDisplayService;
 import com.daxueshi.sqlwork.service.StudentService;
+import com.daxueshi.sqlwork.utils.JwtUtils;
 import com.daxueshi.sqlwork.utils.ResultUtils;
+import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +25,13 @@ import java.util.List;
 @RestController
 @Api(tags = "学生相关信息查询请求")
 @RequestMapping("/dxs")
+@Slf4j
 public class StudentController {
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private DataDisplayService dataDisplayService;
 
     @ApiOperation("查询本校本专业在校生信息")
     @GetMapping("/student/classmates")
@@ -56,5 +67,13 @@ public class StudentController {
         student.setEmail(email);
         studentService.update(student);
         return ResultUtils.success();
+    }
+
+    @PostMapping("/student/contiOrWork")
+    public Result contiOrWork(@RequestBody RequestForm requestForm){
+        Claims claims = JwtUtils.parseJwt(requestForm.getToken());
+        String email = (String) claims.get("email");
+        log.info("用户{}查找应届生去向分布",email);
+        return ResultUtils.success(dataDisplayService.getDesCity(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor()));
     }
 }

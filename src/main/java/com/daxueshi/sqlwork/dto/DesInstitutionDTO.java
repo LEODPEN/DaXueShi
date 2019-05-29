@@ -24,10 +24,13 @@ public class DesInstitutionDTO {
 
     Map<String,Integer> nameWithCount;
 
-    public DesInstitutionDTO(Integer year, String college, String major) {
+
+    public DesInstitutionDTO(Integer year, String college, String major, Integer total, Map<String, Integer> nameWithCount) {
         this.year = year;
         this.college = college;
         this.major = major;
+        this.total = total;
+        this.nameWithCount = nameWithCount;
     }
 
     public DesInstitutionDTO(){}

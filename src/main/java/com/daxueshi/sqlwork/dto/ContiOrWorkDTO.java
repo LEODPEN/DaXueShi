@@ -21,10 +21,19 @@ public class ContiOrWorkDTO implements Serializable {
     //工作
     public Integer work;
 
-    public ContiOrWorkDTO(Integer year, String college, String major) {
+    public Integer aboard;
+
+    public Integer unemployment;
+
+    public ContiOrWorkDTO(Integer year, String college, String major, Integer yan, Integer work, Integer aboard, Integer unemployment) {
         this.year = year;
         this.college = college;
         this.major = major;
+        this.yan = yan;
+        this.work = work;
+        this.aboard = aboard;
+        this.unemployment = unemployment;
     }
+
     public ContiOrWorkDTO(){}
 }

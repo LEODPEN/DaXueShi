@@ -9,6 +9,7 @@ public enum UserEnums implements ResultEnums{
     LOGIN_FAIL(1,"账号或密码错误"),
     INVALID_CODE(2,"验证码失效"),
     WRONG_CODE(3,"验证码错误"),
+    SYNCHRONIZE_EMAIL(4,"邮箱同时注册"),
     ;
     private Integer code;
     private String msg;

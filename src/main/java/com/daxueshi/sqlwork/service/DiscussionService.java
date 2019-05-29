@@ -2,25 +2,26 @@ package com.daxueshi.sqlwork.service;
 
 import com.daxueshi.sqlwork.domain.Discussion;
 import org.springframework.data.domain.Page;
-
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 /**
  * @author onion
  * @date 2019-05-11 -10:15
  */
 public interface DiscussionService {
-    public List<Discussion> findAll();
+    Page findAll(Pageable pageable);
 
-    public Discussion findById(String id);
+    Page<Discussion> findByFollow(String email, Pageable pageable);
 
-    public void save(Discussion discussion);
+    Page<Discussion> findByEmail(String email, Pageable pageable);
 
-    public void update(Discussion discussion);
+    Discussion findById(String id);
 
-    public void deleteById(String id);
+    void save(Discussion discussion);
 
-    public Page<Discussion> findByParentId(String parentId, int page, int size);
+    void update(Discussion discussion);
 
-    public void updateVisit(String id);
+    void deleteById(String id);
+
+
 }

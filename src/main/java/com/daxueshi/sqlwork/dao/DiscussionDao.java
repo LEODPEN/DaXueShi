@@ -6,11 +6,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author onion
  * @date 2019-05-10 -09:31
  */
 @Repository
 public interface DiscussionDao extends MongoRepository<Discussion, String> {
-    Page<Discussion> findByParentId(String parentId, Pageable pageable);
+    Page<Discussion> findByEmail(String email, Pageable pageable);
+    Page<Discussion> findByEmailIn(List<String> emails, Pageable pageable);
 }

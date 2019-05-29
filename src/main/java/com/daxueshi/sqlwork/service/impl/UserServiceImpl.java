@@ -5,6 +5,7 @@ import com.daxueshi.sqlwork.domain.User;
 import com.daxueshi.sqlwork.enums.UserEnums;
 import com.daxueshi.sqlwork.enums.UserStatusEnums;
 import com.daxueshi.sqlwork.exception.MyException;
+import com.daxueshi.sqlwork.lock.RedisLock;
 import com.daxueshi.sqlwork.service.MailService;
 import com.daxueshi.sqlwork.service.UserService;
 import com.daxueshi.sqlwork.utils.CheckcodeUtils;
@@ -32,6 +33,11 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private MailService  mailService;
 
+    @Autowired
+    private RedisLock redisLock;
+
+    private final static int TIMEOUT = 10 * 1000;
+
     @Override
     public User login(String email,String password) {
         User user = userDao.findByMail(email);
@@ -58,9 +64,14 @@ public class UserServiceImpl implements UserService{
         userDao.saveUser(user);
         log.info("邮箱:"+user.getEmail()+"已经被注册");
     }
-
+    //问题
     @Override
     public User findByEmail(String email) {
+        long time = System.currentTimeMillis() + TIMEOUT;
+        if(!redisLock.lock(email, String.valueOf(time))){
+            throw new MyException(UserEnums.SYNCHRONIZE_EMAIL);
+        }
+        redisLock.unlock(email,String.valueOf(time));
         return userDao.findByMail(email);
     }
 

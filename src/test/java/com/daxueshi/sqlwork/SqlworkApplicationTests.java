@@ -108,8 +108,9 @@ public class SqlworkApplicationTests {
 
     @Test
     public void testDiscussion() throws Exception{
-        String content = "{\"_id\":\"10175\",\"content\":\"有中国智慧、世界眼光的现代人\"}";
-        String res = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/discussions")
+        String content = "{\"id\":\"10175101226\",\"content\":\"有中国智慧、世界眼光的现代人\",\"email\":\"969023014@qq.com\"," +
+                "\"nickname\":\"onion\"}";
+        String res = mockMvc.perform(MockMvcRequestBuilders.post("/dxs/discussions")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn().getResponse().getContentAsString();

@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 @Data
 public class JobInfo implements Serializable {
+
     private String email;
     private String majorName;
     private String companyName;

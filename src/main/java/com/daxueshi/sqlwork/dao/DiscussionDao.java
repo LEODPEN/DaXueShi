@@ -14,6 +14,7 @@ import java.util.List;
  */
 @Repository
 public interface DiscussionDao extends MongoRepository<Discussion, String> {
+    Page<Discussion> findByMajorName(String majorName, Pageable pageable);
     Page<Discussion> findByEmail(String email, Pageable pageable);
     Page<Discussion> findByEmailIn(List<String> emails, Pageable pageable);
 }

@@ -26,6 +26,7 @@ public class Discussion implements Serializable {
     private String id;
     @Indexed
     private String content;
+    private String majorName;
     private Date publishTime;
     private Date lastEditTime;
     private String email;

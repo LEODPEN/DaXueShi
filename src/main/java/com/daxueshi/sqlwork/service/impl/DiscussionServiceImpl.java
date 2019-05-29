@@ -7,6 +7,8 @@ import com.daxueshi.sqlwork.domain.Comment;
 import com.daxueshi.sqlwork.domain.Discussion;
 import com.daxueshi.sqlwork.service.DiscussionService;
 import com.daxueshi.sqlwork.utils.KeyUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,8 +40,8 @@ public class DiscussionServiceImpl implements DiscussionService {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public Page findAll(Pageable pageable){
-        return discussionDao.findAll(pageable);
+    public Page findAll(Pageable pageable, String majorName){
+        return discussionDao.findByMajorName(majorName, pageable);
     }
 
     @Override
@@ -53,12 +55,14 @@ public class DiscussionServiceImpl implements DiscussionService {
         return discussionDao.findByEmail(email, pageable);
     }
 
+    @Override
     public Discussion findById(String id){
+        updateCount(id,"visits");
         return discussionDao.findById(id).get();
     }
 
+    @Override
     public void save(Discussion discussion){
-        //指定Id
         discussion.setId(KeyUtils.genUniqueKey());
         discussion.setPublishTime(new Date());
         discussion.setLastEditTime(new Date());
@@ -68,25 +72,51 @@ public class DiscussionServiceImpl implements DiscussionService {
         discussionDao.save(discussion);
     }
 
+    @Override
     public void update(Discussion discussion){
         discussion.setLastEditTime(new Date());
         discussionDao.save(discussion);
     }
 
+    @Override
     public void deleteById(String id){
-
         discussionDao.deleteById(id);
+        commentDao.deleteByDiscussionId(id);
     }
 
-
-
+    @Override
     public void makeComment(Comment comment){
-        String id = KeyUtils.genUniqueKey();
-        comment.setCommentId(id);
+        String id = comment.getDiscussionId();
+
+        Discussion discussion = discussionDao.findById(id).get();
+        discussion.setLastEditTime(new Date());
+        discussion.setThumbs(discussion.getThumbs() + 1);
+        discussion.setComments(discussion.getComments() + 1);
+        discussionDao.save(discussion);
+
+        comment.setCommentId(KeyUtils.genUniqueKey());
         comment.setLastEditTime(new Date());
         commentDao.save(comment);
-        updateCount(id,"comments");
-        updateCount(id,"visits");
+
+    }
+
+    @Override
+    public PageInfo findComments(String id) {
+        String order = "lastEditTime desc";
+        PageHelper.startPage(0,10, order);
+        List<Comment> comments = commentDao.findById(id);
+        return new PageInfo(comments);
+    }
+
+    @Override
+    public void deleteComment(String discussionId, String commentId) {
+        commentDao.deleteCertainComment(discussionId, commentId);
+    }
+
+    @Override
+    public void updateComment(Comment comment) {
+        comment.setLastEditTime(new Date());
+        commentDao.update(comment);
     }
 
     public void updateCount(String id, String key){

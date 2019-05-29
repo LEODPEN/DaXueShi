@@ -2,7 +2,6 @@ package com.daxueshi.sqlwork.controller;
 
 import com.daxueshi.sqlwork.RequestDataForm.RequestForm;
 import com.daxueshi.sqlwork.VO.Result;
-import com.daxueshi.sqlwork.domain.Graduate;
 import com.daxueshi.sqlwork.domain.Student;
 import com.daxueshi.sqlwork.enums.GraduationEnums;
 import com.daxueshi.sqlwork.service.DataDisplayService;
@@ -12,7 +11,6 @@ import com.daxueshi.sqlwork.utils.ResultUtils;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +46,7 @@ public class StudentController {
     }
 
     @ApiOperation("插入学生信息")
-    @PostMapping("/students")
+    @PostMapping("/student")
     public Result save(@RequestBody Student student,@RequestParam String email){
         student.setEmail(email);
         studentService.save(student);
@@ -56,14 +54,14 @@ public class StudentController {
     }
 
     @ApiOperation("删除学生信息")
-    @DeleteMapping("/students")
+    @DeleteMapping("/student")
     public Result delete(@RequestParam  String email){
         studentService.delete(email);
         return ResultUtils.success();
     }
 
     @ApiOperation("更新学生信息")
-    @PutMapping("/students")
+    @PutMapping("/student")
     public Result update(@RequestParam String email,@RequestBody Student student){
         student.setEmail(email);
         studentService.update(student);

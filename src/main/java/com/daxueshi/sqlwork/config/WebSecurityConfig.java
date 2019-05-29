@@ -62,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("api/v1/majors/**").hasAnyRole("student","graduate")
                 .antMatchers("api/v1/discussions/**").hasAnyRole("student","graduate")
                 .anyRequest()
-                .authenticated()
+                .permitAll()
                 .and()
                 .logout()
                 .and()

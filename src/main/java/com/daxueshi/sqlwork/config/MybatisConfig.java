@@ -25,13 +25,5 @@ public class MybatisConfig {
         pageHelper.setProperties(p);
         return pageHelper;
     }
-    /*
-    public ConfigurationCustomizer customize(){
-        return new ConfigurationCustomizer() {
-            @Override
-            public void customize(org.apache.ibatis.session.Configuration configuration) {
-                configuration.setMapUnderscoreToCamelCase(true);
-            }
-        };
-    }*/
+
 }

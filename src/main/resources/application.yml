@@ -38,9 +38,5 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-jwt:
-  config:
-    key: ecnusoft
-    ttl: 3600000
 server:
   port: 8080

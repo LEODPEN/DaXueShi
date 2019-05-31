@@ -17,8 +17,8 @@ import java.util.List;
 public interface MajorDao {
 
 
-    @Select({"select * from majors where major_name in ",
-            "(select major_name from uni_major where university_name=#{universityName})"})
+    @Select({"select major_name from majors where major_name in ",
+            "(select major_name from offers where university_name=#{universityName})"})
     List <Major> findByUniversityName(String universityName);
 
 
@@ -26,4 +26,7 @@ public interface MajorDao {
             "from majors natural join graduates natural join companies " +
             "where major_id = #{majorId}")
     List<JobInfo> findJobInfoByMajor(Integer majorId);
+
+    @Select("select * from majors where major_name = #{majorName}")
+    Major findMajorInfo(String majorName);
 }

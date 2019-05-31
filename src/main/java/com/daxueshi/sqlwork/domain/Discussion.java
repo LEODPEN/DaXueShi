@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -16,7 +15,7 @@ import java.util.Date;
  */
 @ApiModel("论坛区实体")
 @Data
-@Document("discussions")
+@Document(collection = "discussions")
 public class Discussion implements Serializable {
 
 
@@ -24,7 +23,7 @@ public class Discussion implements Serializable {
     @ApiModelProperty("论坛Id")
     @Id
     private String id;
-    @Indexed
+    private String title;
     private String content;
     private String majorName;
     private Date publishTime;

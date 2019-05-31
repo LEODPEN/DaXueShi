@@ -1,10 +1,7 @@
 package com.daxueshi.sqlwork.dao;
 
 import com.daxueshi.sqlwork.domain.Follow;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,6 +25,11 @@ public interface FollowDao {
     @Delete("delete from follows where following_email = #{followingEmail} and followed_email = #{followedEmail}")
     void cancelFollow(String followingEmail, String followedEmail);
 
-    @Insert("insert into follows(following_email,followed_email) values(#{followingEmail},#{followedEmail})")
+    @Insert("insert into follows(following_email,followed_email,times) values(#{followingEmail},#{followedEmail},0)")
     void addFollow(String followingEmail, String followedEmail);
+
+    @Update("update follows set times = times + 1 " +
+            "where following_email = #{followingEmail}" +
+            "and followed_email = #{followedEmail}")
+    void recordTimes(String followingEmail,String followedEmail);
 }

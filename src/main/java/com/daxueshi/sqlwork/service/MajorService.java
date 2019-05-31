@@ -5,5 +5,7 @@ import com.daxueshi.sqlwork.domain.Major;
 import java.util.List;
 
 public interface MajorService {
-     List<Major> findByUniversityName(String universityName);
+    List<Major> findByUniversityName(String universityName);
+
+    Major findMajorInfo(String majorName);
 }

@@ -1,5 +1,6 @@
 package com.daxueshi.sqlwork.service.impl;
 
+import com.daxueshi.sqlwork.dao.FollowDao;
 import com.daxueshi.sqlwork.dao.UserDao;
 import com.daxueshi.sqlwork.domain.User;
 import com.daxueshi.sqlwork.enums.UserEnums;
@@ -23,6 +24,9 @@ import java.util.concurrent.TimeUnit;
 public class UserServiceImpl implements UserService{
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private FollowDao followDao;
 
     @Autowired
     private RedisTemplate<Object,Object> redisTemplate;
@@ -58,7 +62,7 @@ public class UserServiceImpl implements UserService{
             throw new MyException(UserEnums.WRONG_CODE);
         }
         user.setRegisterTime(new Date());
-        user.setLastEditTime(new Date());
+        user.setLastLoginTime(new Date());
         user.setStatus(UserStatusEnums.VISITOR.getCode());
         user.setPassword(encoder.encode(user.getPassword()));
         userDao.saveUser(user);
@@ -121,16 +125,16 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void follow(String followingEmail, String followedEmail) {
-        userDao.follow(followingEmail,followedEmail);
+        followDao.addFollow(followingEmail,followedEmail);
     }
 
     @Override
     public void cancelFollow(String followingEmail, String followedEmail) {
-        userDao.cancelFollow(followingEmail,followedEmail);
+        followDao.cancelFollow(followingEmail,followedEmail);
     }
 
     @Override
     public void visit(String followingEmail, String followedEmail) {
-        userDao.recordTimes(followingEmail,followedEmail);
+        followDao.recordTimes(followingEmail,followedEmail);
     }
 }

@@ -23,7 +23,7 @@ public interface CommentDao {
     @Delete("delete from comments where discussion_id = #{id}")
     void deleteByDiscussionId(String id);
 
-    @Delete("delete from comments where discussion_id = #{discussionId} and comment_id = #{commendId}")
+    @Delete("delete from comments where discussion_id = #{discussionId} and comment_id = #{commentId}")
     void deleteCertainComment(String discussionId, String commentId);
 
     @Update("update comments set content = #{content}, last_edit_time = #{lastEditTime} " +

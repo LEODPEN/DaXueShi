@@ -17,4 +17,9 @@ public class MajorServiceImpl implements MajorService {
     public List<Major> findByUniversityName(String universityName) {
         return majorDao.findByUniversityName(universityName);
     }
+
+    @Override
+    public Major findMajorInfo(String majorName) {
+        return majorDao.findMajorInfo(majorName);
+    }
 }

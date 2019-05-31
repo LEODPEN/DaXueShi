@@ -19,15 +19,12 @@ public class UserController {
     private UserService userService;
 
 
-    @Autowired
-    private JwtUtils jwtUtils;
-
     @ApiOperation("用户登录")
     @PostMapping("/user/login")
     public Result login(@RequestParam String email,@RequestParam String password){
         User user = userService.login(email, password);
         if(user != null){
-            String token = jwtUtils.createJwt(user);
+            String token = JwtUtils.createJwt(user);
             return ResultUtils.success(token);
         }
         return ResultUtils.error(UserEnums.LOGIN_FAIL);
@@ -76,7 +73,6 @@ public class UserController {
     @ApiOperation("忘记密码")
     @PostMapping("user/forgetPassword")
     public Result resetPassword(@RequestParam String checkCode,@RequestParam String email,@RequestParam String password){
-        userService.sendCheckcode(email);
         userService.resetPassword(email,checkCode,password);
         return ResultUtils.success();
     }

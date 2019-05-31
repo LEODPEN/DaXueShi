@@ -71,6 +71,7 @@ public class DiscussionController {
     }
 
     // 增删改功能
+    // 是否需要返回discussion的id
     @ApiOperation("保存帖子")
     @PostMapping
     public Result save(@RequestBody Discussion discussion){

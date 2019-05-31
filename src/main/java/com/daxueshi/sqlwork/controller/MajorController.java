@@ -21,23 +21,23 @@ import java.util.List;
 */
 @Api(tags = "专业查询相关请求")
 @RestController
-@RequestMapping("/dxs")
+@RequestMapping("/dxs/major")
 public class MajorController {
     @Autowired
     private MajorService majorService;
 
     @ApiOperation("查询指定大学开设的专业")
-    @GetMapping("/major")
+    @GetMapping
     public Result certainMajors(@RequestParam String universityName){
         List<Major> list = majorService.findByUniversityName(universityName);
         return ResultUtils.success(list);
     }
-    /**
-    @ApiOperation("查询专业就业情况")
-    @ApiImplicitParam()
-    @GetMapping("/majors/jobInfo/{majorId}")
-    public Result findJobInfo(@PathVariable Integer majorId){
-        List<JobInfo> jobInfos = majorService.findJobInfo(majorId);
-        return ResultUtils.success(jobInfos);
-    }*/
+
+    @ApiOperation("查询某专业具体信息")
+    @GetMapping("/info")
+    public Result majorInfo(@RequestParam String majorName){
+        Major major = majorService.findMajorInfo(majorName);
+        return ResultUtils.success(major);
+    }
+
 }

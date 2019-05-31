@@ -46,6 +46,7 @@ public class FollowController {
         return ResultUtils.success();
     }
 
+    //如果已经关注？
     @PostMapping
     @ApiOperation("添加关注")
     public Result addFollow(@RequestParam String followingEmail, @RequestParam String followedEmail){

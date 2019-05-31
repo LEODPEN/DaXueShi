@@ -8,7 +8,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -21,11 +20,10 @@ import java.util.Date;
 @Component
 @Getter
 @Setter
-@ConfigurationProperties("jwt.config")
 @Slf4j
 public class JwtUtils {
-    private static String key ;
-    private static Long ttl;
+    private final static String key = "ECNUSOFT";
+    private final static Long ttl = 1000 * 60 * 60 * 24L;
 
     public static String createJwt(User user){
         if(user == null || user.getEmail() == null)
@@ -35,7 +33,7 @@ public class JwtUtils {
         JwtBuilder builder = Jwts.builder()
                 //就只能存user信息，因为不确定是否状态为毕业
                 .claim("name",user.getNickname())
-                .claim("img",user.getPortraitUrl())
+                .claim("img",user.getProfile())
                 .claim("email",user.getEmail())
                 .setIssuedAt(present)
                 .signWith(SignatureAlgorithm.HS256,key);

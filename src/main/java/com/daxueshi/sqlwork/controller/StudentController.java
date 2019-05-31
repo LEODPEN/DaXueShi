@@ -34,7 +34,7 @@ public class StudentController {
 
     @ApiOperation("查询本校本专业在校生信息")
     @GetMapping("/student/classmates")
-    public Result findClassmats(@RequestParam String universityName, @RequestParam String majorName){
+    public Result findClassmates(@RequestParam String universityName, @RequestParam String majorName){
         List<Student> students = studentService.findByUniversityAndMajor(universityName,majorName);
         return ResultUtils.success(students);
     }

@@ -1,7 +1,6 @@
 package com.daxueshi.sqlwork.domain;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -26,11 +25,9 @@ public class User implements Serializable {
     @NotNull
     @Size(min = 6, max = 20, message = "密码长度为6-20位")
     private String password;
-    @ApiModelProperty("头像路径")
-    private String portraitUrl;
-    @ApiModelProperty("账号状态")
+    private String profile;
     private Integer status;
     private Date registerTime;
-    private Date lastEditTime;
+    private Date lastLoginTime;
 
 }

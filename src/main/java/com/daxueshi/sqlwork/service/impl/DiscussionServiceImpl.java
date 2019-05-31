@@ -90,7 +90,7 @@ public class DiscussionServiceImpl implements DiscussionService {
 
         Discussion discussion = discussionDao.findById(id).get();
         discussion.setLastEditTime(new Date());
-        discussion.setThumbs(discussion.getThumbs() + 1);
+        discussion.setVisits(discussion.getVisits() + 1);
         discussion.setComments(discussion.getComments() + 1);
         discussionDao.save(discussion);
 
@@ -102,7 +102,7 @@ public class DiscussionServiceImpl implements DiscussionService {
 
     @Override
     public PageInfo findComments(String id) {
-        String order = "lastEditTime desc";
+        String order = "last_edit_time desc";
         PageHelper.startPage(0,10, order);
         List<Comment> comments = commentDao.findById(id);
         return new PageInfo(comments);
@@ -124,7 +124,7 @@ public class DiscussionServiceImpl implements DiscussionService {
         query.addCriteria(Criteria.where("_id").is(id));
         Update update = new Update();
         update.inc(key,1);
-        mongoTemplate.updateFirst(query,update,"discussion");
+        mongoTemplate.updateFirst(query,update,"discussions");
     }
 
 }

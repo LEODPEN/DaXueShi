@@ -26,20 +26,20 @@ public interface GraduateDao {
     void update(Graduate graduate);
 
     @Select("select * from graduates " +
-            "where major_name = #{majorName} " +
-            "left join companies" +
-            "on graduates.company_name = companies.company_name")
+            "left join companies " +
+            "on graduates.company_name = companies.company_name " +
+            "where major_name = #{majorName} " )
     List<JobInfo> findByMajorName(String majorName);
 
     @Select("select * from graduates " +
-            "where university_name = #{universityName} and major_name = #{majorName} " +
-            "left join companies" +
-            "on graduates.company_name = companies.company_name")
+            "left join companies " +
+            "on graduates.company_name = companies.company_name " +
+            "where university_name = #{universityName} and major_name = #{majorName} ")
     List<JobInfo> findByUniversityAndMajor(String universityName, String majorName);
 
     @Select("select * from graduates " +
-            "where salary = #{salaryLevel} " +
-            "left join companies" +
-            "on graduates.company_name = companies.company_name")
+            "left join companies " +
+            "on graduates.company_name = companies.company_name " +
+            "where salary = #{salaryLevel} ")
     List<JobInfo> findBySalaryLevel(Integer salaryLevel);
 }

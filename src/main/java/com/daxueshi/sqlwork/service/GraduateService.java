@@ -1,7 +1,7 @@
 package com.daxueshi.sqlwork.service;
 
 import com.daxueshi.sqlwork.domain.Graduate;
-import com.daxueshi.sqlwork.dto.JobInfo;
+import com.daxueshi.sqlwork.dto.GraduateInfo;
 
 import java.util.List;
 
@@ -16,11 +16,18 @@ public interface GraduateService {
 
     void delete(String email);
 
-    List<JobInfo> findByMajorName(String majorName);
+    List<GraduateInfo> findByMajorName(String majorName);
 
-    List<JobInfo> findByUniversityNameAndMajor(String universityName, String majorName);
+    List<Graduate> findByUniversityNameAndMajor(String universityName, String majorName);
 
-    List<JobInfo> findBySalaryLevel(Integer salaryLevel);
+    List<GraduateInfo> findGraduateJobInfoByUnameANdMname(String universityName, String majorName);
+
+    List<Graduate> findByUniversityNameAndMajorAndYear(String universityName, String majorName, Integer year);
+
+    List<GraduateInfo> findGraduateJobInfoByUnameANdMnameAndYear(String universityName, String majorName, Integer year);
+
+
+    List<GraduateInfo> findBySalaryLevel(Integer salaryLevel);
 
     void update(Graduate graduate);
 }

@@ -4,6 +4,8 @@ import com.daxueshi.sqlwork.RequestDataForm.RequestForm;
 import com.daxueshi.sqlwork.VO.Result;
 import com.daxueshi.sqlwork.domain.Student;
 import com.daxueshi.sqlwork.enums.GraduationEnums;
+import com.daxueshi.sqlwork.enums.OtherErrorEnums;
+import com.daxueshi.sqlwork.exception.MyException;
 import com.daxueshi.sqlwork.service.DataDisplayService;
 import com.daxueshi.sqlwork.service.StudentService;
 import com.daxueshi.sqlwork.utils.JwtUtils;
@@ -68,36 +70,33 @@ public class StudentController {
         return ResultUtils.success();
     }
 
-    @PostMapping("/student/contiOrWork")
-    public Result contiOrWork(@RequestBody RequestForm requestForm){
-        Claims claims = JwtUtils.parseJwt(requestForm.getToken());
-        String email = (String) claims.get("email");
-        log.info("用户{}查找应届生去向分布",email);
+
+    /*data display part */
+    @PostMapping("/student/choice")
+    public Result getChoice(@RequestBody RequestForm requestForm){
+        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
+        log.info("用户{}查找{}年应届生去向分布",email,requestForm.getYear());
         return ResultUtils.success(dataDisplayService.getChoice(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor()));
     }
 
     @PostMapping("/student/desCity")
     public Result desCity(@RequestBody RequestForm requestForm){
-        Claims claims = JwtUtils.parseJwt(requestForm.getToken());
-        String email = (String) claims.get("email");
-        log.info("用户{}查找应届生城市分布",email);
+        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
+        log.info("用户{}查找{}年应届生城市分布",email,requestForm.getYear());
         return ResultUtils.success(dataDisplayService.getDesCity(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor()));
     }
 
     @PostMapping("/student/desCollege")
     public Result desCollege(@RequestBody RequestForm requestForm){
-        Claims claims = JwtUtils.parseJwt(requestForm.getToken());
-        String email = (String) claims.get("email");
-        log.info("用户{}查找应届生研究生学校分布",email);
-
+        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
+        log.info("用户{}查找{}年应届生研究生学校分布",email,requestForm.getYear());
         return ResultUtils.success(dataDisplayService.getInstitution(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor(), GraduationEnums.STUDY.getCode()));
     }
 
     @PostMapping("/student/desCompany")
     public Result desCompany(@RequestBody RequestForm requestForm){
-        Claims claims = JwtUtils.parseJwt(requestForm.getToken());
-        String email = (String) claims.get("email");
-        log.info("用户{}查找应届生研究生公司分布",email);
+        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
+        log.info("用户{}查找{}年应届生研究生公司分布",email,requestForm.getYear());
 
         return ResultUtils.success(dataDisplayService.getInstitution(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor(),GraduationEnums.WORK.getCode()));
     }

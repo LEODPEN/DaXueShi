@@ -16,14 +16,23 @@ public class Graduate implements Serializable {
 
     private static final long serialVersionUID = -6358879932920351127L;
     private String email;
+
     private String universityName;
+
     private String majorName;
+
+    //可能为空
     private String companyName;
-    @ApiModelProperty("积分")
-    private Integer scores;
+
+//    @ApiModelProperty("积分")
+//    private Integer scores;
+
     private Integer salary;
-    @ApiModelProperty("职位")
+
     private String position;
+
     private Integer graduateYear;
-    private Integer status;
+
+    //状态
+    private Integer state;
 }

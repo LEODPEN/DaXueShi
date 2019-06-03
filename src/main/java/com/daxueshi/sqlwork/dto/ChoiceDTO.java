@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 @Data
-public class ContiOrWorkDTO implements Serializable {
+public class ChoiceDTO implements Serializable {
 
     public Integer year;
 
@@ -25,7 +25,7 @@ public class ContiOrWorkDTO implements Serializable {
 
     public Integer unemployment;
 
-    public ContiOrWorkDTO(Integer year, String college, String major, Integer yan, Integer work, Integer aboard, Integer unemployment) {
+    public ChoiceDTO(Integer year, String college, String major, Integer yan, Integer work, Integer aboard, Integer unemployment) {
         this.year = year;
         this.college = college;
         this.major = major;
@@ -35,5 +35,5 @@ public class ContiOrWorkDTO implements Serializable {
         this.unemployment = unemployment;
     }
 
-    public ContiOrWorkDTO(){}
+    public ChoiceDTO(){}
 }

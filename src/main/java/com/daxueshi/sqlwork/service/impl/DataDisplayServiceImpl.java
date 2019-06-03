@@ -1,12 +1,12 @@
 package com.daxueshi.sqlwork.service.impl;
 
-import com.daxueshi.sqlwork.dto.ContiOrWorkDTO;
+import com.daxueshi.sqlwork.domain.Graduate;
+import com.daxueshi.sqlwork.dto.ChoiceDTO;
 import com.daxueshi.sqlwork.dto.DesCityDTO;
 import com.daxueshi.sqlwork.dto.DesInstitutionDTO;
-import com.daxueshi.sqlwork.dto.JobInfo;
+import com.daxueshi.sqlwork.dto.GraduateInfo;
 import com.daxueshi.sqlwork.enums.GraduationEnums;
 import com.daxueshi.sqlwork.enums.OtherErrorEnums;
-import com.daxueshi.sqlwork.enums.ResultEnums;
 import com.daxueshi.sqlwork.exception.MyException;
 import com.daxueshi.sqlwork.service.DataDisplayService;
 import com.daxueshi.sqlwork.service.GraduateService;
@@ -27,22 +27,23 @@ public class DataDisplayServiceImpl implements DataDisplayService {
     private GraduateService graduateService;
 
     @Override
+    //只找有工作的
     public DesCityDTO getDesCity(Integer year, String college, String major) {
-        List<JobInfo> infoList = graduateService.findByUniversityNameAndMajor(college,major);
+        List<GraduateInfo> infoList = graduateService.findGraduateJobInfoByUnameANdMnameAndYear(college,major,year);
 
-        List<JobInfo> needList = new ArrayList<>();
+//        List<GraduateInfo> needList = new ArrayList<>();
 
-        for (JobInfo info : infoList ){
-            if  (info.getGraduateYear().equals(year)){
-                needList.add(info);
-            }
-        }
+//        for (GraduateInfo info : infoList ){
+//            if  (info.getGraduateYear().equals(year)){
+//                needList.add(info);
+//            }
+//        }
         DesCityDTO desCityDTO = new DesCityDTO(year,college,major);
-        desCityDTO.setTotal(needList.size());
+        desCityDTO.setTotal(infoList.size());
         Map<String,Integer> map = new ConcurrentHashMap<>();
         Integer count = 0;
-        for (JobInfo info:needList){
-            String city = info.getCity();
+        for (GraduateInfo info:infoList){
+            String city = info.getAddress();
 //            map.putIfAbsent(city,1);
             map.merge(city,1, (oldValue,newValue)-> oldValue+newValue);
 //            Integer v =map.get(city);
@@ -61,8 +62,8 @@ public class DataDisplayServiceImpl implements DataDisplayService {
     }
 
     @Override
-    public ContiOrWorkDTO getChoice(Integer year, String college, String major) {
-        List<JobInfo> infoList = graduateService.findByUniversityNameAndMajor(college,major);
+    public ChoiceDTO getChoice(Integer year, String college, String major) {
+        List<Graduate> graduateList = graduateService.findByUniversityNameAndMajorAndYear(college,major,year);
 
         int study;
         int work;
@@ -70,8 +71,8 @@ public class DataDisplayServiceImpl implements DataDisplayService {
         int ue;
         study = work = aboard = ue =0;
         //  用不了switch
-        for (JobInfo info : infoList){
-            Integer status = info.getStatus();
+        for (Graduate graduate : graduateList){
+            Integer status = graduate.getState();
             if (status.equals(GraduationEnums.STUDY.getCode())){
                 study++;
             }
@@ -87,34 +88,36 @@ public class DataDisplayServiceImpl implements DataDisplayService {
                 throw new MyException(OtherErrorEnums.STATUS_ERROR);
             }
         }
-        ContiOrWorkDTO contiOrWorkDTO = new ContiOrWorkDTO(year,
+        ChoiceDTO choiceDTO = new ChoiceDTO(year,
                 college,
                 major,
                 study,
                 work,
                 aboard,
                 ue);
-        return contiOrWorkDTO;
+        return choiceDTO;
 
     }
 
     @Override
+    //目前只展示公司的去向
     public DesInstitutionDTO getInstitution(Integer year, String college, String major, Integer which) {
 
-        List<JobInfo> infoList = graduateService.findByUniversityNameAndMajor(college,major);
+        List<GraduateInfo> infoList = graduateService.findGraduateJobInfoByUnameANdMnameAndYear(college,major,year);
 
         Map<String,Integer> desMap = new ConcurrentHashMap<>();
 
         if (which.equals(GraduationEnums.STUDY.getCode())){
-            for (JobInfo info : infoList){
-                if (info.getStatus().equals(GraduationEnums.STUDY.getCode())){
-                    //todo 读研院校并未体现？
-                    //先放个假数据
-                    desMap.merge("ECNU",1,(oldValue,newValue)->oldValue+newValue);
-                }
-            }
+//            for (GraduateInfo info : infoList){
+//                if (info.getStatus().equals(GraduationEnums.STUDY.getCode())){
+//                    //todo 读研院校并未体现？
+//                    //先放个假数据
+//                    desMap.merge("ECNU",1,(oldValue,newValue)->oldValue+newValue);
+//                }
+//            }
+            return null;
         }else{
-            for (JobInfo info : infoList){
+            for (GraduateInfo info : infoList){
                 if (info.getStatus().equals(GraduationEnums.WORK.getCode())){
                     desMap.merge(info.getCompanyName(),1,(oldValue,newValue)->oldValue+newValue);
                 }

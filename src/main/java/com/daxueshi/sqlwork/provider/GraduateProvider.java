@@ -20,9 +20,6 @@ public class GraduateProvider  {
             if(graduate.getCompanyName() != null){
                 SET("company_name = #{companyName}");
             }
-            if(graduate.getScores() != null){
-                SET("scores = #{scores}");
-            }
             if(graduate.getSalary() != null){
                 SET("salary = #{salary}");
             }
@@ -32,8 +29,8 @@ public class GraduateProvider  {
             if(graduate.getGraduateYear() != null){
                 SET("graduate_year = #{graduateYear}");
             }
-            if(graduate.getStatus() != null){
-                SET("status = #{status}");
+            if(graduate.getState() != null){
+                SET("state = #{state}");
             }
             WHERE("email = #{email}");
         }}.toString();

@@ -1,7 +1,7 @@
 package com.daxueshi.sqlwork.dao;
 
 import com.daxueshi.sqlwork.domain.Major;
-import com.daxueshi.sqlwork.dto.JobInfo;
+import com.daxueshi.sqlwork.dto.GraduateInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -25,7 +25,7 @@ public interface MajorDao {
     @Select("select major_name,company_name,city,salary,position " +
             "from majors natural join graduates natural join companies " +
             "where major_id = #{majorId}")
-    List<JobInfo> findJobInfoByMajor(Integer majorId);
+    List<GraduateInfo> findJobInfoByMajor(Integer majorId);
 
     @Select("select * from majors where major_name = #{majorName}")
     Major findMajorInfo(String majorName);

@@ -2,7 +2,7 @@ package com.daxueshi.sqlwork.controller;
 
 import com.daxueshi.sqlwork.VO.Result;
 import com.daxueshi.sqlwork.domain.Graduate;
-import com.daxueshi.sqlwork.dto.JobInfo;
+import com.daxueshi.sqlwork.dto.GraduateInfo;
 import com.daxueshi.sqlwork.service.GraduateService;
 import com.daxueshi.sqlwork.utils.ResultUtils;
 import io.swagger.annotations.Api;
@@ -26,22 +26,22 @@ public class GraduateController {
     @ApiOperation("查询指定专业毕业生信息")
     @GetMapping("/graduate/peers")
     public Result findByMajorName(@RequestParam String majorName){
-        List<JobInfo> jobInfos = graduateService.findByMajorName(majorName);
-        return ResultUtils.success(jobInfos);
+        List<GraduateInfo> graduateInfos = graduateService.findByMajorName(majorName);
+        return ResultUtils.success(graduateInfos);
     }
 
     @ApiOperation("查询指定学校指定专业毕业生信息")
     @GetMapping("/graduate/classmates")
     public Result findByUniversityAndMajor(@RequestParam String universityName,@RequestParam String majorName){
-        List<JobInfo> jobInfos = graduateService.findByUniversityNameAndMajor(universityName, majorName);
-        return  ResultUtils.success(jobInfos);
+        List<Graduate> graduateInfos = graduateService.findByUniversityNameAndMajor(universityName, majorName);
+        return  ResultUtils.success(graduateInfos);
     }
 
     @ApiOperation("根据薪资等级查询毕业生信息")
     @GetMapping("/graduate/salaryLevel")
     public Result findBySalary(@RequestParam Integer salaryLevel){
-        List<JobInfo> jobInfos = graduateService.findBySalaryLevel(salaryLevel);
-        return ResultUtils.success(jobInfos);
+        List<GraduateInfo> graduateInfos = graduateService.findBySalaryLevel(salaryLevel);
+        return ResultUtils.success(graduateInfos);
     }
 
     @ApiOperation("插入毕业生信息")

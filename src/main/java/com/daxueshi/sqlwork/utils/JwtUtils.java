@@ -1,6 +1,8 @@
 package com.daxueshi.sqlwork.utils;
 
 import com.daxueshi.sqlwork.domain.User;
+import com.daxueshi.sqlwork.enums.OtherErrorEnums;
+import com.daxueshi.sqlwork.exception.MyException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -44,11 +46,11 @@ public class JwtUtils {
     }
     public static Claims parseJwt(String jwt){
         try{
-            Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwt).getBody();
-            return claims;
+            return Jwts.parser().setSigningKey(key).parseClaimsJws(jwt).getBody();
         }catch (Exception e){
-            log.error(e.getMessage());
+            log.error("token无效或者已经过期");
+            throw new MyException(OtherErrorEnums.TOKEN_ERROR);
+
         }
-        return null;
     }
 }

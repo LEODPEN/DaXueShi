@@ -21,7 +21,7 @@ public class GlobalCorConfig {
         //放行哪些原始域(头部信息)
         config.addAllowedHeader("*");
         //暴露哪些头部信息（因为跨域访问默认不能获取全部头部信息）
-        config.addExposedHeader("*");
+//        config.addExposedHeader("*");
 
         //2.添加映射路径
         UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();

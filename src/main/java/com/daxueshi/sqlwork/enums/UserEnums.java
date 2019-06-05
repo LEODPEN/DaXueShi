@@ -8,11 +8,11 @@ import lombok.Getter;
  */
 @Getter
 public enum UserEnums implements ResultEnums{
-    EMAIL_REGISTERED(0,"邮箱已经被注册"),
-    LOGIN_FAIL(1,"账号或密码错误"),
-    INVALID_CODE(2,"验证码失效"),
-    WRONG_CODE(3,"验证码错误"),
-    SYNCHRONIZE_EMAIL(4,"邮箱同时注册"),
+    EMAIL_REGISTERED(100,"邮箱已经被注册"),
+    LOGIN_FAIL(101,"账号或密码错误"),
+    INVALID_CODE(102,"验证码失效"),
+    WRONG_CODE(103,"验证码错误"),
+    SYNCHRONIZE_EMAIL(104,"邮箱同时注册"),
     ;
     private Integer code;
     private String msg;

@@ -16,10 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = "用户请求")
 @RestController
-@RequestMapping("/dxs")
 @Slf4j
+@Api(tags = "用户请求")
+@RequestMapping("/dxs")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -31,13 +31,12 @@ public class UserController {
     private GraduateService graduateService;
 
 
-
     @ApiOperation("查看邮箱是否可用")
     @GetMapping("/user/checkAvailable")
-    public Result isAvailable(@RequestParam String email){
-        if(userService.findByEmail(email)!= null){
+    public Result isAvailable(@RequestParam String email) {
+        if (userService.findByEmail(email) != null) {
             return ResultUtils.error(UserEnums.EMAIL_REGISTERED);
-        }else{
+        } else {
             return ResultUtils.success();
         }
     }
@@ -45,7 +44,7 @@ public class UserController {
 
     @ApiOperation("更新用户信息")
     @PutMapping("/user")
-    public Result update(@RequestBody User user){
+    public Result update(@RequestBody User user) {
         userService.updateUser(user);
         return ResultUtils.success();
     }
@@ -53,63 +52,62 @@ public class UserController {
 
     @ApiOperation("删除用户信息")
     @DeleteMapping("/user/")
-    public Result delete(@RequestParam String email,@RequestParam String checkCode){
-        userService.deleteByEmail(email,checkCode);
+    public Result delete(@RequestParam String email, @RequestParam String checkCode) {
+        userService.deleteByEmail(email, checkCode);
         return ResultUtils.success();
     }
 
     @ApiOperation("发送验证码")
     @GetMapping("/user/sendCode")
-    public Result sendCheckCode(@RequestParam String email){
+    public Result sendCheckCode(@RequestParam String email) {
         userService.sendCheckcode(email);
         return ResultUtils.success("验证码已发送");
     }
 
     @ApiOperation("忘记密码")
     @PostMapping("user/forgetPassword")
-    public Result resetPassword(@RequestParam String checkCode,@RequestParam String email,@RequestParam String password){
-        userService.resetPassword(email,checkCode,password);
+    public Result resetPassword(@RequestParam String checkCode, @RequestParam String email, @RequestParam String password) {
+        userService.resetPassword(email, checkCode, password);
         return ResultUtils.success();
     }
 
     @ApiOperation("关注")
     @PutMapping("user/follow")
-    public Result follow(@RequestParam String followingEmail,@RequestParam String followedEmail){
-        userService.follow(followingEmail,followedEmail);
+    public Result follow(@RequestParam String followingEmail, @RequestParam String followedEmail) {
+        userService.follow(followingEmail, followedEmail);
         return ResultUtils.success();
     }
 
     @ApiOperation("取消关注")
     @DeleteMapping("user/cancelFollow")
-    public Result cancelFollow(@RequestParam String followingEmail,@RequestParam String followedEmail){
-        userService.cancelFollow(followingEmail,followedEmail);
+    public Result cancelFollow(@RequestParam String followingEmail, @RequestParam String followedEmail) {
+        userService.cancelFollow(followingEmail, followedEmail);
         return ResultUtils.success();
     }
 
     @ApiOperation("记录访问主页次数")
     @PostMapping("user/visit")
-    public Result visit(@RequestParam String followingEmail,@RequestParam String followedEmail){
-        userService.visit(followingEmail,followedEmail);
+    public Result visit(@RequestParam String followingEmail, @RequestParam String followedEmail) {
+        userService.visit(followingEmail, followedEmail);
         return ResultUtils.success();
     }
-
 
 
     /*******身份转换操作********/
 
     @ApiOperation("用户注册")
     @PostMapping("/user/register")
-    public Result register(@RequestBody User user,@RequestParam String checkcode){
-        userService.register(user,checkcode);
+    public Result register(@RequestBody User user, @RequestParam String checkcode) {
+        userService.register(user, checkcode);
         return ResultUtils.success();
     }
 
 
     @ApiOperation("用户登录")
     @PostMapping("/user/login")
-    public Result login(@RequestParam String email,@RequestParam String password){
+    public Result login(@RequestParam String email, @RequestParam String password) {
         User user = userService.login(email, password);
-        if(user != null){
+        if (user != null) {
             String token = JwtUtils.createJwt(user);
             return ResultUtils.success(token);
         }
@@ -120,12 +118,12 @@ public class UserController {
 
     @PostMapping("/user/becomeStudent")
     //虽然可以同时使用，但是一般还是别这么干，以后有机会改
-    public Result becomeStudent(@RequestBody Student student,@RequestParam String token){
+    public Result becomeStudent(@RequestBody Student student, @RequestParam String token) {
 
         String email = (String) JwtUtils.parseJwt(token).get("email");
         student.setEmail(email);
         studentService.save(student);
-        log.info("{}认证成为学生",email);
+        log.info("{}认证成为学生", email);
         return ResultUtils.success();
     }
 
@@ -133,12 +131,12 @@ public class UserController {
     //认证成为毕业生
 
     @PostMapping("/user/becomeGraduate")
-    public Result becomeGraduate(@RequestBody Graduate graduate,@RequestParam String token){
+    public Result becomeGraduate(@RequestBody Graduate graduate, @RequestParam String token) {
 
         String email = (String) JwtUtils.parseJwt(token).get("email");
         graduate.setEmail(email);
         graduateService.save(graduate);
-        log.info("{}认证成为毕业生",email);
+        log.info("{}认证成为毕业生", email);
         return ResultUtils.success();
     }
 }

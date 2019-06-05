@@ -47,21 +47,12 @@ public class StudentController {
         return ResultUtils.success(students);
     }
 
-    @ApiOperation("插入学生信息")
-    @PostMapping("/student")
-    public Result save(@RequestBody Student student,@RequestParam String email){
-        student.setEmail(email);
-        studentService.save(student);
-        return ResultUtils.success();
-    }
-
-    @ApiOperation("删除学生信息")
-    @DeleteMapping("/student")
-    public Result delete(@RequestParam  String email){
-        studentService.delete(email);
-        return ResultUtils.success();
-    }
-
+//    @ApiOperation("删除学生信息")
+//    @DeleteMapping("/student")
+//    public Result delete(@RequestParam  String email){
+//        studentService.delete(email);
+//        return ResultUtils.success();
+//    }
     @ApiOperation("更新学生信息")
     @PutMapping("/student")
     public Result update(@RequestParam String email,@RequestBody Student student){
@@ -70,6 +61,12 @@ public class StudentController {
         return ResultUtils.success();
     }
 
+    @PostMapping("/student")
+    public Result saveStudent(@RequestBody Student student,@RequestParam String email){
+        student.setEmail(email);
+        studentService.save(student);
+        return ResultUtils.success();
+    }
 
     /*data display part */
     @PostMapping("/student/choice")
@@ -99,6 +96,16 @@ public class StudentController {
         log.info("用户{}查找{}年应届生研究生公司分布",email,requestForm.getYear());
 
         return ResultUtils.success(dataDisplayService.getInstitution(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor(),GraduationEnums.WORK.getCode()));
+    }
+
+    @PostMapping("/student/salaryChange")
+    public Result fiveYearSalary(@RequestBody RequestForm requestForm){
+        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
+        log.info("用户{}查找{}近5年应届生平均资薪水平走势",email,requestForm.getYear());
+
+        return ResultUtils.success(dataDisplayService.getSalaryTrend(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor()));
+
+
     }
 
 }

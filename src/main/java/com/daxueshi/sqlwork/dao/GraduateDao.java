@@ -16,7 +16,7 @@ import java.util.List;
 @Mapper
 public interface GraduateDao {
     @Insert("insert into graduates(email,university_name,major_name,company_name,salary,position,graduate_year,state)" +
-            "values(#{email},#{universityName},#{majorName},#{companyName},#{salary},#{position},#{graduateYear},#{status})")
+            "values(#{email},#{universityName},#{majorName},#{companyName},#{salary},#{position},#{graduateYear},#{state})")
     void save(Graduate graduate);
 
     @Delete("delete from graduates where email=#{email}")
@@ -26,10 +26,8 @@ public interface GraduateDao {
     void update(Graduate graduate);
 
     @Select("select * from graduates " +
-            "left join companies " +
-            "on graduates.company_name = companies.company_name " +
             "where major_name = #{majorName} " )
-    List<GraduateInfo> findByMajorName(String majorName);
+    List<Graduate> findByMajorName(String majorName);
 
     @Select("select * from graduates from "+
             "graduates where university_name = #{universityName} and major_name = #{majorName} ")
@@ -42,13 +40,13 @@ public interface GraduateDao {
     List<GraduateInfo> findAllGraduateInfoByUniversityAndMajor(String universityName, String majorName);
 
     @Select("select * from graduates from "+
-            "graduates where university_name = #{universityName} and major_name = #{majorName} and graduate_year = #{year}")
+            "graduates where university_name = #{universityName} and major_name = #{majorName} and graduate_year = #{year} ")
     List<Graduate> findByUniversityAndMajorAndYear(String universityName, String majorName, Integer year);
 
     @Select("select email, company_name, address, salary, position, graduate_year, state as status "+
             "from graduates natural join companies " +
             "using company_name " +
-            "where university_name = #{universityName} and major_name = #{majorName} ")
+            "where university_name = #{universityName} and major_name = #{majorName} and graduate_year = #{year} ")
     List<GraduateInfo> findGraduateInfoByUniversityAndMajorAndYear(String universityName, String majorName, Integer year);
 
     @Select("select * from graduates " +

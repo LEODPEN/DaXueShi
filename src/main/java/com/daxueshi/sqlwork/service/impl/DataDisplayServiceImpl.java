@@ -7,17 +7,22 @@ import com.daxueshi.sqlwork.dto.DesInstitutionDTO;
 import com.daxueshi.sqlwork.dto.GraduateInfo;
 import com.daxueshi.sqlwork.enums.GraduationEnums;
 import com.daxueshi.sqlwork.enums.OtherErrorEnums;
+import com.daxueshi.sqlwork.enums.SalaryEnums;
 import com.daxueshi.sqlwork.exception.MyException;
 import com.daxueshi.sqlwork.service.DataDisplayService;
 import com.daxueshi.sqlwork.service.GraduateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static java.util.Arrays.asList;
 
 @Service
 @Slf4j
@@ -126,5 +131,42 @@ public class DataDisplayServiceImpl implements DataDisplayService {
         DesInstitutionDTO desInstitutionDTO = new DesInstitutionDTO(year,college,major,infoList.size(),desMap);
 
         return desInstitutionDTO;
+    }
+
+    @Override
+    public Map<String, Object> getSalaryTrend(Integer year, String college, String major) {
+
+        Map<String,Object> salaryMap = new ConcurrentHashMap<>();
+        List<Integer> yearList = new ArrayList<>(asList(year-4,year-3,year-2,year-1,year));
+        List<Integer> salaryList = new ArrayList<>();
+        salaryMap.put("year",yearList);
+        for (int i = 0; i<5;i++){
+            List< GraduateInfo> infoList = graduateService.findGraduateJobInfoByUnameANdMnameAndYear(college,major,year-i);
+            if (CollectionUtils.isEmpty(infoList)){
+                salaryList.add(0);
+                continue;
+            }
+            int average = 0;
+            //是以级别来定的资薪水平---暂时定8级，一级5000
+            for (GraduateInfo info : infoList){
+                average+=info.getSalary();
+            }
+            average/=infoList.size();
+            if (average<=0){
+                salaryList.add(0);
+            }else if (average>8){
+                salaryList.add(50000);
+            }else {
+                for (SalaryEnums enums : SalaryEnums.values()){
+                    if (enums.getLevel()==average){
+                        salaryList.add(enums.getAverage());
+                        break;
+                    }
+                }
+            }
+
+        }
+        salaryMap.put("salary",salaryList);
+        return salaryMap;
     }
 }

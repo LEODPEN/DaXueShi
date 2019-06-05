@@ -1,9 +1,12 @@
 package com.daxueshi.sqlwork.enums;
 
+import lombok.Getter;
+
 /**
  * @author onion
  * @date 2019-05-27 -07:54
  */
+@Getter
 public enum UserEnums implements ResultEnums{
     EMAIL_REGISTERED(0,"邮箱已经被注册"),
     LOGIN_FAIL(1,"账号或密码错误"),
@@ -17,15 +20,5 @@ public enum UserEnums implements ResultEnums{
     UserEnums(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
-    }
-
-    @Override
-    public String getMsg() {
-        return this.msg;
-    }
-
-    @Override
-    public Integer getCode() {
-        return this.code;
     }
 }

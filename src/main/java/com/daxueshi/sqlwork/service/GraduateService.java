@@ -16,7 +16,7 @@ public interface GraduateService {
 
     void delete(String email);
 
-    List<GraduateInfo> findByMajorName(String majorName);
+    List<Graduate> findByMajorName(String majorName);
 
     List<Graduate> findByUniversityNameAndMajor(String universityName, String majorName);
 

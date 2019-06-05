@@ -1,34 +1,36 @@
 package com.daxueshi.sqlwork.controller;
 
 import com.daxueshi.sqlwork.VO.Result;
+import com.daxueshi.sqlwork.domain.Graduate;
+import com.daxueshi.sqlwork.domain.Student;
 import com.daxueshi.sqlwork.domain.User;
 import com.daxueshi.sqlwork.enums.UserEnums;
+import com.daxueshi.sqlwork.service.GraduateService;
+import com.daxueshi.sqlwork.service.StudentService;
 import com.daxueshi.sqlwork.service.UserService;
 import com.daxueshi.sqlwork.utils.JwtUtils;
 import com.daxueshi.sqlwork.utils.ResultUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "用户请求")
 @RestController
 @RequestMapping("/dxs")
+@Slf4j
 public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private StudentService studentService;
 
-    @ApiOperation("用户登录")
-    @PostMapping("/user/login")
-    public Result login(@RequestParam String email,@RequestParam String password){
-        User user = userService.login(email, password);
-        if(user != null){
-            String token = JwtUtils.createJwt(user);
-            return ResultUtils.success(token);
-        }
-        return ResultUtils.error(UserEnums.LOGIN_FAIL);
-    }
+    @Autowired
+    private GraduateService graduateService;
+
+
 
     @ApiOperation("查看邮箱是否可用")
     @GetMapping("/user/checkAvailable")
@@ -38,13 +40,6 @@ public class UserController {
         }else{
             return ResultUtils.success();
         }
-    }
-
-    @ApiOperation("用户注册")
-    @PostMapping("/user/register")
-    public Result register(@RequestBody User user,@RequestParam String checkcode){
-        userService.register(user,checkcode);
-        return ResultUtils.success();
     }
 
 
@@ -95,6 +90,55 @@ public class UserController {
     @PostMapping("user/visit")
     public Result visit(@RequestParam String followingEmail,@RequestParam String followedEmail){
         userService.visit(followingEmail,followedEmail);
+        return ResultUtils.success();
+    }
+
+
+
+    /*******身份转换操作********/
+
+    @ApiOperation("用户注册")
+    @PostMapping("/user/register")
+    public Result register(@RequestBody User user,@RequestParam String checkcode){
+        userService.register(user,checkcode);
+        return ResultUtils.success();
+    }
+
+
+    @ApiOperation("用户登录")
+    @PostMapping("/user/login")
+    public Result login(@RequestParam String email,@RequestParam String password){
+        User user = userService.login(email, password);
+        if(user != null){
+            String token = JwtUtils.createJwt(user);
+            return ResultUtils.success(token);
+        }
+        return ResultUtils.error(UserEnums.LOGIN_FAIL);
+    }
+
+    //认证成为本科学生
+
+    @PostMapping("/user/becomeStudent")
+    //虽然可以同时使用，但是一般还是别这么干，以后有机会改
+    public Result becomeStudent(@RequestBody Student student,@RequestParam String token){
+
+        String email = (String) JwtUtils.parseJwt(token).get("email");
+        student.setEmail(email);
+        studentService.save(student);
+        log.info("{}认证成为学生",email);
+        return ResultUtils.success();
+    }
+
+
+    //认证成为毕业生
+
+    @PostMapping("/user/becomeGraduate")
+    public Result becomeGraduate(@RequestBody Graduate graduate,@RequestParam String token){
+
+        String email = (String) JwtUtils.parseJwt(token).get("email");
+        graduate.setEmail(email);
+        graduateService.save(graduate);
+        log.info("{}认证成为毕业生",email);
         return ResultUtils.success();
     }
 }

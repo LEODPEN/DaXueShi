@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "用户请求")
 @RestController
 @RequestMapping("/dxs")
+@CrossOrigin
 public class UserController {
     @Autowired
     private UserService userService;

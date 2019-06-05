@@ -21,7 +21,7 @@ public class UserProvider {
                 SET("profile = #{profile}");
             }
             if(user.getLastLoginTime() != null){
-                SET("last_login_time = #{lastLoginTime");
+                SET("last_login_time = #{lastLoginTime}");
             }
             if (user.getStatus() != null){
                 SET("status = #{status}");

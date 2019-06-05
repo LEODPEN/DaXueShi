@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService{
         User user = userDao.findByMail(email);
         user.setPassword(encoder.encode(password));
         log.info("用户:" + email + "重置了密码");
-        userDao.saveUser(user);
+        userDao.updateUser(user);
     }
 
     @Override

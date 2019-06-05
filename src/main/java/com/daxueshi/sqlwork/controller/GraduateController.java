@@ -23,40 +23,41 @@ public class GraduateController {
     @Autowired
     private GraduateService graduateService;
 
-    @ApiOperation("查询指定专业毕业生信息")
+    //查某专业毕业的所有学生信息
     @GetMapping("/graduate/peers")
-    public Result findByMajorName(@RequestParam String majorName){
-        List<GraduateInfo> graduateInfos = graduateService.findByMajorName(majorName);
-        return ResultUtils.success(graduateInfos);
+    public Result findAllByMajorName(@RequestParam String majorName){
+        List<Graduate> graduates = graduateService.findByMajorName(majorName);
+        return ResultUtils.success(graduates);
     }
 
     @ApiOperation("查询指定学校指定专业毕业生信息")
-    @GetMapping("/graduate/classmates")
+    @GetMapping("/graduate/byUAM")
     public Result findByUniversityAndMajor(@RequestParam String universityName,@RequestParam String majorName){
-        List<Graduate> graduateInfos = graduateService.findByUniversityNameAndMajor(universityName, majorName);
-        return  ResultUtils.success(graduateInfos);
+        List<Graduate> graduates = graduateService.findByUniversityNameAndMajor(universityName, majorName);
+        return  ResultUtils.success(graduates);
     }
 
     @ApiOperation("根据薪资等级查询毕业生信息")
-    @GetMapping("/graduate/salaryLevel")
+    @GetMapping("/graduate/bySalaryLevel")
     public Result findBySalary(@RequestParam Integer salaryLevel){
-        List<GraduateInfo> graduateInfos = graduateService.findBySalaryLevel(salaryLevel);
-        return ResultUtils.success(graduateInfos);
+        //Graduate里面也有salary，必要性极低
+        List<GraduateInfo> graduates = graduateService.findBySalaryLevel(salaryLevel);
+        return ResultUtils.success(graduates);
     }
 
     @ApiOperation("插入毕业生信息")
-    @PostMapping("/graduate")
+    @PostMapping("/graduate/")
     public Result save(@RequestBody Graduate graduate){
         graduateService.save(graduate);
         return ResultUtils.success();
     }
 
-    @ApiOperation("删除毕业生信息")
-    @DeleteMapping("/graduate")
-    public Result delete(@RequestParam String email){
-        graduateService.delete(email);
-        return ResultUtils.success();
-    }
+//    @ApiOperation("删除毕业生信息")
+////    @DeleteMapping("/graduate")
+////    public Result delete(@RequestParam String email){
+////        graduateService.delete(email);
+////        return ResultUtils.success();
+////    }
 
     @ApiOperation("更新毕业生信息")
     @PutMapping("/graduate")

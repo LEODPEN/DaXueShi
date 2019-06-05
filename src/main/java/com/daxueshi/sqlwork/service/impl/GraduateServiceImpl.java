@@ -30,7 +30,7 @@ public class GraduateServiceImpl implements GraduateService {
     }
 
     @Override
-    public List<GraduateInfo> findByMajorName(String majorName) {
+    public List<Graduate> findByMajorName(String majorName) {
         return graduateDao.findByMajorName(majorName);
     }
 

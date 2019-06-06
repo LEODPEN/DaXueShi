@@ -16,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @Slf4j
 @Api(tags = "用户请求")
@@ -107,9 +110,12 @@ public class UserController {
     @PostMapping("/user/login")
     public Result login(@RequestParam String email, @RequestParam String password) {
         User user = userService.login(email, password);
+        Map<String,String> loginInfo = new HashMap<>();
         if (user != null) {
             String token = JwtUtils.createJwt(user);
-            return ResultUtils.success(token);
+            loginInfo.put("token",token);
+            loginInfo.put("nickname",user.getNickname());
+            return ResultUtils.success(loginInfo);
         }
         return ResultUtils.error(UserEnums.LOGIN_FAIL);
     }

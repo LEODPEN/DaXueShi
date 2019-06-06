@@ -6,6 +6,7 @@ import com.daxueshi.sqlwork.dao.FollowDao;
 import com.daxueshi.sqlwork.domain.Comment;
 import com.daxueshi.sqlwork.domain.Discussion;
 import com.daxueshi.sqlwork.service.DiscussionService;
+import com.daxueshi.sqlwork.utils.JwtUtils;
 import com.daxueshi.sqlwork.utils.KeyUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -62,7 +63,11 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
 
     @Override
-    public void save(Discussion discussion){
+    public void save(Discussion discussion,String token){
+        String email = (String) JwtUtils.parseJwt(token).get("email");
+        String nickname = (String) JwtUtils.parseJwt(token).get("name");
+        discussion.setEmail(email);
+        discussion.setNickname(nickname);
         discussion.setId(KeyUtils.genUniqueKey());
         discussion.setPublishTime(new Date());
         discussion.setLastEditTime(new Date());
@@ -118,6 +123,7 @@ public class DiscussionServiceImpl implements DiscussionService {
         comment.setLastEditTime(new Date());
         commentDao.update(comment);
     }
+
 
     public void updateCount(String id, String key){
         Query query = new Query();

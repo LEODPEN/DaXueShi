@@ -16,7 +16,7 @@ import java.util.List;
 public interface StudentDao {
 
 
-    @Insert("insert into students(user_id,university_id,major_id,scores) values(#{userId},#{universityId},#{majorId},0)")
+    @Insert("insert into students(email,university_name,major_name,grade,scores) values(#{email},#{universityName},#{majorName},#{grade},0)")
     void save(Student student);
 
     @Delete("delete from students where email = #{email}")

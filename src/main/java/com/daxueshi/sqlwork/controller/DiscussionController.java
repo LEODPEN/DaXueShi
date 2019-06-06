@@ -74,8 +74,8 @@ public class DiscussionController {
     // 是否需要返回discussion的id
     @ApiOperation("保存帖子")
     @PostMapping
-    public Result save(@RequestBody Discussion discussion){
-        discussionService.save(discussion);
+    public Result save(@RequestBody Discussion discussion,@RequestParam String token){
+        discussionService.save(discussion,token);
         return ResultUtils.success();
     }
 

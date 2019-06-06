@@ -19,7 +19,6 @@ public interface DiscussionService {
 
     Discussion findById(String id);
 
-    void save(Discussion discussion);
 
     void update(Discussion discussion);
 
@@ -32,4 +31,6 @@ public interface DiscussionService {
     void deleteComment(String discussionId, String commentId);
 
     void updateComment(Comment comment);
+
+    void save(Discussion discussion, String token);
 }

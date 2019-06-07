@@ -79,6 +79,13 @@ public class DiscussionServiceImpl implements DiscussionService {
 
     @Override
     public void update(Discussion discussion){
+        Discussion oldDiscussion = discussionDao.findById(discussion.getId()).get();
+        discussion.setNickname(oldDiscussion.getNickname());
+        discussion.setEmail(oldDiscussion.getEmail());
+        discussion.setPublishTime(oldDiscussion.getPublishTime());
+        discussion.setVisits(oldDiscussion.getVisits());
+        discussion.setThumbs(oldDiscussion.getThumbs());
+        discussion.setComments(oldDiscussion.getComments());
         discussion.setLastEditTime(new Date());
         discussionDao.save(discussion);
     }

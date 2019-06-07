@@ -3,6 +3,7 @@ package com.daxueshi.sqlwork.domain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,6 +17,7 @@ import java.util.Date;
 @ApiModel("论坛区实体")
 @Data
 @Document(collection = "discussions")
+@DynamicUpdate
 public class Discussion implements Serializable {
 
 
@@ -24,7 +26,8 @@ public class Discussion implements Serializable {
     @Id
     private String id;
     private String title;
-    private String content;
+    private String mdContent;
+    private String htmlContent;
     private String majorName;
     private Date publishTime;
     private Date lastEditTime;

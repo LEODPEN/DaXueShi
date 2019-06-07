@@ -115,6 +115,7 @@ public class UserController {
             String token = JwtUtils.createJwt(user);
             loginInfo.put("token",token);
             loginInfo.put("nickname",user.getNickname());
+            loginInfo.put("email",user.getEmail());
             return ResultUtils.success(loginInfo);
         }
         return ResultUtils.error(UserEnums.LOGIN_FAIL);

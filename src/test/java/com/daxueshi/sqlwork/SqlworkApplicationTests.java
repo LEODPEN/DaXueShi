@@ -143,14 +143,14 @@ public class SqlworkApplicationTests {
 
     @Test
     public void testGetDiscussion() throws Exception{
-        String token = "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoi5rSL6JGxIiwiZW1haWwiOiI5NjkwMjMwMTRAcXEuY29tIiwiaWF0IjoxNTU5Mjc5MDE0LCJleHAiOjE1NTkzNjU0MTR9.ezPRyJ_Iy-z3O7UW7qWXOKENUZ3JapxxBD5JBCy9-Jg";
-        String head = "token_" + token;
+        //String token = "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoi5rSL6JGxIiwiZW1haWwiOiI5NjkwMjMwMTRAcXEuY29tIiwiaWF0IjoxNTU5Mjc5MDE0LCJleHAiOjE1NTkzNjU0MTR9.ezPRyJ_Iy-z3O7UW7qWXOKENUZ3JapxxBD5JBCy9-Jg";
+        //String head = "token_" + token;
         String id = "1559281006732382647";
-        String res = mockMvc.perform(MockMvcRequestBuilders.get("/dxs/discussion/comment")
-                .header("Login",head)
-                //.param("majorName","软件工程")
+        String res = mockMvc.perform(MockMvcRequestBuilders.get("/dxs/discussion/all")
+                //.header("Login",head)
+                .param("majorName","软件工程")
                 //.param("email","969023014@qq.com")
-                .param("id",id)
+                //.param("id",id)
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn().getResponse().getContentAsString();
         System.out.println("res = " + res);

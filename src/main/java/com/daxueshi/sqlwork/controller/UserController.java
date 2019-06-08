@@ -1,6 +1,7 @@
 package com.daxueshi.sqlwork.controller;
 
 import com.daxueshi.sqlwork.VO.Result;
+import com.daxueshi.sqlwork.dao.UserDao;
 import com.daxueshi.sqlwork.domain.Graduate;
 import com.daxueshi.sqlwork.domain.Student;
 import com.daxueshi.sqlwork.domain.User;
@@ -8,7 +9,9 @@ import com.daxueshi.sqlwork.enums.UserEnums;
 import com.daxueshi.sqlwork.service.GraduateService;
 import com.daxueshi.sqlwork.service.StudentService;
 import com.daxueshi.sqlwork.service.UserService;
-import com.daxueshi.sqlwork.utils.JwtUtils;
+import com.daxueshi.sqlwork.utils.GraduateJwtUtils;
+import com.daxueshi.sqlwork.utils.StudentJwtUtils;
+import com.daxueshi.sqlwork.utils.UserJwtUtils;
 import com.daxueshi.sqlwork.utils.ResultUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +27,10 @@ import java.util.Map;
 @Api(tags = "用户请求")
 @RequestMapping("/dxs")
 public class UserController {
+
+    @Autowired
+    private UserDao userDao;
+
     @Autowired
     private UserService userService;
 
@@ -109,15 +116,30 @@ public class UserController {
     @ApiOperation("用户登录")
     @PostMapping("/user/login")
     public Result login(@RequestParam String email, @RequestParam String password) {
-        User user = userService.login(email, password);
+        Object o = userService.login(email, password);
         Map<String,String> loginInfo = new HashMap<>();
-        if (user != null) {
-            String token = JwtUtils.createJwt(user);
+        if (o==null){
+            return ResultUtils.error(UserEnums.LOGIN_FAIL);
+        }
+        else if (o instanceof User){
+            User user = (User)o;
+            String token = UserJwtUtils.createJwt(user);
             loginInfo.put("token",token);
             loginInfo.put("nickname",user.getNickname());
-            return ResultUtils.success(loginInfo);
         }
-        return ResultUtils.error(UserEnums.LOGIN_FAIL);
+        else if (o instanceof Student){
+            Student student = (Student)o;
+            String token = StudentJwtUtils.createJwt(student);
+            loginInfo.put("token",token);
+            loginInfo.put("nickname", userDao.findByMail(student.getEmail()).getNickname());
+        }
+        else {
+            Graduate graduate = (Graduate)o;
+            String token = GraduateJwtUtils.createJwt(graduate);
+            loginInfo.put("token",token);
+            loginInfo.put("nickname", userDao.findByMail(graduate.getEmail()).getNickname());
+        }
+        return ResultUtils.success(loginInfo);
     }
 
     //认证成为本科学生
@@ -126,11 +148,13 @@ public class UserController {
     //虽然可以同时使用，但是一般还是别这么干，以后有机会改
     public Result becomeStudent(@RequestBody Student student, @RequestParam String token) {
 
-        String email = (String) JwtUtils.parseJwt(token).get("email");
+        String email = (String) UserJwtUtils.parseJwt(token).get("email");
         student.setEmail(email);
         studentService.save(student);
         log.info("{}认证成为学生", email);
-        return ResultUtils.success();
+        String studentToken = StudentJwtUtils.createJwt(student);
+        //回传token，前端将原来的token替换掉
+        return ResultUtils.success(studentToken);
     }
 
 
@@ -139,10 +163,12 @@ public class UserController {
     @PostMapping("/user/becomeGraduate")
     public Result becomeGraduate(@RequestBody Graduate graduate, @RequestParam String token) {
 
-        String email = (String) JwtUtils.parseJwt(token).get("email");
+        String email = (String) UserJwtUtils.parseJwt(token).get("email");
         graduate.setEmail(email);
         graduateService.save(graduate);
         log.info("{}认证成为毕业生", email);
-        return ResultUtils.success();
+        String graduateToken = GraduateJwtUtils.createJwt(graduate);
+        //回传token，前端将原来的token替换掉
+        return ResultUtils.success(graduateToken);
     }
 }

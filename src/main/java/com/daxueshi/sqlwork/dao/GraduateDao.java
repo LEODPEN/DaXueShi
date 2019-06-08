@@ -25,6 +25,9 @@ public interface GraduateDao {
     @UpdateProvider(type = GraduateProvider.class, method = "updateGraduate")
     void update(Graduate graduate);
 
+    @Select("select * from graduates where email = #{email}")
+    Graduate findOne(String email);
+
     @Select("select * from graduates " +
             "where major_name = #{majorName} " )
     List<Graduate> findByMajorName(String majorName);

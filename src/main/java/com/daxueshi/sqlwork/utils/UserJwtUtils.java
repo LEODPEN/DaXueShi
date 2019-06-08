@@ -23,7 +23,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Slf4j
-public class JwtUtils {
+public class UserJwtUtils {
     private final static String key = "ECNUSOFT";
     private final static Long ttl = 1000 * 60 * 60 * 24L;
 
@@ -35,6 +35,8 @@ public class JwtUtils {
         JwtBuilder builder = Jwts.builder()
                 //就只能存user信息，因为不确定是否状态为毕业
                 .claim("name",user.getNickname())
+                //不然都加上这个字段
+                //或者单开一张表,来做对应
                 .claim("img",user.getProfile())
                 .claim("email",user.getEmail())
                 .setIssuedAt(present)

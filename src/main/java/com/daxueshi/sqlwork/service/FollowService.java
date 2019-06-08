@@ -1,6 +1,7 @@
 package com.daxueshi.sqlwork.service;
 
 import com.daxueshi.sqlwork.domain.Follow;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -9,9 +10,9 @@ import java.util.List;
  * @date 2019-05-29 -15:17
  */
 public interface FollowService {
-    List<Follow> findIFollowWho(String email);
+    PageInfo findIFollowWho(String email);
 
-    List<Follow> findWhoFollowMe(String email);
+    PageInfo findWhoFollowMe(String email);
 
     void cancelFollow(String followingEmail, String followedEmail);
 

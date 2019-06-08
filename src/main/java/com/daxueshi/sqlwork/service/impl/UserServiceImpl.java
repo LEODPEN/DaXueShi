@@ -1,13 +1,19 @@
 package com.daxueshi.sqlwork.service.impl;
 
 import com.daxueshi.sqlwork.dao.FollowDao;
+import com.daxueshi.sqlwork.dao.GraduateDao;
+import com.daxueshi.sqlwork.dao.StudentDao;
 import com.daxueshi.sqlwork.dao.UserDao;
+import com.daxueshi.sqlwork.domain.Graduate;
+import com.daxueshi.sqlwork.domain.Student;
 import com.daxueshi.sqlwork.domain.User;
 import com.daxueshi.sqlwork.enums.UserEnums;
 import com.daxueshi.sqlwork.enums.UserStatusEnums;
 import com.daxueshi.sqlwork.exception.MyException;
 import com.daxueshi.sqlwork.lock.RedisLock;
+import com.daxueshi.sqlwork.service.GraduateService;
 import com.daxueshi.sqlwork.service.MailService;
+import com.daxueshi.sqlwork.service.StudentService;
 import com.daxueshi.sqlwork.service.UserService;
 import com.daxueshi.sqlwork.utils.CheckcodeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -40,13 +46,27 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private RedisLock redisLock;
 
+    @Autowired
+    private StudentDao studentDao;
+
+    @Autowired
+    private GraduateDao graduateDao;
+
     private final static int TIMEOUT = 10 * 1000;
 
     @Override
-    public User login(String email,String password) {
+    public Object login(String email,String password) {
         User user = userDao.findByMail(email);
         if(user != null && encoder.matches(password,user.getPassword())) {
             log.info("账号:" + email + "已经成功登录");
+            Graduate graduate = graduateDao.findOne(email);
+            if (graduate!=null){
+                return graduate;
+            }
+            Student student = studentDao.findOne(email);
+            if (student!=null){
+                return student;
+            }
             return user;
         }
         return null;

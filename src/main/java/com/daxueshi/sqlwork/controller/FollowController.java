@@ -4,6 +4,7 @@ import com.daxueshi.sqlwork.VO.Result;
 import com.daxueshi.sqlwork.domain.Follow;
 import com.daxueshi.sqlwork.service.FollowService;
 import com.daxueshi.sqlwork.utils.ResultUtils;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,27 +20,27 @@ import java.util.Map;
  */
 @RestController
 @Api(tags = "关注请求")
+//其实只有学生能操作？不如放在student？
 @RequestMapping("/dxs/follow")
 public class FollowController {
 
     @Autowired
     private FollowService followService;
 
-    @GetMapping
+    @GetMapping("/getInfo")
     @ApiOperation("查询我关注的信息")
-    public Result findFollowInfos(
-            @RequestParam String email){
+    public Result findFollowInfos(@RequestParam String email){
         Map<String, Object> followInfos = new HashMap<>();
-        List<Follow> following = followService.findIFollowWho(email);
-        List<Follow> followed = followService.findWhoFollowMe(email);
+        PageInfo following = followService.findIFollowWho(email);
+        PageInfo followed = followService.findWhoFollowMe(email);
         followInfos.put("following",following);
-        followInfos.put("followingCnt",following.size());
+        followInfos.put("followingCnt",following.getTotal());
         followInfos.put("followed",followed);
-        followInfos.put("followedCnt",followed.size());
+        followInfos.put("followedCnt",followed.getTotal());
         return ResultUtils.success(followInfos);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/cancelFollow")
     @ApiOperation("取消关注")
     public Result cancelFollow(@RequestParam String followingEmail, @RequestParam String followedEmail){
         followService.cancelFollow(followingEmail,followedEmail);
@@ -47,7 +48,7 @@ public class FollowController {
     }
 
     //如果已经关注？
-    @PostMapping
+    @PostMapping("/addFollow")
     @ApiOperation("添加关注")
     public Result addFollow(@RequestParam String followingEmail, @RequestParam String followedEmail){
         followService.addFollow(followingEmail,followedEmail);

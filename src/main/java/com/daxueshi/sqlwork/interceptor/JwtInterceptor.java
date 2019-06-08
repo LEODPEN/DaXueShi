@@ -1,7 +1,5 @@
 package com.daxueshi.sqlwork.interceptor;
 
-import com.daxueshi.sqlwork.utils.JwtUtils;
-import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 

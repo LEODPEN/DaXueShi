@@ -52,7 +52,6 @@ public class UserJwtUtils {
         }catch (Exception e){
             log.error("token无效或者已经过期");
             throw new MyException(OtherErrorEnums.TOKEN_ERROR);
-
         }
     }
 }

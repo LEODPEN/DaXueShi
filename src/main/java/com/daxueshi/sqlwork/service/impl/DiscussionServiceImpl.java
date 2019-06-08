@@ -81,6 +81,7 @@ public class DiscussionServiceImpl implements DiscussionService {
     public void update(Discussion discussion){
         Discussion oldDiscussion = discussionDao.findById(discussion.getId()).get();
         discussion.setNickname(oldDiscussion.getNickname());
+        discussion.setMajorName(oldDiscussion.getMajorName());
         discussion.setEmail(oldDiscussion.getEmail());
         discussion.setPublishTime(oldDiscussion.getPublishTime());
         discussion.setVisits(oldDiscussion.getVisits());

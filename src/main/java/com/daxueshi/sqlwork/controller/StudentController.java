@@ -1,5 +1,6 @@
 package com.daxueshi.sqlwork.controller;
 
+import antlr.Token;
 import com.daxueshi.sqlwork.RequestDataForm.RequestForm;
 import com.daxueshi.sqlwork.VO.Result;
 import com.daxueshi.sqlwork.domain.Student;
@@ -9,6 +10,9 @@ import com.daxueshi.sqlwork.service.StudentService;
 import com.daxueshi.sqlwork.utils.StudentJwtUtils;
 import com.daxueshi.sqlwork.utils.UserJwtUtils;
 import com.daxueshi.sqlwork.utils.ResultUtils;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
+import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -34,14 +38,21 @@ public class StudentController {
 
     @ApiOperation("查询本校本专业在校生信息")
     @GetMapping("/student/classmates")
-    public Result findClassmates(@RequestParam String universityName, @RequestParam String majorName){
-        List<Student> students = studentService.findByUniversityAndMajor(universityName,majorName);
+    public Result findClassmates(@RequestParam("token") String token,
+                                 @RequestParam(value = "page", defaultValue = "1")Integer page,
+                                 @RequestParam(value = "size", defaultValue = "20")Integer size){
+        Claims claims = StudentJwtUtils.parseJwt(token);
+        PageInfo students = studentService.findByUniversityAndMajor((String) claims.get("universityName"), (String)claims.get("majorName"),page,size);
+
         return ResultUtils.success(students);
     }
     @ApiOperation("查询本专业在校生信息")
     @GetMapping("/student/peers/")
-    public Result findPeers(@RequestParam String majorName){
-        List<Student> students = studentService.findByMajorName(majorName);
+    public Result findPeers(@RequestParam("token") String token,
+                            @RequestParam(value = "page", defaultValue = "1")Integer page,
+                            @RequestParam(value = "size", defaultValue = "20")Integer size){
+
+        PageInfo students = studentService.findByMajorName((String) StudentJwtUtils.parseJwt(token).get("majorName"),page,size);
         return ResultUtils.success(students);
     }
 

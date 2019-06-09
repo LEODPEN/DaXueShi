@@ -1,15 +1,17 @@
 package com.daxueshi.sqlwork.controller;
 
+import antlr.Token;
 import com.daxueshi.sqlwork.RequestDataForm.RequestForm;
 import com.daxueshi.sqlwork.VO.Result;
 import com.daxueshi.sqlwork.domain.Student;
 import com.daxueshi.sqlwork.enums.GraduationEnums;
-import com.daxueshi.sqlwork.enums.OtherErrorEnums;
-import com.daxueshi.sqlwork.exception.MyException;
 import com.daxueshi.sqlwork.service.DataDisplayService;
 import com.daxueshi.sqlwork.service.StudentService;
-import com.daxueshi.sqlwork.utils.JwtUtils;
+import com.daxueshi.sqlwork.utils.StudentJwtUtils;
+import com.daxueshi.sqlwork.utils.UserJwtUtils;
 import com.daxueshi.sqlwork.utils.ResultUtils;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,14 +38,21 @@ public class StudentController {
 
     @ApiOperation("查询本校本专业在校生信息")
     @GetMapping("/student/classmates")
-    public Result findClassmates(@RequestParam String universityName, @RequestParam String majorName){
-        List<Student> students = studentService.findByUniversityAndMajor(universityName,majorName);
+    public Result findClassmates(@RequestParam("token") String token,
+                                 @RequestParam(value = "page", defaultValue = "1")Integer page,
+                                 @RequestParam(value = "size", defaultValue = "20")Integer size){
+        Claims claims = StudentJwtUtils.parseJwt(token);
+        PageInfo students = studentService.findByUniversityAndMajor((String) claims.get("universityName"), (String)claims.get("majorName"),page,size);
+
         return ResultUtils.success(students);
     }
     @ApiOperation("查询本专业在校生信息")
     @GetMapping("/student/peers/")
-    public Result findPeers(@RequestParam String majorName){
-        List<Student> students = studentService.findByMajorName(majorName);
+    public Result findPeers(@RequestParam("token") String token,
+                            @RequestParam(value = "page", defaultValue = "1")Integer page,
+                            @RequestParam(value = "size", defaultValue = "20")Integer size){
+
+        PageInfo students = studentService.findByMajorName((String) StudentJwtUtils.parseJwt(token).get("majorName"),page,size);
         return ResultUtils.success(students);
     }
 
@@ -71,28 +80,31 @@ public class StudentController {
     /*data display part */
     @PostMapping("/student/choice")
     public Result getChoice(@RequestBody RequestForm requestForm){
-        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
+        String email = (String) UserJwtUtils.parseJwt(requestForm.getToken()).get("email");
         log.info("用户{}查找{}年应届生去向分布",email,requestForm.getYear());
         return ResultUtils.success(dataDisplayService.getChoice(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor()));
     }
 
     @PostMapping("/student/desCity")
     public Result desCity(@RequestBody RequestForm requestForm){
-        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
+        String email = (String) UserJwtUtils.parseJwt(requestForm.getToken()).get("email");
         log.info("用户{}查找{}年应届生城市分布",email,requestForm.getYear());
         return ResultUtils.success(dataDisplayService.getDesCity(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor()));
     }
 
     @PostMapping("/student/desCollege")
     public Result desCollege(@RequestBody RequestForm requestForm){
-        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
+        String email = (String) UserJwtUtils.parseJwt(requestForm.getToken()).get("email");
         log.info("用户{}查找{}年应届生研究生学校分布",email,requestForm.getYear());
         return ResultUtils.success(dataDisplayService.getInstitution(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor(), GraduationEnums.STUDY.getCode()));
     }
 
     @PostMapping("/student/desCompany")
     public Result desCompany(@RequestBody RequestForm requestForm){
-        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
+//        String email = (String) UserJwtUtils.parseJwt(requestForm.getToken()).get("email");
+        //验证是本科还是毕业生，选择不同解析方式
+        //考虑加prefix做substring的识别
+        String email = (String) StudentJwtUtils.parseJwt(requestForm.getToken()).get("email");
         log.info("用户{}查找{}年应届生研究生公司分布",email,requestForm.getYear());
 
         return ResultUtils.success(dataDisplayService.getInstitution(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor(),GraduationEnums.WORK.getCode()));
@@ -100,7 +112,7 @@ public class StudentController {
 
     @PostMapping("/student/salaryChange")
     public Result fiveYearSalary(@RequestBody RequestForm requestForm){
-        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
+        String email = (String) UserJwtUtils.parseJwt(requestForm.getToken()).get("email");
         log.info("用户{}查找{}近5年应届生平均资薪水平走势",email,requestForm.getYear());
 
         return ResultUtils.success(dataDisplayService.getSalaryTrend(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor()));

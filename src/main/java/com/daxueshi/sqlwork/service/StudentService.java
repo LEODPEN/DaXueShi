@@ -1,6 +1,7 @@
 package com.daxueshi.sqlwork.service;
 
 import com.daxueshi.sqlwork.domain.Student;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ public interface StudentService {
 
     List<Student> findByMajorName(String majorName);
 
+    PageInfo findByMajorName(String majorName,Integer page, Integer size);
+
     void save(Student student);
 
     void delete(String email);
@@ -19,4 +22,6 @@ public interface StudentService {
     void update(Student student);
 
     List<Student> findByUniversityAndMajor(String universityName, String majorName);
+
+    PageInfo findByUniversityAndMajor(String universityName, String majorName, Integer page, Integer size);
 }

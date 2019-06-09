@@ -1,5 +1,6 @@
 package com.daxueshi.sqlwork.utils;
 
+import com.daxueshi.sqlwork.domain.Student;
 import com.daxueshi.sqlwork.domain.User;
 import com.daxueshi.sqlwork.enums.OtherErrorEnums;
 import com.daxueshi.sqlwork.exception.MyException;
@@ -7,36 +8,32 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-/**
- * @author onion
- * @date 2019-04-13 -11:21
- * jwt工具类
- */
 @Component
-@Getter
-@Setter
+@Data
 @Slf4j
-public class JwtUtils {
+public class StudentJwtUtils {
+
     private final static String key = "ECNUSOFT";
     private final static Long ttl = 1000 * 60 * 60 * 24L;
 
-    public static String createJwt(User user){
-        if(user == null || user.getEmail() == null)
+    public static String createJwt(Student student){
+        if(student == null || student.getEmail() == null)
             return null;
         long cur = System.currentTimeMillis();
         Date present = new Date(cur);
         JwtBuilder builder = Jwts.builder()
-                //就只能存user信息，因为不确定是否状态为毕业
-                .claim("name",user.getNickname())
-                .claim("img",user.getProfile())
-                .claim("email",user.getEmail())
+
+                .claim("majorName",student.getMajorName())
+                .claim("universityName",student.getUniversityName())
+                .claim("email",student.getEmail())
+                .claim("grade",student.getGrade())
+
                 .setIssuedAt(present)
                 .signWith(SignatureAlgorithm.HS256,key);
         if(ttl > 0){
@@ -50,6 +47,7 @@ public class JwtUtils {
         }catch (Exception e){
             log.error("token无效或者已经过期");
             throw new MyException(OtherErrorEnums.TOKEN_ERROR);
+
         }
     }
 }

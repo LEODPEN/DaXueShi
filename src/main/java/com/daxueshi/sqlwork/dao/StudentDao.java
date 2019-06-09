@@ -19,6 +19,9 @@ public interface StudentDao {
     @Insert("insert into students(email,university_name,major_name,grade,scores) values(#{email},#{universityName},#{majorName},#{grade},0)")
     void save(Student student);
 
+    @Select("select * from students where email = #{email}")
+    Student findOne(String email);
+
     @Delete("delete from students where email = #{email}")
     void delete(String email);
 

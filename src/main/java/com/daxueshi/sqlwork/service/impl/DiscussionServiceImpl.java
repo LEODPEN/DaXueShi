@@ -7,7 +7,7 @@ import com.daxueshi.sqlwork.domain.Comment;
 import com.daxueshi.sqlwork.domain.Discussion;
 import com.daxueshi.sqlwork.dto.CommentDTO;
 import com.daxueshi.sqlwork.service.DiscussionService;
-import com.daxueshi.sqlwork.utils.JwtUtils;
+import com.daxueshi.sqlwork.utils.UserJwtUtils;
 import com.daxueshi.sqlwork.utils.KeyUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -66,8 +66,8 @@ public class DiscussionServiceImpl implements DiscussionService {
 
     @Override
     public void save(Discussion discussion,String token){
-        String email = (String) JwtUtils.parseJwt(token).get("email");
-        String nickname = (String) JwtUtils.parseJwt(token).get("name");
+        String email = (String) UserJwtUtils.parseJwt(token).get("email");
+        String nickname = (String) UserJwtUtils.parseJwt(token).get("name");
         discussion.setEmail(email);
         discussion.setNickname(nickname);
         discussion.setId(KeyUtils.genUniqueKey());

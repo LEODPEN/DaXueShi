@@ -5,6 +5,7 @@ import com.daxueshi.sqlwork.dao.DiscussionDao;
 import com.daxueshi.sqlwork.dao.FollowDao;
 import com.daxueshi.sqlwork.domain.Comment;
 import com.daxueshi.sqlwork.domain.Discussion;
+import com.daxueshi.sqlwork.dto.CommentDTO;
 import com.daxueshi.sqlwork.service.DiscussionService;
 import com.daxueshi.sqlwork.utils.JwtUtils;
 import com.daxueshi.sqlwork.utils.KeyUtils;
@@ -19,6 +20,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -118,12 +120,26 @@ public class DiscussionServiceImpl implements DiscussionService {
         String order = "last_edit_time desc";
         PageHelper.startPage(0,10, order);
         List<Comment> comments = commentDao.findById(id);
-        return new PageInfo(comments);
+        List<CommentDTO> commentDTOList = new ArrayList<>();
+        for(Comment comment: comments){
+            String commentId = comment.getCommentId();
+            List<Comment> childrenList = commentDao.findChildrenById(commentId);
+            String content = comment.getContent();
+            String email = comment.getEmail();
+            Date lastEditTime = comment.getLastEditTime();
+            commentDTOList.add(new CommentDTO(childrenList,commentId,content,email,lastEditTime));
+        }
+        return new PageInfo(commentDTOList);
     }
 
     @Override
     public void deleteComment(String discussionId, String commentId) {
         commentDao.deleteCertainComment(discussionId, commentId);
+    }
+
+    @Override
+    public void deleteCommentByCommentId(String commentId) {
+        commentDao.deleteCommentByCommentId(commentId);
     }
 
     @Override

@@ -20,11 +20,17 @@ public interface CommentDao {
     @Select("select * from comments where discussion_id = #{id}")
     List<Comment> findById(String id);
 
+    @Select("select * from comments where parent_id = #{parentId}")
+    List<Comment> findChildrenById(String parentId);
+
     @Delete("delete from comments where discussion_id = #{id}")
     void deleteByDiscussionId(String id);
 
     @Delete("delete from comments where discussion_id = #{discussionId} and comment_id = #{commentId}")
     void deleteCertainComment(String discussionId, String commentId);
+
+    @Delete("delete from comments where comment_id = #{commentId}")
+    void deleteCommentByCommentId(String commentId);
 
     @Update("update comments set content = #{content}, last_edit_time = #{lastEditTime} " +
             "where discussion_id = #{discussionId} and comment_id = #{commentId}")

@@ -33,8 +33,8 @@ public class DiscussionController {
     @GetMapping("/all")
     public Result findAll(
             @RequestParam(value = "page", defaultValue = "1")Integer page,
-            @RequestParam(value = "size", defaultValue = "20")Integer size,
-            @RequestParam(value = "sort", defaultValue = "publishTime")String property,
+            @RequestParam(value = "size", defaultValue = "5")Integer size,
+            @RequestParam(value = "property", defaultValue = "publishTime")String property,
             @RequestParam String majorName){
         Sort sort = new Sort(Sort.Direction.DESC,property);
         Pageable pageable  = PageRequest.of(page - 1, size, sort);
@@ -117,8 +117,8 @@ public class DiscussionController {
 
     @ApiOperation("删除评论")
     @DeleteMapping("/comment")
-    public Result deleteComment(@RequestParam String discussionId,@RequestParam String commentId){
-        discussionService.deleteComment(discussionId,commentId);
+    public Result deleteComment(@RequestParam String commentId){
+        discussionService.deleteCommentByCommentId(commentId);
         return ResultUtils.success();
     }
 

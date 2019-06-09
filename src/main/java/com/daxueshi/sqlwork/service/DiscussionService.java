@@ -19,7 +19,6 @@ public interface DiscussionService {
 
     Discussion findById(String id);
 
-
     void update(Discussion discussion);
 
     void deleteById(String id);
@@ -29,6 +28,8 @@ public interface DiscussionService {
     PageInfo findComments(String id);
 
     void deleteComment(String discussionId, String commentId);
+
+    void deleteCommentByCommentId(String commentId);
 
     void updateComment(Comment comment);
 

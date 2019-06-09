@@ -149,6 +149,7 @@ public class SqlworkApplicationTests {
         String res = mockMvc.perform(MockMvcRequestBuilders.get("/dxs/discussion/all")
                 //.header("Login",head)
                 .param("majorName","软件工程")
+                .param("property","visits")
                 //.param("email","969023014@qq.com")
                 //.param("id",id)
                 .contentType(MediaType.APPLICATION_JSON_UTF8))

@@ -34,4 +34,6 @@ public interface DiscussionService {
     void updateComment(Comment comment);
 
     void save(Discussion discussion, String token);
+
+    Page<Discussion> findByKeyword(Pageable pageable, String majorName, String keyword);
 }

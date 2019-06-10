@@ -35,10 +35,16 @@ public class DiscussionController {
             @RequestParam(value = "page", defaultValue = "1")Integer page,
             @RequestParam(value = "size", defaultValue = "5")Integer size,
             @RequestParam(value = "property", defaultValue = "publishTime")String property,
-            @RequestParam String majorName){
+            @RequestParam String majorName,
+            @RequestParam(defaultValue = "")String keyword){
         Sort sort = new Sort(Sort.Direction.DESC,property);
         Pageable pageable  = PageRequest.of(page - 1, size, sort);
-        Page pageInfo = discussionService.findAll(pageable, majorName);
+        Page pageInfo;
+        if(keyword.equals("")){
+            pageInfo = discussionService.findAll(pageable, majorName);
+        }else{
+            pageInfo = discussionService.findByKeyword(pageable, majorName, keyword);
+        }
         return ResultUtils.success(pageInfo);
     }
 
@@ -46,12 +52,21 @@ public class DiscussionController {
     @GetMapping("/follow")
     @ApiImplicitParam(name = "email",value = "我的邮箱")
     public Result findByFollow(@RequestParam(value = "page", defaultValue = "1")Integer page,
-                               @RequestParam(value = "size", defaultValue = "20")Integer size,
+                               @RequestParam(value = "size", defaultValue = "5")Integer size,
                                @RequestParam String email){
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Discussion> pageInfo = discussionService.findByFollow(email, pageable);
         return ResultUtils.success(pageInfo);
     }
+
+//    @ApiOperation("通过标题匹配查询")
+//    @GetMapping("/search")
+//    public Result findBySearch(@RequestParam(value = "page", defaultValue = "1")Integer page,
+//                               @RequestParam(value = "size", defaultValue = "5")Integer size,
+//                               @RequestParam String title){
+//
+//        return ResultUtils.success();
+//    }
 
     @ApiOperation("查询某用户发表的所有帖子")
     @GetMapping("/publish")

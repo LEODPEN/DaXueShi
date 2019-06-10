@@ -80,6 +80,11 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
 
     @Override
+    public Page findByKeyword(Pageable pageable, String majorName, String keyword) {
+        return discussionDao.findByMajorNameAndTitleLike(majorName, keyword, pageable);
+    }
+
+    @Override
     public void update(Discussion discussion){
         Discussion oldDiscussion = discussionDao.findById(discussion.getId()).get();
         discussion.setNickname(oldDiscussion.getNickname());

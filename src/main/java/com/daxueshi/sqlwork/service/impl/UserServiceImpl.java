@@ -11,11 +11,10 @@ import com.daxueshi.sqlwork.enums.UserEnums;
 import com.daxueshi.sqlwork.enums.UserStatusEnums;
 import com.daxueshi.sqlwork.exception.MyException;
 import com.daxueshi.sqlwork.lock.RedisLock;
-import com.daxueshi.sqlwork.service.GraduateService;
 import com.daxueshi.sqlwork.service.MailService;
-import com.daxueshi.sqlwork.service.StudentService;
 import com.daxueshi.sqlwork.service.UserService;
 import com.daxueshi.sqlwork.utils.CheckcodeUtils;
+import com.daxueshi.sqlwork.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,6 +22,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -55,21 +56,27 @@ public class UserServiceImpl implements UserService{
     private final static int TIMEOUT = 10 * 1000;
 
     @Override
-    public Object login(String email,String password) {
+    public Map<String,String> login(String email, String password) {
         User user = userDao.findByMail(email);
+        Map loginInfo = new HashMap();
         if(user != null && encoder.matches(password,user.getPassword())) {
             log.info("账号:" + email + "已经成功登录");
+            String token = JwtUtils.createJwt(user);
+            loginInfo.put("token",token);
+            loginInfo.put("nickname",user.getNickname());
+            loginInfo.put("email",user.getEmail());
             Graduate graduate = graduateDao.findOne(email);
             if (graduate!=null){
-                return graduate;
+                loginInfo.put("majorName", graduate.getMajorName());
             }
             Student student = studentDao.findOne(email);
             if (student!=null){
-                return student;
+                loginInfo.put("majorName",student.getMajorName());
             }
-            return user;
+        }else{
+            throw new MyException(UserEnums.LOGIN_FAIL);
         }
-        return null;
+        return loginInfo;
     }
 
     @Override

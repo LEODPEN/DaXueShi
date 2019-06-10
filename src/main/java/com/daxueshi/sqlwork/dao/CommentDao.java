@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 @Mapper
 public interface CommentDao {
-    @Insert("insert into comments(discussion_id,comment_id,parent_id,content,email,last_edit_time)" +
-            "values(#{discussionId},#{commentId},#{parentId},#{content},#{email},#{lastEditTime})")
+    @Insert("insert into comments(discussion_id,comment_id,parent_id,content,email,last_edit_time,nickname)" +
+            "values(#{discussionId},#{commentId},#{parentId},#{content},#{email},#{lastEditTime},#{nickname})")
     void save(Comment comment);
 
     @Select("select * from comments where discussion_id = #{id}")

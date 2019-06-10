@@ -110,8 +110,10 @@ public class DiscussionController {
 
     @ApiOperation("查询帖子的评论")
     @GetMapping("/comment")
-    public Result findComments(@RequestParam String id){
-        PageInfo pageInfo = discussionService.findComments(id);
+    public Result findComments(@RequestParam String id,
+                               @RequestParam(defaultValue = "0") Integer page,
+                               @RequestParam(defaultValue = "5") Integer size){
+        PageInfo pageInfo = discussionService.findComments(id, page, size);
         return ResultUtils.success(pageInfo);
     }
 

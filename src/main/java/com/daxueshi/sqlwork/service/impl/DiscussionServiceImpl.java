@@ -7,7 +7,7 @@ import com.daxueshi.sqlwork.domain.Comment;
 import com.daxueshi.sqlwork.domain.Discussion;
 import com.daxueshi.sqlwork.dto.CommentDTO;
 import com.daxueshi.sqlwork.service.DiscussionService;
-import com.daxueshi.sqlwork.utils.UserJwtUtils;
+import com.daxueshi.sqlwork.utils.JwtUtils;
 import com.daxueshi.sqlwork.utils.KeyUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -66,8 +66,8 @@ public class DiscussionServiceImpl implements DiscussionService {
 
     @Override
     public void save(Discussion discussion,String token){
-        String email = (String) UserJwtUtils.parseJwt(token).get("email");
-        String nickname = (String) UserJwtUtils.parseJwt(token).get("name");
+        String email = (String) JwtUtils.parseJwt(token).get("email");
+        String nickname = (String) JwtUtils.parseJwt(token).get("name");
         discussion.setEmail(email);
         discussion.setNickname(nickname);
         discussion.setId(KeyUtils.genUniqueKey());
@@ -116,9 +116,9 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
 
     @Override
-    public PageInfo findComments(String id) {
+    public PageInfo findComments(String id,Integer page, Integer size) {
         String order = "last_edit_time desc";
-        PageHelper.startPage(0,10, order);
+        PageHelper.startPage(page, size, order);
         List<Comment> comments = commentDao.findById(id);
         List<CommentDTO> commentDTOList = new ArrayList<>();
         for(Comment comment: comments){
@@ -127,9 +127,13 @@ public class DiscussionServiceImpl implements DiscussionService {
             String content = comment.getContent();
             String email = comment.getEmail();
             Date lastEditTime = comment.getLastEditTime();
-            commentDTOList.add(new CommentDTO(childrenList,commentId,content,email,lastEditTime));
+            String nickname = comment.getNickname();
+            commentDTOList.add(new CommentDTO(childrenList,commentId,content,email,lastEditTime,nickname));
         }
-        return new PageInfo(commentDTOList);
+        PageInfo pageInfo = new PageInfo(comments);
+        pageInfo.setTotal(pageInfo.getTotal());
+        pageInfo.setList(commentDTOList);
+        return pageInfo;
     }
 
     @Override

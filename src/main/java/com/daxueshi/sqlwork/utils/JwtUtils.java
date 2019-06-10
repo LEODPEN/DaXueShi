@@ -23,7 +23,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Slf4j
-public class UserJwtUtils {
+public class JwtUtils {
     private final static String key = "ECNUSOFT";
     private final static Long ttl = 1000 * 60 * 60 * 24L;
 

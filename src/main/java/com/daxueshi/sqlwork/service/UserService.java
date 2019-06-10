@@ -2,8 +2,10 @@ package com.daxueshi.sqlwork.service;
 
 import com.daxueshi.sqlwork.domain.User;
 
+import java.util.Map;
+
 public interface UserService {
-    Object login(String email,String password);
+    Map<String,String> login(String email, String password);
     void register(User user,String checkcode);
     User findByEmail(String email);
     void updateUser(User user);

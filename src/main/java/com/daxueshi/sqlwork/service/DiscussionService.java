@@ -25,7 +25,7 @@ public interface DiscussionService {
 
     void makeComment(Comment comment);
 
-    PageInfo findComments(String id);
+    PageInfo findComments(String id,Integer page, Integer size);
 
     void deleteComment(String discussionId, String commentId);
 

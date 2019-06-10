@@ -1,6 +1,5 @@
 package com.daxueshi.sqlwork.controller;
 
-import antlr.Token;
 import com.daxueshi.sqlwork.RequestDataForm.RequestForm;
 import com.daxueshi.sqlwork.VO.Result;
 import com.daxueshi.sqlwork.domain.Student;
@@ -8,9 +7,8 @@ import com.daxueshi.sqlwork.enums.GraduationEnums;
 import com.daxueshi.sqlwork.service.DataDisplayService;
 import com.daxueshi.sqlwork.service.StudentService;
 import com.daxueshi.sqlwork.utils.StudentJwtUtils;
-import com.daxueshi.sqlwork.utils.UserJwtUtils;
+import com.daxueshi.sqlwork.utils.JwtUtils;
 import com.daxueshi.sqlwork.utils.ResultUtils;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
@@ -18,8 +16,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @author onion
@@ -80,21 +76,21 @@ public class StudentController {
     /*data display part */
     @PostMapping("/student/choice")
     public Result getChoice(@RequestBody RequestForm requestForm){
-        String email = (String) UserJwtUtils.parseJwt(requestForm.getToken()).get("email");
+        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
         log.info("用户{}查找{}年应届生去向分布",email,requestForm.getYear());
         return ResultUtils.success(dataDisplayService.getChoice(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor()));
     }
 
     @PostMapping("/student/desCity")
     public Result desCity(@RequestBody RequestForm requestForm){
-        String email = (String) UserJwtUtils.parseJwt(requestForm.getToken()).get("email");
+        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
         log.info("用户{}查找{}年应届生城市分布",email,requestForm.getYear());
         return ResultUtils.success(dataDisplayService.getDesCity(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor()));
     }
 
     @PostMapping("/student/desCollege")
     public Result desCollege(@RequestBody RequestForm requestForm){
-        String email = (String) UserJwtUtils.parseJwt(requestForm.getToken()).get("email");
+        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
         log.info("用户{}查找{}年应届生研究生学校分布",email,requestForm.getYear());
         return ResultUtils.success(dataDisplayService.getInstitution(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor(), GraduationEnums.STUDY.getCode()));
     }
@@ -112,7 +108,7 @@ public class StudentController {
 
     @PostMapping("/student/salaryChange")
     public Result fiveYearSalary(@RequestBody RequestForm requestForm){
-        String email = (String) UserJwtUtils.parseJwt(requestForm.getToken()).get("email");
+        String email = (String) JwtUtils.parseJwt(requestForm.getToken()).get("email");
         log.info("用户{}查找{}近5年应届生平均资薪水平走势",email,requestForm.getYear());
 
         return ResultUtils.success(dataDisplayService.getSalaryTrend(requestForm.getYear(),requestForm.getCollege(),requestForm.getMajor()));

@@ -18,5 +18,6 @@ public class Comment implements Serializable {
     private String parentId;
     private String content;
     private String email;
+    private String nickname;
     private Date lastEditTime;
 }

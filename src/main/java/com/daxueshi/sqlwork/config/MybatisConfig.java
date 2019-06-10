@@ -22,6 +22,7 @@ public class MybatisConfig {
         //使用RowBounds分页会进行count查询
         p.setProperty("rowBoundsWithCount","true");
         p.setProperty("reasonable","true");
+        p.setProperty("dialect","mysql");
         pageHelper.setProperties(p);
         return pageHelper;
     }

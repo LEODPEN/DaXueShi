@@ -28,7 +28,7 @@ public interface StudentDao {
     @UpdateProvider(type = StudentProvider.class, method = "updateStudent")
     void update(Student student);
 
-    @Select("select * from students where major_name = #{majorName}")
+    @Select("select * from students where major_name = #{majorName} order by university_name desc ")
     List<Student> findByMajorName(String majorName);
 
     @Select("select * from students where major_name = #{majorName} and university_name = #{universityName}")

@@ -13,7 +13,7 @@ public interface StudentService {
 
     List<Student> findByMajorName(String majorName);
 
-    PageInfo findByMajorName(String majorName,Integer page, Integer size);
+    PageInfo findByMajorName(String email,Integer page, Integer size);
 
     void save(Student student);
 
@@ -23,5 +23,5 @@ public interface StudentService {
 
     List<Student> findByUniversityAndMajor(String universityName, String majorName);
 
-    PageInfo findByUniversityAndMajor(String universityName, String majorName, Integer page, Integer size);
+    PageInfo findByUniversityAndMajor(String email, Integer page, Integer size);
 }

@@ -22,6 +22,9 @@ public interface FollowDao {
     @Select("select * from follows where followed_email = #{email} order by times desc")
     List<Follow> findWhoFollowMe(String email);
 
+    @Select("select * from follows where following_email = #{followingEmail} and followed_email = #{followedEmail}")
+    Follow findOne(String followingEmail, String followedEmail);
+
     @Delete("delete from follows where following_email = #{followingEmail} and followed_email = #{followedEmail}")
     void cancelFollow(String followingEmail, String followedEmail);
 

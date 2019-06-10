@@ -10,7 +10,6 @@ import com.daxueshi.sqlwork.utils.StudentJwtUtils;
 import com.daxueshi.sqlwork.utils.JwtUtils;
 import com.daxueshi.sqlwork.utils.ResultUtils;
 import com.github.pagehelper.PageInfo;
-import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -37,19 +36,39 @@ public class StudentController {
     public Result findClassmates(@RequestParam("token") String token,
                                  @RequestParam(value = "page", defaultValue = "1")Integer page,
                                  @RequestParam(value = "size", defaultValue = "20")Integer size){
-        Claims claims = StudentJwtUtils.parseJwt(token);
-        PageInfo students = studentService.findByUniversityAndMajor((String) claims.get("universityName"), (String)claims.get("majorName"),page,size);
+
+        String email = (String) JwtUtils.parseJwt(token).get("email");
+        PageInfo students = studentService.findByUniversityAndMajor(email,page,size);
 
         return ResultUtils.success(students);
     }
     @ApiOperation("查询本专业在校生信息")
-    @GetMapping("/student/peers/")
+    @GetMapping("/student/peers")
     public Result findPeers(@RequestParam("token") String token,
                             @RequestParam(value = "page", defaultValue = "1")Integer page,
                             @RequestParam(value = "size", defaultValue = "20")Integer size){
 
-        PageInfo students = studentService.findByMajorName((String) StudentJwtUtils.parseJwt(token).get("majorName"),page,size);
+        String email = (String) JwtUtils.parseJwt(token).get("email");
+
+        PageInfo students = studentService.findByMajorName(email,page,size);
+
         return ResultUtils.success(students);
+    }
+
+    @GetMapping("/student/findOneByEmail")
+    //能找到全部的student和graduate,无论是不是本专业本学校
+    public Result findOneByEmail(@RequestParam("email") String email){
+        //todo
+
+        return ResultUtils.success();
+    }
+
+    @GetMapping("/student/findOneByNickname")
+    public Result findOneByNickname(@RequestParam("nickname") String nickname ){
+
+        //todo
+
+        return ResultUtils.success();
     }
 
 //    @ApiOperation("删除学生信息")

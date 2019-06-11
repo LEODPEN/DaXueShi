@@ -20,6 +20,8 @@ public class MyWebSocket {
     private static CopyOnWriteArrayList<MyWebSocket> webSockets = new CopyOnWriteArrayList<>();
     private static Map<String, Session> sessionPool = new HashMap<>();
 
+    private String email = " ";
+
     @OnOpen
     public void onOpen(Session session, @PathParam(value = "email") String email){
         this.session = session;

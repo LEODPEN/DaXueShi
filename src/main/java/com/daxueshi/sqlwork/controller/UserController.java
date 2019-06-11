@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -57,7 +58,6 @@ public class UserController {
         userService.updateUser(user);
         return ResultUtils.success();
     }
-
 
     @ApiOperation("删除用户信息")
     @DeleteMapping("/user/")
@@ -129,9 +129,12 @@ public class UserController {
         student.setEmail(email);
         studentService.save(student);
         log.info("{}认证成为学生", email);
-        String studentToken = StudentJwtUtils.createJwt(student);
+//        String studentToken = StudentJwtUtils.createJwt(student);
+        Map<String,Object> map = new HashMap<>();
+        map.put("majorName",student.getMajorName());
+        map.put("universityName",student.getUniversityName());
         //回传token，前端将原来的token替换掉
-        return ResultUtils.success(studentToken);
+        return ResultUtils.success(map);
     }
 
 
@@ -144,8 +147,11 @@ public class UserController {
         graduate.setEmail(email);
         graduateService.save(graduate);
         log.info("{}认证成为毕业生", email);
-        String graduateToken = GraduateJwtUtils.createJwt(graduate);
+//        String graduateToken = GraduateJwtUtils.createJwt(graduate);
+        Map<String,Object> map = new HashMap<>();
+        map.put("majorName",graduate.getMajorName());
+        map.put("universityName",graduate.getUniversityName());
         //回传token，前端将原来的token替换掉
-        return ResultUtils.success(graduateToken);
+        return ResultUtils.success(map);
     }
 }

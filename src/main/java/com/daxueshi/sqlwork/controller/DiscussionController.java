@@ -1,10 +1,14 @@
 package com.daxueshi.sqlwork.controller;
 
 import com.daxueshi.sqlwork.VO.Result;
+import com.daxueshi.sqlwork.dao.FollowDao;
+import com.daxueshi.sqlwork.dao.MessageDao;
 import com.daxueshi.sqlwork.domain.Comment;
 import com.daxueshi.sqlwork.domain.Discussion;
+import com.daxueshi.sqlwork.domain.Follow;
 import com.daxueshi.sqlwork.service.impl.DiscussionServiceImpl;
 import com.daxueshi.sqlwork.socket.MyWebSocket;
+import com.daxueshi.sqlwork.utils.JwtUtils;
 import com.daxueshi.sqlwork.utils.ResultUtils;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -17,6 +21,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * @author onion
  * @date 2019-05-10 -09:39
@@ -28,6 +35,12 @@ public class DiscussionController {
 
     @Autowired
     private DiscussionServiceImpl discussionService;
+
+    @Autowired
+    private FollowDao followDao;
+
+    @Autowired
+    private MessageDao messageDao;
 
     @Autowired
     private MyWebSocket myWebSocket;
@@ -101,11 +114,16 @@ public class DiscussionController {
     }
 
     // 增删改功能
-    // 是否需要返回discussion的id
     @ApiOperation("保存帖子")
     @PostMapping
     public Result save(@RequestBody Discussion discussion,@RequestParam String token){
         discussionService.save(discussion,token);
+        String email = (String) JwtUtils.parseJwt(token).get("email");
+        List<Follow> followList = followDao.findWhoFollowMe(email);
+        String message = email + "发布了有关 " + discussion.getTitle() + " 的讨论";
+        for(Follow follow : followList){
+            myWebSocket.sendOneMessage(follow.getFollowingEmail(), message);
+        }
         return ResultUtils.success();
     }
 
@@ -126,9 +144,8 @@ public class DiscussionController {
     // 其他功能
     @ApiOperation("点赞")
     @PutMapping("/thumb")
-    public Result makeThumb(@RequestParam String id,@RequestParam(defaultValue = "969023017@qq.com")String email){
+    public Result makeThumb(@RequestParam String id){
         discussionService.updateCount(id,"thumbs");
-        myWebSocket.sendOneMessage(email,"您收到了点赞");
         return ResultUtils.success();
     }
 
@@ -137,7 +154,11 @@ public class DiscussionController {
     public Result makeComment(@RequestBody Comment comment){
         discussionService.makeComment(comment);
         Discussion discussion = discussionService.findById(comment.getDiscussionId());
-        myWebSocket.sendOneMessage(discussion.getEmail(),"您收到了回复");
+        if(!discussion.getEmail().equals(comment.getEmail())) {
+            String message = comment.getNickname() + "对您的 " + discussion.getTitle() + "有了新回复";
+            messageDao.saveMessage(discussion.getEmail(), message, new Date());
+            myWebSocket.sendOneMessage(discussion.getEmail(), message);
+        }
         return ResultUtils.success();
     }
 

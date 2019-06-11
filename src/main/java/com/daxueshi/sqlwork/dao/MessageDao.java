@@ -1,12 +1,10 @@
 package com.daxueshi.sqlwork.dao;
 
 import com.daxueshi.sqlwork.domain.Message;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,7 +15,7 @@ import java.util.List;
 @Repository
 public interface MessageDao {
     @Select("select * from messages where email = #{email} and handle = false")
-    List<Message> messages(String email);
+    List<Message> findMessages(String email);
 
     @Update("update messages set handle = true where id = #{id}")
     void handleMessage(Integer id);
@@ -26,6 +24,8 @@ public interface MessageDao {
     void handleAllMessages(List<Integer> idList);
 
     @Insert("insert into messages(email,message,publish,handle) values(#{email},#{message},#{publish},false)")
-    void hanle();
+    void saveMessage(String email, String message, Date publish);
 
+    @Delete("delete from messages where email = #{email}")
+    void deleteAllMessage(String email);
 }

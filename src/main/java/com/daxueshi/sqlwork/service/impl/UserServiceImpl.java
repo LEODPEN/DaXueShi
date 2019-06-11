@@ -68,10 +68,12 @@ public class UserServiceImpl implements UserService{
             Graduate graduate = graduateDao.findOne(email);
             if (graduate!=null){
                 loginInfo.put("majorName", graduate.getMajorName());
+                loginInfo.put("universityName", graduate.getUniversityName());
             }
             Student student = studentDao.findOne(email);
             if (student!=null){
                 loginInfo.put("majorName",student.getMajorName());
+                loginInfo.put("universityName",student.getUniversityName());
             }
         }else{
             throw new MyException(UserEnums.LOGIN_FAIL);

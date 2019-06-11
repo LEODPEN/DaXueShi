@@ -2,8 +2,15 @@ package com.daxueshi.sqlwork.controller;
 
 import com.daxueshi.sqlwork.RequestDataForm.RequestForm;
 import com.daxueshi.sqlwork.VO.Result;
+import com.daxueshi.sqlwork.converter.TotalUserDTOConverter;
+import com.daxueshi.sqlwork.dao.GraduateDao;
+import com.daxueshi.sqlwork.dao.StudentDao;
+import com.daxueshi.sqlwork.dao.UserDao;
 import com.daxueshi.sqlwork.domain.Student;
+import com.daxueshi.sqlwork.domain.User;
+import com.daxueshi.sqlwork.dto.TotalUserDTO;
 import com.daxueshi.sqlwork.enums.GraduationEnums;
+import com.daxueshi.sqlwork.enums.UserStatusEnums;
 import com.daxueshi.sqlwork.service.DataDisplayService;
 import com.daxueshi.sqlwork.service.StudentService;
 import com.daxueshi.sqlwork.utils.StudentJwtUtils;
@@ -15,6 +22,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author onion
@@ -31,6 +40,15 @@ public class StudentController {
     @Autowired
     private DataDisplayService dataDisplayService;
 
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private StudentDao studentDao;
+
+    @Autowired
+    private GraduateDao graduateDao;
+
     @ApiOperation("查询本校本专业在校生信息")
     @GetMapping("/student/classmates")
     public Result findClassmates(@RequestParam("token") String token,
@@ -38,10 +56,10 @@ public class StudentController {
                                  @RequestParam(value = "size", defaultValue = "20")Integer size){
 
         String email = (String) JwtUtils.parseJwt(token).get("email");
-        PageInfo students = studentService.findByUniversityAndMajor(email,page,size);
-
-        return ResultUtils.success(students);
+        PageInfo results = studentService.findByUniversityAndMajor(email,page,size);
+        return ResultUtils.success(results);
     }
+
     @ApiOperation("查询本专业在校生信息")
     @GetMapping("/student/peers")
     public Result findPeers(@RequestParam("token") String token,
@@ -50,25 +68,38 @@ public class StudentController {
 
         String email = (String) JwtUtils.parseJwt(token).get("email");
 
-        PageInfo students = studentService.findByMajorName(email,page,size);
+        PageInfo results = studentService.findByMajorName(email,page,size);
 
-        return ResultUtils.success(students);
+        return ResultUtils.success(results);
     }
 
     @GetMapping("/student/findOneByEmail")
     //能找到全部的student和graduate,无论是不是本专业本学校
+    //直接传list
     public Result findOneByEmail(@RequestParam("email") String email){
-        //todo
 
-        return ResultUtils.success();
+        User user = userDao.findByMail(email);
+        TotalUserDTO result = new TotalUserDTO();
+        if (user!=null){
+            String nickname = user.getNickname();
+            if (user.getStatus().equals(UserStatusEnums.VISITOR.getCode())){
+                result = TotalUserDTOConverter.convert(user,nickname);
+            }
+            else if (user.getStatus().equals(UserStatusEnums.STUDENT.getCode())){
+                result = TotalUserDTOConverter.convert(studentDao.findOne(email),nickname);
+            }
+            else {
+                result = TotalUserDTOConverter.convert(graduateDao.findOne(email),nickname);
+            }
+        }
+        return ResultUtils.success(result);
     }
 
     @GetMapping("/student/findOneByNickname")
     public Result findOneByNickname(@RequestParam("nickname") String nickname ){
 
-        //todo
-
-        return ResultUtils.success();
+        //List<User> users = userDao.findByNickname(nickname);
+        return ResultUtils.success(studentService.findByNickname(nickname));
     }
 
 //    @ApiOperation("删除学生信息")

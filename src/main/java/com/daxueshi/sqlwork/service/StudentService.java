@@ -1,6 +1,7 @@
 package com.daxueshi.sqlwork.service;
 
 import com.daxueshi.sqlwork.domain.Student;
+import com.daxueshi.sqlwork.dto.TotalUserDTO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -14,6 +15,8 @@ public interface StudentService {
     List<Student> findByMajorName(String majorName);
 
     PageInfo findByMajorName(String email,Integer page, Integer size);
+
+    List<TotalUserDTO> findByNickname(String nickname);
 
     void save(Student student);
 

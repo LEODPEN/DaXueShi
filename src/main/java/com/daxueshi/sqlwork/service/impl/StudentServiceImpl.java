@@ -1,17 +1,25 @@
 package com.daxueshi.sqlwork.service.impl;
 
+import com.daxueshi.sqlwork.converter.TotalUserDTOConverter;
 import com.daxueshi.sqlwork.dao.GraduateDao;
 import com.daxueshi.sqlwork.dao.StudentDao;
+import com.daxueshi.sqlwork.dao.UserDao;
 import com.daxueshi.sqlwork.domain.Graduate;
 import com.daxueshi.sqlwork.domain.Student;
+import com.daxueshi.sqlwork.domain.User;
+import com.daxueshi.sqlwork.dto.TotalUserDTO;
 import com.daxueshi.sqlwork.enums.OtherErrorEnums;
+import com.daxueshi.sqlwork.enums.UserStatusEnums;
 import com.daxueshi.sqlwork.exception.MyException;
 import com.daxueshi.sqlwork.service.StudentService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.list.TreeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +33,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private GraduateDao graduateDao;
+
+    @Autowired
+    private UserDao userDao;
 
 
     @Override
@@ -55,6 +66,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public PageInfo findByMajorName(String email, Integer page, Integer size) {
 
+        List<TotalUserDTO> totalUserDTOS = new ArrayList<>();
         String order = "grade desc";
         PageHelper.startPage(page-1,size,order);
         Student student = studentDao.findOne(email);
@@ -64,7 +76,17 @@ public class StudentServiceImpl implements StudentService {
         if (student==null){
             throw new MyException(OtherErrorEnums.NO_RIGHT);
         }
-        return new PageInfo(studentDao.findByMajorName(student.getMajorName()));
+
+        //同专业
+        List<Student> students = studentDao.findByMajorName(student.getMajorName());
+        PageInfo pageInfo = new PageInfo(students);
+
+        for (Student s : students){
+            totalUserDTOS.add(TotalUserDTOConverter.convert(s,userDao.findByMail(s.getEmail()).getNickname()));
+        }
+        pageInfo.setList(totalUserDTOS);
+
+        return pageInfo;
     }
 
     @Override
@@ -81,8 +103,40 @@ public class StudentServiceImpl implements StudentService {
         if (student==null){
             throw new MyException(OtherErrorEnums.NO_RIGHT);
         }
+        List<TotalUserDTO> totalUserDTOS = new ArrayList<>();
 
+        List<Student> students = studentDao.findByUniversityAndMajor(student.getUniversityName(),student.getMajorName());
+        PageInfo pageInfo = new PageInfo(students);
 
-        return new PageInfo(studentDao.findByUniversityAndMajor(student.getUniversityName(),student.getMajorName()));
+        for (Student s : students){
+            totalUserDTOS.add(TotalUserDTOConverter.convert(s,userDao.findByMail(s.getEmail()).getNickname()));
+        }
+        pageInfo.setList(totalUserDTOS);
+
+        return pageInfo;
+    }
+
+    @Override
+    //查得到所有的用户,故不对学校or专业排序,且直接传list
+    public List<TotalUserDTO> findByNickname(String nickname) {
+        List<User> users = userDao.findByNickname(nickname);
+
+        List<TotalUserDTO> result = new ArrayList<>();
+        if (CollectionUtils.isEmpty(users)){
+            return result;
+        }
+        for (User u:users){
+            String nn = u.getNickname();
+            if (u.getStatus().equals(UserStatusEnums.VISITOR.getCode())){
+                result.add(TotalUserDTOConverter.convert(u,nn));
+            }
+            else if (u.getStatus().equals(UserStatusEnums.STUDENT.getCode())){
+                result.add(TotalUserDTOConverter.convert(studentDao.findOne(u.getEmail()),nn));
+            }else {
+                result.add(TotalUserDTOConverter.convert(graduateDao.findOne(u.getEmail()),nn));
+            }
+        }
+        return result;
+
     }
 }

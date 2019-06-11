@@ -68,7 +68,7 @@ public class StudentServiceImpl implements StudentService {
 
         List<TotalUserDTO> totalUserDTOS = new ArrayList<>();
         String order = "grade desc";
-        PageHelper.startPage(page-1,size,order);
+        PageHelper.startPage(page,size,order);
         Student student = studentDao.findOne(email);
 
 //        Graduate graduate = graduateDao.findOne(email);
@@ -92,9 +92,6 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public PageInfo findByUniversityAndMajor(String email, Integer page, Integer size) {
 
-        String order = "university_name desc";
-        PageHelper.startPage(page-1,size,order);
-
         Student student = studentDao.findOne(email);
         //目前设定
         //如果是往届的学生，从未毕业到毕业状态的话，是可以查到的
@@ -105,12 +102,16 @@ public class StudentServiceImpl implements StudentService {
         }
         List<TotalUserDTO> totalUserDTOS = new ArrayList<>();
 
-        List<Student> students = studentDao.findByUniversityAndMajor(student.getUniversityName(),student.getMajorName());
+        String order = "university_name desc";
+        PageHelper.startPage(page,size,order);
+        List<Student> students = studentDao.findByUniversityAndMajor(student.getUniversityName(), student.getMajorName());
+
         PageInfo pageInfo = new PageInfo(students);
 
         for (Student s : students){
             totalUserDTOS.add(TotalUserDTOConverter.convert(s,userDao.findByMail(s.getEmail()).getNickname()));
         }
+        pageInfo.setTotal(pageInfo.getTotal());
         pageInfo.setList(totalUserDTOS);
 
         return pageInfo;

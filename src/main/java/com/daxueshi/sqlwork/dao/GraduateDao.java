@@ -42,13 +42,12 @@ public interface GraduateDao {
             "where university_name = #{universityName} and major_name = #{majorName} ")
     List<GraduateInfo> findAllGraduateInfoByUniversityAndMajor(String universityName, String majorName);
 
-    @Select("select * from graduates from "+
-            "graduates where university_name = #{universityName} and major_name = #{majorName} and graduate_year = #{year} ")
+    @Select("select * from graduates "+
+            " where university_name = #{universityName} and major_name = #{majorName} and graduate_year = #{year} ")
     List<Graduate> findByUniversityAndMajorAndYear(String universityName, String majorName, Integer year);
 
     @Select("select email, company_name, address, salary, position, graduate_year, state as status "+
             "from graduates natural join companies " +
-            "using company_name " +
             "where university_name = #{universityName} and major_name = #{majorName} and graduate_year = #{year} ")
     List<GraduateInfo> findGraduateInfoByUniversityAndMajorAndYear(String universityName, String majorName, Integer year);
 

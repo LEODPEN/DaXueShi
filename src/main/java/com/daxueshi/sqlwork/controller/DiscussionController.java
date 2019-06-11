@@ -123,6 +123,7 @@ public class DiscussionController {
         String message = email + "发布了有关 " + discussion.getTitle() + " 的讨论";
         for(Follow follow : followList){
             myWebSocket.sendOneMessage(follow.getFollowingEmail(), message);
+            messageDao.saveMessage(follow.getFollowingEmail(), message, new Date());
         }
         return ResultUtils.success();
     }

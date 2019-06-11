@@ -1,6 +1,7 @@
 package com.daxueshi.sqlwork.service;
 
 import com.daxueshi.sqlwork.domain.Message;
+import com.github.pagehelper.PageInfo;
 
 import java.util.Date;
 import java.util.List;
@@ -10,11 +11,17 @@ import java.util.List;
  * @date 2019-06-11 -11:06
  */
 public interface MessageService {
-    void saveMessage(String followedEmail, StringBuilder message, Date date);
+    void saveMessage(String followedEmail, String message, Date date);
 
-    List<Message> findMyMessage(String email);
+    PageInfo <Message> findMyMessage(String email, Integer page, Integer size);
 
-    void handleMessage(Integer id);
+    PageInfo <Message> findAllMessages(String email, Integer page, Integer size);
+
+    void deleteSelectMessages(List<Integer> idList);
 
     void deleteAllMessage(String email);
+
+    void handleSelectMessages(List<Integer> idList);
+
+    void handleAllMessages(String email);
 }

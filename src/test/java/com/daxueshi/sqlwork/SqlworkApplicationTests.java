@@ -27,6 +27,10 @@ public class SqlworkApplicationTests {
     }
 
     @Test
+    public void query() throws Exception{
+
+    }
+    @Test
     public void queryTemplate() throws Exception{
         //String content = "{\"userId\":\"010\",\"password\":\"10175101226\",\"email\":\"969023014@qq.com\"}";
         String res = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/checkCode")

@@ -51,10 +51,9 @@ public class FollowController {
     @ApiOperation("取消关注")
     public Result cancelFollow(@RequestParam String followingEmail, @RequestParam String followedEmail){
         followService.cancelFollow(followingEmail,followedEmail);
-        StringBuilder message = new StringBuilder();
-        message.append(followedEmail + "取消了对您的关注");
+        String message = followingEmail + "取消了对您的关注";
         messageService.saveMessage(followedEmail, message, new Date());
-        myWebSocket.sendOneMessage(followedEmail,message.toString());
+        myWebSocket.sendOneMessage(followedEmail, message);
         return ResultUtils.success();
     }
 
@@ -63,10 +62,9 @@ public class FollowController {
     @ApiOperation("添加关注")
     public Result addFollow(@RequestParam String followingEmail, @RequestParam String followedEmail){
         followService.addFollow(followingEmail,followedEmail);
-        StringBuilder message = new StringBuilder();
-        message.append(followedEmail + "关注了您");
+        String message = followingEmail + "关注了您";
         messageService.saveMessage(followedEmail, message, new Date());
-        myWebSocket.sendOneMessage(followedEmail,message.toString());
+        myWebSocket.sendOneMessage(followedEmail, message);
         return ResultUtils.success();
     }
 }

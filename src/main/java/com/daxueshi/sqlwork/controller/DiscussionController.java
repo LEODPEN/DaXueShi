@@ -4,6 +4,7 @@ import com.daxueshi.sqlwork.VO.Result;
 import com.daxueshi.sqlwork.domain.Comment;
 import com.daxueshi.sqlwork.domain.Discussion;
 import com.daxueshi.sqlwork.service.impl.DiscussionServiceImpl;
+import com.daxueshi.sqlwork.socket.MyWebSocket;
 import com.daxueshi.sqlwork.utils.ResultUtils;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -27,6 +28,9 @@ public class DiscussionController {
 
     @Autowired
     private DiscussionServiceImpl discussionService;
+
+    @Autowired
+    private MyWebSocket myWebSocket;
 
     // 查询功能
     @ApiOperation("查询所有帖子(根据property排序)")
@@ -56,6 +60,16 @@ public class DiscussionController {
                                @RequestParam String email){
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Discussion> pageInfo = discussionService.findByFollow(email, pageable);
+        return ResultUtils.success(pageInfo);
+    }
+
+    @ApiOperation("查询我发布的帖子")
+    @GetMapping("/mine")
+    public Result findMine(@RequestParam(value = "page", defaultValue = "1")Integer page,
+                           @RequestParam(value = "size", defaultValue = "5")Integer size,
+                           @RequestParam String email){
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Discussion> pageInfo = discussionService.findByEmail(email, pageable);
         return ResultUtils.success(pageInfo);
     }
 
@@ -111,8 +125,9 @@ public class DiscussionController {
     // 其他功能
     @ApiOperation("点赞")
     @PutMapping("/thumb")
-    public Result makeThumb(@RequestParam String id){
+    public Result makeThumb(@RequestParam String id,@RequestParam(defaultValue = "969023017@qq.com")String email){
         discussionService.updateCount(id,"thumbs");
+        myWebSocket.sendOneMessage(email,"您收到了点赞");
         return ResultUtils.success();
     }
 
@@ -120,6 +135,8 @@ public class DiscussionController {
     @PostMapping("/comment")
     public Result makeComment(@RequestBody Comment comment){
         discussionService.makeComment(comment);
+        Discussion discussion = discussionService.findById(comment.getDiscussionId());
+        myWebSocket.sendOneMessage(discussion.getEmail(),"您收到了回复");
         return ResultUtils.success();
     }
 

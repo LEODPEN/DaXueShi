@@ -5,6 +5,8 @@ import com.daxueshi.sqlwork.provider.UserProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author onion
  * @date 2019-04-08 -20:56
@@ -26,5 +28,7 @@ public interface UserDao {
     @Delete("delete from users where email=#{email}")
     void deleteByMail(String email);
 
+    @Select("select * from users where nickname like CONCAT('%',#{nickname},'%') ")
+    List<User> findByNickname(String nickname);
 
 }

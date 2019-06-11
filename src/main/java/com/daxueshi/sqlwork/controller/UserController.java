@@ -6,6 +6,7 @@ import com.daxueshi.sqlwork.domain.Graduate;
 import com.daxueshi.sqlwork.domain.Student;
 import com.daxueshi.sqlwork.domain.User;
 import com.daxueshi.sqlwork.enums.UserEnums;
+import com.daxueshi.sqlwork.enums.UserStatusEnums;
 import com.daxueshi.sqlwork.service.GraduateService;
 import com.daxueshi.sqlwork.service.StudentService;
 import com.daxueshi.sqlwork.service.UserService;
@@ -126,6 +127,9 @@ public class UserController {
     public Result becomeStudent(@RequestBody Student student, @RequestParam String token) {
 
         String email = (String) JwtUtils.parseJwt(token).get("email");
+        User user = userService.findByEmail(email);
+        user.setStatus(UserStatusEnums.STUDENT.getCode());
+        userDao.updateUser(user);
         student.setEmail(email);
         studentService.save(student);
         log.info("{}认证成为学生", email);
@@ -144,6 +148,12 @@ public class UserController {
     public Result becomeGraduate(@RequestBody Graduate graduate, @RequestParam String token) {
 
         String email = (String) JwtUtils.parseJwt(token).get("email");
+
+        User user = userService.findByEmail(email);
+
+        user.setStatus(UserStatusEnums.GRADUATE.getCode());
+        userDao.updateUser(user);
+
         graduate.setEmail(email);
         graduateService.save(graduate);
         log.info("{}认证成为毕业生", email);

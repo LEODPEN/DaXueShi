@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService{
     public void sendCheckcode(String email) {
         String checkcode = CheckcodeUtils.getCheckcode();
         redisTemplate.opsForValue().set("checkcode_"+email,checkcode,5*60, TimeUnit.SECONDS);
-        String subject = "Hello"+", This is a register mail from MTD";
+        String subject = "Hello"+", This is a register mail from DXS";
         String content = "your code is "+checkcode+", please complete your registration in 5 minutes.";
         mailService.sendHtmlMail(email,subject,content);
         log.info("向用户:" + email + "发送了验证码");

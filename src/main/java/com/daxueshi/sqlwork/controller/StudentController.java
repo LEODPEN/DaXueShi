@@ -50,7 +50,8 @@ public class StudentController {
     @Autowired
     private GraduateDao graduateDao;
 
-    @ApiOperation("查询本校本专业在校生信息")
+    @ApiOperation("查询本校本专业人信息")
+    //在校or不是在校
     @GetMapping("/student/classmates")
     public Result findClassmates(@RequestParam("token") String token,
                                  @RequestParam(value = "page", defaultValue = "1")Integer page,
@@ -70,7 +71,8 @@ public class StudentController {
         return ResultUtils.success(results);
     }
 
-    @ApiOperation("查询本专业在校生信息")
+    @ApiOperation("查询本专业所有信息")
+    //本专业全国在校or不在校学生
     @GetMapping("/student/peers")
     public Result findPeers(@RequestParam("token") String token,
                             @RequestParam(value = "page", defaultValue = "1")Integer page,
@@ -79,6 +81,15 @@ public class StudentController {
         String email = (String) JwtUtils.parseJwt(token).get("email");
 
         PageInfo results = studentService.findByMajorName(email,page,size);
+
+        List<TotalUserDTO> totalUserDTOList = (List<TotalUserDTO>) results.getList();
+        for (TotalUserDTO g : totalUserDTOList){
+            if (graduateDao.findOne(g.getEmail())!=null){
+                g.setRole("毕业老狗");
+            }
+        }
+        results.setList(totalUserDTOList);
+        results.setTotal(results.getTotal());
 
         return ResultUtils.success(results);
     }

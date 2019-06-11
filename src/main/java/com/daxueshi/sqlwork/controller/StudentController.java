@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,6 +58,15 @@ public class StudentController {
 
         String email = (String) JwtUtils.parseJwt(token).get("email");
         PageInfo results = studentService.findByUniversityAndMajor(email,page,size);
+        List<TotalUserDTO> totalUserDTOS = (List<TotalUserDTO>) results.getList();
+        //List<TotalUserDTO> newList = new ArrayList<>();
+        for (TotalUserDTO t : totalUserDTOS){
+            if (graduateDao.findOne(t.getEmail())!=null){
+                t.setRole("毕业老狗");
+            }
+        }
+        results.setTotal(results.getTotal());
+        results.setList(totalUserDTOS);
         return ResultUtils.success(results);
     }
 

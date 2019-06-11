@@ -67,8 +67,7 @@ public class StudentServiceImpl implements StudentService {
     public PageInfo findByMajorName(String email, Integer page, Integer size) {
 
         List<TotalUserDTO> totalUserDTOS = new ArrayList<>();
-        String order = "grade desc";
-        PageHelper.startPage(page,size,order);
+
         Student student = studentDao.findOne(email);
 
 //        Graduate graduate = graduateDao.findOne(email);
@@ -77,14 +76,20 @@ public class StudentServiceImpl implements StudentService {
             throw new MyException(OtherErrorEnums.NO_RIGHT);
         }
 
+        String order = "grade desc";
+        PageHelper.startPage(page,size,order);
+
         //同专业
         List<Student> students = studentDao.findByMajorName(student.getMajorName());
+
         PageInfo pageInfo = new PageInfo(students);
 
         for (Student s : students){
             totalUserDTOS.add(TotalUserDTOConverter.convert(s,userDao.findByMail(s.getEmail()).getNickname()));
         }
+
         pageInfo.setList(totalUserDTOS);
+        pageInfo.setTotal(pageInfo.getTotal());
 
         return pageInfo;
     }
@@ -109,7 +114,13 @@ public class StudentServiceImpl implements StudentService {
         PageInfo pageInfo = new PageInfo(students);
 
         for (Student s : students){
-            totalUserDTOS.add(TotalUserDTOConverter.convert(s,userDao.findByMail(s.getEmail()).getNickname()));
+//            Graduate graduate = graduateDao.findOne(email);
+//            if (graduate!=null){
+//                totalUserDTOS.add(TotalUserDTOConverter.convert(graduate,userDao.findByMail(s.getEmail()).getNickname()));
+//            }else {
+                totalUserDTOS.add(TotalUserDTOConverter.convert(s,userDao.findByMail(s.getEmail()).getNickname()));
+            //}
+
         }
         pageInfo.setTotal(pageInfo.getTotal());
         pageInfo.setList(totalUserDTOS);

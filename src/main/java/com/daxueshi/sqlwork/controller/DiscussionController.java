@@ -68,7 +68,8 @@ public class DiscussionController {
     public Result findMine(@RequestParam(value = "page", defaultValue = "1")Integer page,
                            @RequestParam(value = "size", defaultValue = "5")Integer size,
                            @RequestParam String email){
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Sort sort = new Sort(Sort.Direction.DESC, "publishTime");
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
         Page<Discussion> pageInfo = discussionService.findByEmail(email, pageable);
         return ResultUtils.success(pageInfo);
     }

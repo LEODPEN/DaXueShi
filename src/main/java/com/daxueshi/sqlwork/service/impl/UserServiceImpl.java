@@ -69,11 +69,15 @@ public class UserServiceImpl implements UserService{
             if (graduate!=null){
                 loginInfo.put("majorName", graduate.getMajorName());
                 loginInfo.put("universityName", graduate.getUniversityName());
+                loginInfo.put("role","graduate");
+                return loginInfo;
             }
             Student student = studentDao.findOne(email);
             if (student!=null){
                 loginInfo.put("majorName",student.getMajorName());
                 loginInfo.put("universityName",student.getUniversityName());
+                loginInfo.put("role","student");
+                return loginInfo;
             }
         }else{
             throw new MyException(UserEnums.LOGIN_FAIL);
@@ -110,7 +114,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void updateUser(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
+//        user.setPassword(encoder.encode(user.getPassword()));
         log.info("用户:" + user.getEmail() + "信息修改");
         userDao.updateUser(user);
     }

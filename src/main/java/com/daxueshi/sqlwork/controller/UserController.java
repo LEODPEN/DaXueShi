@@ -1,6 +1,8 @@
 package com.daxueshi.sqlwork.controller;
 
 import com.daxueshi.sqlwork.VO.Result;
+import com.daxueshi.sqlwork.dao.GraduateDao;
+import com.daxueshi.sqlwork.dao.StudentDao;
 import com.daxueshi.sqlwork.dao.UserDao;
 import com.daxueshi.sqlwork.domain.Graduate;
 import com.daxueshi.sqlwork.domain.Student;
@@ -10,10 +12,8 @@ import com.daxueshi.sqlwork.enums.UserStatusEnums;
 import com.daxueshi.sqlwork.service.GraduateService;
 import com.daxueshi.sqlwork.service.StudentService;
 import com.daxueshi.sqlwork.service.UserService;
-import com.daxueshi.sqlwork.utils.GraduateJwtUtils;
 import com.daxueshi.sqlwork.utils.JwtUtils;
 import com.daxueshi.sqlwork.utils.ResultUtils;
-import com.daxueshi.sqlwork.utils.StudentJwtUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +40,26 @@ public class UserController {
 
     @Autowired
     private GraduateService graduateService;
+
+    @Autowired
+    private StudentDao studentDao;
+
+    @Autowired
+    private GraduateDao graduateDao;
+
+//    @ApiOperation()
+    @ApiOperation("查看个人信息")
+    @GetMapping("/user")
+    public Result personalInfo(@RequestParam String email,@RequestParam String role){
+        if(role.equals("student")) {
+            Student student = studentDao.findOne(email);
+            return ResultUtils.success(student);
+        }
+        else{
+            Graduate graduate = graduateDao.findOne(email);
+            return ResultUtils.success(graduate);
+        }
+    }
 
 
     @ApiOperation("查看邮箱是否可用")

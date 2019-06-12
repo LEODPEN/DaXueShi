@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class Company implements Serializable {
     private static final long serialVersionUID = -5693815303324276770L;
     private String companyName;
-    private String city;
-    private String type;
+    private String address;
+    private String keyword;
     private String description;
 }

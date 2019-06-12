@@ -33,4 +33,10 @@ public interface StudentDao {
 
     @Select("select * from students where major_name = #{majorName} and university_name = #{universityName}")
     List<Student> findByUniversityAndMajor(String universityName, String majorName);
+
+    @Select("select * from students where major_name = #{majorName} and email <> #{email} order by university_name desc ")
+    List<Student> findByMajorNameExceptMe(String majorName, String email);
+
+    @Select("select * from students where major_name = #{majorName} and university_name = #{universityName} and email <> #{email}")
+    List<Student> findByUniversityAndMajorExceptMe(String universityName, String majorName,String email);
 }

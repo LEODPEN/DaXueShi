@@ -80,7 +80,7 @@ public class StudentServiceImpl implements StudentService {
         PageHelper.startPage(page,size,order);
 
         //同专业
-        List<Student> students = studentDao.findByMajorName(student.getMajorName());
+        List<Student> students = studentDao.findByMajorNameExceptMe(student.getMajorName(),email);
 
         PageInfo pageInfo = new PageInfo(students);
 
@@ -109,7 +109,7 @@ public class StudentServiceImpl implements StudentService {
 
         String order = "university_name desc";
         PageHelper.startPage(page,size,order);
-        List<Student> students = studentDao.findByUniversityAndMajor(student.getUniversityName(), student.getMajorName());
+        List<Student> students = studentDao.findByUniversityAndMajorExceptMe(student.getUniversityName(), student.getMajorName(),email);
 
         PageInfo pageInfo = new PageInfo(students);
 

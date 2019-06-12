@@ -1,6 +1,7 @@
 package com.daxueshi.sqlwork.handler;
 
 import com.daxueshi.sqlwork.VO.Result;
+import com.daxueshi.sqlwork.exception.MyException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +16,9 @@ public class MyExceptionHandler {
     @ResponseBody
     public Result exception(Exception e){
         e.printStackTrace();
+        if (e instanceof MyException){
+            return new Result(((MyException) e).getCode(),null,e.getMessage());
+        }
         return new Result(-1,null,e.getMessage());
     }
 

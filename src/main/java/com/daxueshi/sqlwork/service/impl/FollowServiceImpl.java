@@ -42,6 +42,9 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public void cancelFollow(String followingEmail, String followedEmail) {
 
+        if (followedEmail.equals(followingEmail)){
+            throw new MyException(OtherErrorEnums.SHIT_OPERATION);
+        }
         if (followDao.findOne(followingEmail,followedEmail)==null){
             throw new MyException(OtherErrorEnums.NO_SUNC_RECORD);
         }
@@ -50,9 +53,14 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public void addFollow(String followingEmail, String followedEmail) {
+
+        if (followedEmail.equals(followingEmail)){
+            throw new MyException(OtherErrorEnums.NO_SELF_FOLLOW);
+        }
         if (followDao.findOne(followingEmail,followedEmail)!=null){
             throw new MyException(OtherErrorEnums.ALREADY_FOLLOWED);
         }
+
         followDao.addFollow(followingEmail, followedEmail);
     }
 }

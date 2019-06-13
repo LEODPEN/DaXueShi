@@ -9,8 +9,10 @@ import com.daxueshi.sqlwork.domain.Graduate;
 import com.daxueshi.sqlwork.domain.Student;
 import com.daxueshi.sqlwork.domain.User;
 import com.daxueshi.sqlwork.dto.TotalUserDTO;
+import com.daxueshi.sqlwork.enums.OtherErrorEnums;
 import com.daxueshi.sqlwork.enums.UserEnums;
 import com.daxueshi.sqlwork.enums.UserStatusEnums;
+import com.daxueshi.sqlwork.exception.MyException;
 import com.daxueshi.sqlwork.service.GraduateService;
 import com.daxueshi.sqlwork.service.StudentService;
 import com.daxueshi.sqlwork.service.UserService;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -154,14 +157,19 @@ public class UserController {
     //认证成为本科学生
 
     @PostMapping("/user/becomeStudent")
+    @Transactional
     //虽然可以同时使用，但是一般还是别这么干，以后有机会改
-    public Result becomeStudent(@RequestBody Student student, @RequestParam String token) {
+    public Result becomeStudent(@RequestBody Student student) {
 
-        String email = (String) JwtUtils.parseJwt(token).get("email");
+//        String email = (String) JwtUtils.parseJwt(token).get("email");
+        if (student == null){
+            throw new MyException(OtherErrorEnums.NO_INPUT);
+        }
+        String email = student.getEmail();
         User user = userService.findByEmail(email);
         user.setStatus(UserStatusEnums.STUDENT.getCode());
         userDao.updateUser(user);
-        student.setEmail(email);
+//        student.setEmail(email);
         studentService.save(student);
         log.info("{}认证成为学生", email);
 //        String studentToken = StudentJwtUtils.createJwt(student);
@@ -176,16 +184,24 @@ public class UserController {
     //认证成为毕业生
 
     @PostMapping("/user/becomeGraduate")
-    public Result becomeGraduate(@RequestBody Graduate graduate, @RequestParam String token) {
+    @Transactional
+    public Result becomeGraduate(@RequestBody Graduate graduate) {
 
-        String email = (String) JwtUtils.parseJwt(token).get("email");
+//        String email = (String) JwtUtils.parseJwt(token).get("email");
 
+        if (graduate==null){
+            throw new MyException(OtherErrorEnums.NO_INPUT);
+        }
+        String email = graduate.getEmail();
         User user = userService.findByEmail(email);
-
         user.setStatus(UserStatusEnums.GRADUATE.getCode());
+        Student student = new Student();
+        student.setEmail(email);
+        student.setMajorName(graduate.getMajorName());
+        student.setUniversityName(graduate.getUniversityName());
         userDao.updateUser(user);
-
-        graduate.setEmail(email);
+        studentDao.save(student);
+//        graduate.setEmail(email);
         graduateService.save(graduate);
         log.info("{}认证成为毕业生", email);
 //        String graduateToken = GraduateJwtUtils.createJwt(graduate);

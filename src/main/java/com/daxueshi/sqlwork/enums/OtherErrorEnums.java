@@ -12,6 +12,7 @@ public enum  OtherErrorEnums implements ResultEnums  {
     ALREADY_FOLLOWED(-4,"已经关注该用户"),
     NO_SUNC_RECORD(-5,"未关注该用户"),
     NO_SELF_FOLLOW(-6,"不能自我关注哦,去看看其他人吧!"),
+    NO_INPUT(-7,"未填写数据"),
     ;
 
     Integer code;

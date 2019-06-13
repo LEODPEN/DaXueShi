@@ -139,8 +139,9 @@ public class UserController {
 
     /*******身份转换操作********/
 
-    @ApiOperation("用户注册")
+
     @PostMapping("/user/register")
+    @Transactional
     public Result register(@RequestBody User user, @RequestParam String checkcode) {
         userService.register(user, checkcode);
         return ResultUtils.success();
@@ -159,17 +160,16 @@ public class UserController {
     @PostMapping("/user/becomeStudent")
     @Transactional
     //虽然可以同时使用，但是一般还是别这么干，以后有机会改
-    public Result becomeStudent(@RequestBody Student student) {
+    public Result becomeStudent(@RequestBody Student student,@RequestParam String token) {
 
-//        String email = (String) JwtUtils.parseJwt(token).get("email");
+        String email = (String) JwtUtils.parseJwt(token).get("email");
         if (student == null){
             throw new MyException(OtherErrorEnums.NO_INPUT);
         }
-        String email = student.getEmail();
         User user = userService.findByEmail(email);
         user.setStatus(UserStatusEnums.STUDENT.getCode());
         userDao.updateUser(user);
-//        student.setEmail(email);
+        student.setEmail(email);
         studentService.save(student);
         log.info("{}认证成为学生", email);
 //        String studentToken = StudentJwtUtils.createJwt(student);
@@ -185,23 +185,21 @@ public class UserController {
 
     @PostMapping("/user/becomeGraduate")
     @Transactional
-    public Result becomeGraduate(@RequestBody Graduate graduate) {
+    public Result becomeGraduate(@RequestBody Graduate graduate, @RequestParam String token) {
 
-//        String email = (String) JwtUtils.parseJwt(token).get("email");
-
-        if (graduate==null){
+        String email = (String) JwtUtils.parseJwt(token).get("email");
+        if (graduate == null){
             throw new MyException(OtherErrorEnums.NO_INPUT);
         }
-        String email = graduate.getEmail();
         User user = userService.findByEmail(email);
         user.setStatus(UserStatusEnums.GRADUATE.getCode());
         Student student = new Student();
         student.setEmail(email);
-        student.setMajorName(graduate.getMajorName());
         student.setUniversityName(graduate.getUniversityName());
-        userDao.updateUser(user);
+        student.setMajorName(graduate.getMajorName());
+        graduate.setEmail(email);
         studentDao.save(student);
-//        graduate.setEmail(email);
+        userDao.updateUser(user);
         graduateService.save(graduate);
         log.info("{}认证成为毕业生", email);
 //        String graduateToken = GraduateJwtUtils.createJwt(graduate);

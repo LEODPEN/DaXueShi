@@ -65,6 +65,7 @@ public class UserServiceImpl implements UserService{
             loginInfo.put("token",token);
             loginInfo.put("nickname",user.getNickname());
             loginInfo.put("email",user.getEmail());
+            loginInfo.put("role","undefined");
             Graduate graduate = graduateDao.findOne(email);
             if (graduate!=null){
                 loginInfo.put("majorName", graduate.getMajorName());

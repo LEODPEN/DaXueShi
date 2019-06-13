@@ -16,4 +16,12 @@ public class TotalUserDTO {
 
     private String universityName;
 
+    private Integer graduateYear;
+
+    private String company;
+
+    private String position;
+
+
+
 }

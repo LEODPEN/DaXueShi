@@ -5,6 +5,7 @@ import com.daxueshi.sqlwork.domain.Graduate;
 import com.daxueshi.sqlwork.domain.Student;
 import com.daxueshi.sqlwork.domain.User;
 import com.daxueshi.sqlwork.dto.TotalUserDTO;
+import com.daxueshi.sqlwork.enums.GraduationEnums;
 
 public class TotalUserDTOConverter {
 
@@ -28,6 +29,11 @@ public class TotalUserDTOConverter {
             totalUserDTO.setRole("毕业老狗");
             totalUserDTO.setMajorName(((Graduate)o).getMajorName());
             totalUserDTO.setUniversityName(((Graduate)o).getUniversityName());
+            totalUserDTO.setGraduateYear(((Graduate)o).getGraduateYear());
+            if (((Graduate)o).getState().equals(GraduationEnums.WORK.getCode())){
+                totalUserDTO.setCompany(((Graduate)o).getCompanyName());
+                totalUserDTO.setPosition(((Graduate)o).getPosition());
+            }
         }
         return totalUserDTO;
     }

@@ -36,10 +36,13 @@ public class FollowController {
 
     @GetMapping("/getInfo")
     @ApiOperation("查询我关注的信息")
-    public Result findFollowInfos(@RequestParam String email){
+    public Result findFollowInfos(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "20") Integer size,
+            @RequestParam String email){
         Map<String, Object> followInfos = new HashMap<>();
-        PageInfo following = followService.findIFollowWho(email);
-        PageInfo followed = followService.findWhoFollowMe(email);
+        PageInfo following = followService.findIFollowWho(email, page, size);
+        PageInfo followed = followService.findWhoFollowMe(email, page, size);
         followInfos.put("following",following);
         followInfos.put("followingCnt",following.getTotal());
         followInfos.put("followed",followed);

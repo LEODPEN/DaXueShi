@@ -1,18 +1,15 @@
 package com.daxueshi.sqlwork.service;
 
-import com.daxueshi.sqlwork.domain.Follow;
 import com.github.pagehelper.PageInfo;
-
-import java.util.List;
 
 /**
  * @author onion
  * @date 2019-05-29 -15:17
  */
 public interface FollowService {
-    PageInfo findIFollowWho(String email);
+    PageInfo findIFollowWho(String email, Integer page, Integer size);
 
-    PageInfo findWhoFollowMe(String email);
+    PageInfo findWhoFollowMe(String email, Integer page, Integer size);
 
     void cancelFollow(String followingEmail, String followedEmail);
 

@@ -23,17 +23,17 @@ public class FollowServiceImpl implements FollowService {
     private FollowDao followDao;
 
     @Override
-    public PageInfo findIFollowWho(String email) {
-//        String order = "times desc";
-        PageHelper.startPage(0,10);
+    public PageInfo findIFollowWho(String email, Integer page, Integer size) {
+
+        PageHelper.startPage(page,size);
         List<Follow> followList = followDao.findIFollowWho(email);
 
         return new PageInfo(followList);
     }
 
     @Override
-    public PageInfo findWhoFollowMe(String email) {
-        PageHelper.startPage(0,10);
+    public PageInfo findWhoFollowMe(String email, Integer page, Integer size) {
+        PageHelper.startPage(page,size);
         List<Follow> followList = followDao.findWhoFollowMe(email);
 
         return new PageInfo(followList);

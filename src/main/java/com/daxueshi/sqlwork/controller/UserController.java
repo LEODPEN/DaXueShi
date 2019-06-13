@@ -9,6 +9,7 @@ import com.daxueshi.sqlwork.domain.Graduate;
 import com.daxueshi.sqlwork.domain.Student;
 import com.daxueshi.sqlwork.domain.User;
 import com.daxueshi.sqlwork.dto.TotalUserDTO;
+import com.daxueshi.sqlwork.enums.GraduationEnums;
 import com.daxueshi.sqlwork.enums.OtherErrorEnums;
 import com.daxueshi.sqlwork.enums.UserEnums;
 import com.daxueshi.sqlwork.enums.UserStatusEnums;
@@ -193,12 +194,24 @@ public class UserController {
         }
         User user = userService.findByEmail(email);
         user.setStatus(UserStatusEnums.GRADUATE.getCode());
-        Student student = new Student();
-        student.setEmail(email);
-        student.setUniversityName(graduate.getUniversityName());
-        student.setMajorName(graduate.getMajorName());
+        Student student = studentDao.findOne(email);
+        if (student==null){
+            student = new Student();
+            student.setEmail(email);
+            student.setUniversityName(graduate.getUniversityName());
+            student.setMajorName(graduate.getMajorName());
+            studentDao.save(student);
+        }else {
+            student.setGrade(null);
+            studentDao.update(student);
+        }
         graduate.setEmail(email);
-        studentDao.save(student);
+        if (graduate.getCompanyName()!=null){
+            graduate.setState(GraduationEnums.WORK.getCode());
+        }else {
+            //todo 前端得验证一下！！！
+            graduate.setState(GraduationEnums.STUDY.getCode());
+        }
         userDao.updateUser(user);
         graduateService.save(graduate);
         log.info("{}认证成为毕业生", email);

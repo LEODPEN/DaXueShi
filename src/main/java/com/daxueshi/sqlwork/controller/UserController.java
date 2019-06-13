@@ -1,12 +1,14 @@
 package com.daxueshi.sqlwork.controller;
 
 import com.daxueshi.sqlwork.VO.Result;
+import com.daxueshi.sqlwork.converter.TotalUserDTOConverter;
 import com.daxueshi.sqlwork.dao.GraduateDao;
 import com.daxueshi.sqlwork.dao.StudentDao;
 import com.daxueshi.sqlwork.dao.UserDao;
 import com.daxueshi.sqlwork.domain.Graduate;
 import com.daxueshi.sqlwork.domain.Student;
 import com.daxueshi.sqlwork.domain.User;
+import com.daxueshi.sqlwork.dto.TotalUserDTO;
 import com.daxueshi.sqlwork.enums.UserEnums;
 import com.daxueshi.sqlwork.enums.UserStatusEnums;
 import com.daxueshi.sqlwork.service.GraduateService;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -47,18 +50,26 @@ public class UserController {
     @Autowired
     private GraduateDao graduateDao;
 
-//    @ApiOperation()
     @ApiOperation("查看个人信息")
     @GetMapping("/user")
-    public Result personalInfo(@RequestParam String email,@RequestParam String role){
-        if(role.equals("student")) {
-            Student student = studentDao.findOne(email);
-            return ResultUtils.success(student);
+    public Result personalInfo(@RequestParam String email){
+        User user = userDao.findByMail(email);
+        //user 既然这里能查那就不会为空了
+        String nickname = user.getNickname();
+        TotalUserDTO t ;
+        if (user.getStatus().equals(UserStatusEnums.VISITOR.getCode())){
+            log.info("查看{}未认证用户信息",email);
+            t=TotalUserDTOConverter.convert(user,nickname);
+        }
+        else if (user.getStatus().equals(UserStatusEnums.STUDENT.getCode())){
+            log.info("查看{}学生信息",email);
+            t=TotalUserDTOConverter.convert(studentDao.findOne(email),nickname);
         }
         else{
-            Graduate graduate = graduateDao.findOne(email);
-            return ResultUtils.success(graduate);
+            log.info("查看{}毕业生信息",email);
+            t=TotalUserDTOConverter.convert(graduateDao.findOne(email),nickname);
         }
+        return ResultUtils.success(t);
     }
 
 

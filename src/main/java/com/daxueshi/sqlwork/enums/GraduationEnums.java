@@ -8,10 +8,10 @@ import lombok.Getter;
  */
 @Getter
 public enum GraduationEnums implements ResultEnums{
-    WORK(1,"工作"),
-    STUDY(2,"读研"),
-    ABOARD(3,"出国"),
-    UNEMPLOYED(4,"未就业"),
+    WORK(1,"工作中"),
+    STUDY(2,"读研中"),
+    ABOARD(3,"出国中"),
+    UNEMPLOYED(4,"暂咸鱼"),//未就业
     ;
     private Integer code;
     private String msg;

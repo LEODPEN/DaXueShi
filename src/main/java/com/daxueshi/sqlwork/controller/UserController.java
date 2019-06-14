@@ -9,10 +9,7 @@ import com.daxueshi.sqlwork.domain.Graduate;
 import com.daxueshi.sqlwork.domain.Student;
 import com.daxueshi.sqlwork.domain.User;
 import com.daxueshi.sqlwork.dto.TotalUserDTO;
-import com.daxueshi.sqlwork.enums.GraduationEnums;
-import com.daxueshi.sqlwork.enums.OtherErrorEnums;
-import com.daxueshi.sqlwork.enums.UserEnums;
-import com.daxueshi.sqlwork.enums.UserStatusEnums;
+import com.daxueshi.sqlwork.enums.*;
 import com.daxueshi.sqlwork.exception.MyException;
 import com.daxueshi.sqlwork.service.GraduateService;
 import com.daxueshi.sqlwork.service.StudentService;
@@ -22,6 +19,7 @@ import com.daxueshi.sqlwork.utils.ResultUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -168,10 +166,20 @@ public class UserController {
             throw new MyException(OtherErrorEnums.NO_INPUT);
         }
         User user = userService.findByEmail(email);
-        user.setStatus(UserStatusEnums.STUDENT.getCode());
-        userDao.updateUser(user);
-        student.setEmail(email);
-        studentService.save(student);
+        if (!user.getStatus().equals(UserStatusEnums.STUDENT.getCode())){
+            user.setStatus(UserStatusEnums.STUDENT.getCode());
+            userDao.updateUser(user);
+            student.setEmail(email);
+            studentService.save(student);
+        }
+        else {
+            //原来就是在校生
+            Student s = studentDao.findOne(email);
+            s.setGrade(student.getGrade());
+            s.setMajorName(student.getMajorName());
+            s.setUniversityName(student.getUniversityName());
+            studentDao.update(s);
+        }
         log.info("{}认证成为学生", email);
 //        String studentToken = StudentJwtUtils.createJwt(student);
         Map<String,Object> map = new HashMap<>();
@@ -193,27 +201,39 @@ public class UserController {
             throw new MyException(OtherErrorEnums.NO_INPUT);
         }
         User user = userService.findByEmail(email);
-        user.setStatus(UserStatusEnums.GRADUATE.getCode());
-        Student student = studentDao.findOne(email);
-        if (student==null){
-            student = new Student();
-            student.setEmail(email);
-            student.setUniversityName(graduate.getUniversityName());
-            student.setMajorName(graduate.getMajorName());
-            studentDao.save(student);
+        Student student = new Student();
+        //本来不是毕业生
+        if (!user.getStatus().equals(UserStatusEnums.GRADUATE.getCode())){
+            user.setStatus(UserStatusEnums.GRADUATE.getCode());
+            //原来未认证
+            if (!user.getStatus().equals(UserStatusEnums.STUDENT.getCode())){
+
+                student.setEmail(email);
+                student.setUniversityName(graduate.getUniversityName());
+                student.setMajorName(graduate.getMajorName());
+                student.setGrade(null);
+                graduate.setEmail(email);
+                studentDao.save(student);
+            }else {
+                //原来认证为在校生
+                student = studentDao.findOne(email);
+                student.setGrade(null);
+                studentDao.update(student);
+            }
+            userDao.updateUser(user);
+            graduate.setEmail(email);
+            graduateService.save(graduate);
         }else {
-            student.setGrade(null);
-            studentDao.update(student);
+            //原来就是毕业生
+            Graduate g = graduateDao.findOne(email);
+            //原来的剔除
+            BeanUtils.copyProperties(graduate,g);
+            if (!g.getState().equals(GraduationEnums.WORK.getCode())){
+                g.setSalary(SalaryEnums.O.getLevel());
+            }
+            g.setEmail(email);
+            graduateDao.update(g);
         }
-        graduate.setEmail(email);
-        if (graduate.getCompanyName()!=null){
-            graduate.setState(GraduationEnums.WORK.getCode());
-        }else {
-            //todo 前端得验证一下！！！
-            graduate.setState(GraduationEnums.STUDY.getCode());
-        }
-        userDao.updateUser(user);
-        graduateService.save(graduate);
         log.info("{}认证成为毕业生", email);
 //        String graduateToken = GraduateJwtUtils.createJwt(graduate);
         Map<String,Object> map = new HashMap<>();

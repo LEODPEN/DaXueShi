@@ -10,7 +10,7 @@ public enum UserStatusEnums implements ResultEnums{
 
     STUDENT(1,"在校"),
 
-    GRADUATE(2,"工作"),
+    GRADUATE(2,"毕业生"),
 
     ;
 

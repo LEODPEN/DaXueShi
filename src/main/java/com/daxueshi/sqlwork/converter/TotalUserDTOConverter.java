@@ -34,6 +34,19 @@ public class TotalUserDTOConverter {
                 totalUserDTO.setCompany(((Graduate)o).getCompanyName());
                 totalUserDTO.setPosition(((Graduate)o).getPosition());
             }
+            switch (((Graduate)o).getState()){
+                case 1:
+                    totalUserDTO.setState(GraduationEnums.WORK.getMsg());
+                    break;
+                case 2:
+                    totalUserDTO.setState(GraduationEnums.STUDY.getMsg());
+                    break;
+                case 3:
+                    totalUserDTO.setState(GraduationEnums.ABOARD.getMsg());
+                    break;
+                default:
+                    totalUserDTO.setState(GraduationEnums.UNEMPLOYED.getMsg());
+            }
         }
         return totalUserDTO;
     }

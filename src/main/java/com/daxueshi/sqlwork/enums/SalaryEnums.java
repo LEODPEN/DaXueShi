@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum  SalaryEnums {
+    O(0,"1-1000",0),//其他状态情况下
     A(1,"1000-6000",3000),
     B(2,"6000-10000",8000),
     C(3,"10000-15000",12500),

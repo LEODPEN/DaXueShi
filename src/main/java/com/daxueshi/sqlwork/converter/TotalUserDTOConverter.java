@@ -23,13 +23,16 @@ public class TotalUserDTOConverter {
             totalUserDTO.setRole("在校生");
             totalUserDTO.setMajorName(((Student) o).getMajorName());
             totalUserDTO.setUniversityName(((Student) o).getUniversityName());
+            totalUserDTO.setGradeOrYear(((Student) o).getGrade());
         }
         else {
             totalUserDTO.setEmail(((Graduate)o).getEmail());
             totalUserDTO.setRole("毕业老狗");
             totalUserDTO.setMajorName(((Graduate)o).getMajorName());
             totalUserDTO.setUniversityName(((Graduate)o).getUniversityName());
-            totalUserDTO.setGraduateYear(((Graduate)o).getGraduateYear());
+            //设置毕业年份
+            totalUserDTO.setGradeOrYear(((Graduate)o).getGraduateYear());
+
             if (((Graduate)o).getState().equals(GraduationEnums.WORK.getCode())){
                 totalUserDTO.setCompany(((Graduate)o).getCompanyName());
                 totalUserDTO.setPosition(((Graduate)o).getPosition());

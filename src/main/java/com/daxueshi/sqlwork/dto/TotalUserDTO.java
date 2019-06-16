@@ -18,7 +18,8 @@ public class TotalUserDTO {
 
     private String state;
 
-    private Integer graduateYear;
+    //在校生就是年级，毕业生就是毕业年份
+    private Integer gradeOrYear;
 
     private String company;
 

@@ -140,7 +140,7 @@ public class DataDisplayServiceImpl implements DataDisplayService {
         List<Integer> yearList = new ArrayList<>(asList(year-4,year-3,year-2,year-1,year));
         List<Integer> salaryList = new ArrayList<>();
         salaryMap.put("year",yearList);
-        for (int i = 0; i<5;i++){
+        for (int i = 4; i>=0;i--){
             List< GraduateInfo> infoList = graduateService.findGraduateJobInfoByUnameANdMnameAndYear(college,major,year-i);
             if (CollectionUtils.isEmpty(infoList)){
                 salaryList.add(0);
@@ -149,24 +149,26 @@ public class DataDisplayServiceImpl implements DataDisplayService {
             int average = 0;
             //是以级别来定的资薪水平---暂时定8级，一级5000
             for (GraduateInfo info : infoList){
-                average+=info.getSalary();
+                average+=findSalary(info.getSalary());
+//                average+=info.getSalary();
             }
             average/=infoList.size();
             if (average<=0){
                 salaryList.add(0);
-            }else if (average>8){
-                salaryList.add(50000);
-            }else {
-                for (SalaryEnums enums : SalaryEnums.values()){
-                    if (enums.getLevel()==average){
-                        salaryList.add(enums.getAverage());
-                        break;
-                    }
-                }
+            }else{
+                salaryList.add(average);
             }
-
         }
         salaryMap.put("salary",salaryList);
         return salaryMap;
+    }
+
+    private Integer findSalary(Integer level){
+        for (SalaryEnums salaryEnums : SalaryEnums.values()){
+                if (salaryEnums.getLevel().equals(level)){
+                    return salaryEnums.getAverage();
+                }
+        }
+        return level;
     }
 }

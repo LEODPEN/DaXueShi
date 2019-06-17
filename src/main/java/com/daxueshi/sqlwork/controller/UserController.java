@@ -204,7 +204,6 @@ public class UserController {
         Student student = new Student();
         //本来不是毕业生
         if (!user.getStatus().equals(UserStatusEnums.GRADUATE.getCode())){
-            user.setStatus(UserStatusEnums.GRADUATE.getCode());
             //原来未认证
             if (!user.getStatus().equals(UserStatusEnums.STUDENT.getCode())){
 
@@ -220,6 +219,7 @@ public class UserController {
                 student.setGrade(null);
                 studentDao.update(student);
             }
+            user.setStatus(UserStatusEnums.GRADUATE.getCode());
             userDao.updateUser(user);
             graduate.setEmail(email);
             graduateService.save(graduate);
